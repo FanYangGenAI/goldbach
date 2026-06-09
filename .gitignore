@@ -1,0 +1,10 @@
+data/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.idea/
+
+# CMake / CUDA build outputs
+generator/cuda/build/
+generator/cuda/build-*/
