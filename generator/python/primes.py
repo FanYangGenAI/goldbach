@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from constants import MAX_P1, SMALL_PRIMES
+from constants import MAX_P1, MODULUS_BASE_COUNT, SMALL_PRIMES
 
 
 def _sieve(limit: int) -> list[int]:
@@ -28,6 +28,11 @@ ODD_PRIMES_UP_TO_MAX_P1: tuple[int, ...] = PRIMES_UP_TO_MAX_P1[1:]
 
 def is_small_prime(value: int) -> bool:
     return value in PRIME_SET_UP_TO_MAX_P1
+
+
+def first_m_modulus_bases(m: int = MODULUS_BASE_COUNT) -> tuple[int, ...]:
+    """Return the first m odd primes used as sieve modulus bases."""
+    return first_k_odd_primes(m)
 
 
 def first_k_odd_primes(k: int) -> tuple[int, ...]:

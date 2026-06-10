@@ -14,9 +14,10 @@ from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
-from buckets import bucket_range, collect_bucket_samples
+from buckets import bucket_range, collect_bucket_samples, sample_even_log_uniform  # noqa: F401
 from constants import (
     CANDIDATE_PRIME_COUNT,
+    MIN_TRAINING_EVEN,
     PHASE0_BUCKET_TARGETS,
     PHASE0_TOTAL,
     PHASE1_BUCKET_TARGETS,
@@ -82,6 +83,49 @@ def _phase_targets(phase: str) -> dict[int, int]:
     if phase == "phase2":
         return PHASE2_BUCKET_TARGETS
     raise ValueError(f"Unknown phase: {phase}")
+
+
+def _prepare_v2_bucket_evens(
+    evens: list[int],
+    bucket_id: int,
+    target: int,
+    seed: int,
+) -> list[int]:
+    """Drop evens below MIN_TRAINING_EVEN; top up when the bucket range has spare evens."""
+    import random
+
+    filtered = [even for even in evens if even >= MIN_TRAINING_EVEN]
+    if len(filtered) == target:
+        return filtered
+    if len(filtered) > target:
+        raise RuntimeError(
+            f"Bucket {bucket_id}: got {len(filtered)} evens after filtering, expected {target}"
+        )
+
+    low, high = bucket_range(bucket_id)
+    rng = random.Random(seed + bucket_id * 9_999_983)
+    seen = set(filtered)
+    need = target - len(filtered)
+    low_bound = max(low, MIN_TRAINING_EVEN)
+    try:
+        extras = sample_even_log_uniform(low_bound, high, need, rng, seen=seen)
+    except RuntimeError:
+        return filtered
+    filtered.extend(extra for extra in extras if extra >= MIN_TRAINING_EVEN)
+    return filtered
+
+
+def _expected_sample_total(phase: str, dataset_version: int) -> int:
+    totals = {
+        "phase0": PHASE0_TOTAL,
+        "phase1": PHASE1_TOTAL,
+        "phase2": PHASE2_TOTAL,
+    }
+    total = totals[phase]
+    if phase == "phase0" and dataset_version == VERSION_V2:
+        # Bucket 1 enumerates every even in [4, 100); removing N=4 frees no replacement slot.
+        return total - 1
+    return total
 
 
 def _collect_bucket_evens_for_phase(
@@ -182,12 +226,13 @@ def generate_dataset(
     dataset_version: int = VERSION,
 ) -> None:
     targets = _phase_targets(phase)
-    expected_total = {
+    expected_total = _expected_sample_total(phase, dataset_version)
+    nominal_total = {
         "phase0": PHASE0_TOTAL,
         "phase1": PHASE1_TOTAL,
         "phase2": PHASE2_TOTAL,
     }[phase]
-    if sum(targets.values()) != expected_total:
+    if sum(targets.values()) != nominal_total:
         raise RuntimeError(f"{phase} bucket targets do not sum to expected total")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -212,6 +257,8 @@ def generate_dataset(
             print(f"Bucket {bucket_id:2d}: {strategy:12s} target={target:,}")
 
             evens = _collect_bucket_evens_for_phase(phase, bucket_id, target, seed)
+            if dataset_version == VERSION_V2:
+                evens = _prepare_v2_bucket_evens(evens, bucket_id, target, seed)
             bucket_records.append(
                 {"id": bucket_id, "range": [low, high], "count": len(evens), "strategy": strategy}
             )
@@ -248,7 +295,10 @@ def generate_dataset(
         raise RuntimeError(f"Labeling failed for {len(all_errors)} evens; see {error_log}")
 
     if total_written != expected_total:
-        raise RuntimeError(f"Write count mismatch: wrote {total_written}, expected {expected_total}")
+        raise RuntimeError(
+            f"Write count mismatch: wrote {total_written}, expected {expected_total} "
+            f"(nominal phase target={nominal_total})"
+        )
 
     with output_path.open("r+b") as handle:
         handle.seek(0)
@@ -274,6 +324,7 @@ def generate_dataset(
     }
     if dataset_version == VERSION_V2:
         manifest["candidate_prime_count"] = CANDIDATE_PRIME_COUNT
+        manifest["min_training_even"] = MIN_TRAINING_EVEN
         manifest["coverage_report"] = "data/coverage_report_phase0.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 

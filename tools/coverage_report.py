@@ -20,6 +20,7 @@ if str(_GENERATOR_PYTHON) not in sys.path:
 from constants import (  # noqa: E402
     CANDIDATE_PRIME_COUNT,
     HEADER_SIZE,
+    MIN_TRAINING_EVEN,
     PHASE0_TOTAL,
 )
 from coverage import (  # noqa: E402
@@ -119,6 +120,8 @@ def run_coverage_report(args: argparse.Namespace) -> dict:
     if args.max_samples is not None and args.max_samples < len(even_numbers):
         rng = random.Random(args.seed)
         even_numbers = rng.sample(even_numbers, args.max_samples)
+
+    even_numbers = [even for even in even_numbers if even >= MIN_TRAINING_EVEN]
 
     k_values = _parse_k_values(args.k_sweep, args.k)
     started = time.perf_counter()

@@ -185,6 +185,7 @@ python tools/coverage_report.py --k 500 --seed 7 --workers 8 \
 | 未覆盖样本 | **仅 N=4**（bucket 1） |
 | bucket 1 coverage | 97.92%（48 条中 1 条为 N=4） |
 | bucket 2–18 coverage | **100%** |
+| **排除 N<6 后** | **coverage@500 = 100%**（99,999 条，见 `phase1_sieve_baseline_experiment.md`） |
 | 平均合法候选数 | 48.1 |
 | 最小合法候选平均 rank | 12.4 |
 | bucket 18 平均合法候选数 | 23.8（min=5, max=69） |
@@ -193,7 +194,7 @@ python tools/coverage_report.py --k 500 --seed 7 --workers 8 \
 
 未覆盖原因：N=4 的哥德巴赫分解为 2+2，需要候选 p=2，而 IGOT 词表仅含**奇素数**（从 3 起）。这是任务定义内的已知边界，不是词表太小。
 
-**训练域建议**：生成与评估时排除 N=4（或统一使用 N ≥ 6）。bucket 1 其余 47 条样本 coverage 为 100%。
+**训练域定稿**：`MIN_TRAINING_EVEN = 6`，生成/加载/评估均排除 N=4。v2 phase0 总量 99,999（bucket 1 少 1 条）。详见 `docs/phase1_sieve_baseline_experiment.md`。
 
 完整报告：`data/coverage_report_phase0.json`（耗时约 28s，8 workers）。
 
@@ -278,9 +279,26 @@ optimizer = Adam(params=[b, w], lr=...)
 
 ### 5.6 完成标准
 
-- [ ] Sieve baseline 训练收敛
-- [ ] `wⱼ` 权重符合数论预期（小素数模数为负）
-- [ ] 基线指标写入报告，作为后续 `residual_gain` 的参照
+- [x] Sieve baseline 训练收敛（`train/train.py`，3 epoch smoke 已跑通）
+- [x] `wⱼ` 权重符合数论预期（r=3,5,7,... 均为明显负数）
+- [x] 基线指标写入报告（`results/phase1/train_report.json`），作为后续 `residual_gain` 的参照
+
+**Phase 1 smoke 结果（v2 phase0，val 10k，3 epochs，CPU）**
+
+| 指标 | epoch 3 |
+|------|---------|
+| val BCE | 0.191 |
+| top1_valid_rate | 42.5% |
+| top5_valid_rate | 87.0% |
+| topK_valid_rate | 99.99% |
+| avg_checks_to_success | 2.97 |
+
+训练命令：
+
+```bash
+cd train
+python train.py --epochs 5 --batch-size 512
+```
 
 ---
 

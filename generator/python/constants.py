@@ -17,6 +17,12 @@ MAX_P1 = 5000
 # IGOT v2: default candidate vocabulary size (first K odd primes starting at 3).
 CANDIDATE_PRIME_COUNT = 500
 
+# Training/eval domain: exclude N=4 (Goldbach pair 2+2 needs p=2, not in odd-prime vocabulary).
+MIN_TRAINING_EVEN = 6
+
+# IGOT explicit sieve: number of modulus bases r_j for sieve features.
+MODULUS_BASE_COUNT = 32
+
 # Full production bucket boundaries (2n value ranges).
 BUCKET_BOUNDS: list[tuple[int, int, int]] = [
     (1, 4, 10**2),

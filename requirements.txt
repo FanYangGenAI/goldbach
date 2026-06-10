@@ -1,2 +1,6 @@
+# For CPU-only or generic installs:
 numpy>=1.24
-torch>=2.0
+
+# For GPU training in this project, use the project .venv instead:
+#   powershell -File scripts/setup_venv.ps1
+# See requirements-cuda.txt (torch 2.5.1+cu121).

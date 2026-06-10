@@ -17,6 +17,7 @@ if str(_GENERATOR_PYTHON) not in sys.path:
 from constants import (  # noqa: E402
     CANDIDATE_PRIME_COUNT,
     HEADER_SIZE,
+    MIN_TRAINING_EVEN,
     VALID_MASK_BYTES,
     VERSION_V2,
 )
@@ -44,7 +45,11 @@ def decode_valid_mask_array(
 class GoldbachBinDataset(Dataset):
     """Memory-mapped Goldbach dataset supporting v1 (p1_label) and v2 (valid_mask)."""
 
-    def __init__(self, path: Path | str) -> None:
+    def __init__(
+        self,
+        path: Path | str,
+        min_even: int = MIN_TRAINING_EVEN,
+    ) -> None:
         self.path = Path(path)
         if not self.path.exists():
             raise FileNotFoundError(f"Dataset not found: {self.path}")
@@ -54,7 +59,8 @@ class GoldbachBinDataset(Dataset):
 
         self.version = header.version
         self.record_size = sample_size_for_version(header.version)
-        self.sample_count = int(header.sample_count)
+        self.raw_sample_count = int(header.sample_count)
+        self.min_even = min_even
         self.candidate_count = CANDIDATE_PRIME_COUNT if self.version == VERSION_V2 else None
 
         self._mmap = np.memmap(
@@ -62,17 +68,31 @@ class GoldbachBinDataset(Dataset):
             dtype=np.uint8,
             mode="r",
             offset=HEADER_SIZE,
-            shape=(self.sample_count, self.record_size),
+            shape=(self.raw_sample_count, self.record_size),
         )
+        self._indices = self._build_indices(min_even)
+
+    def _build_indices(self, min_even: int) -> list[int] | None:
+        if min_even <= 4:
+            return None
+        indices: list[int] = []
+        for index in range(self.raw_sample_count):
+            even_number = int.from_bytes(self._mmap[index, 0:8].tobytes(), "little")
+            if even_number >= min_even:
+                indices.append(index)
+        return indices
 
     def __len__(self) -> int:
-        return self.sample_count
+        if self._indices is None:
+            return self.raw_sample_count
+        return len(self._indices)
 
     def __getitem__(self, index: int) -> dict[str, torch.Tensor]:
-        if index < 0 or index >= self.sample_count:
+        if index < 0 or index >= len(self):
             raise IndexError(f"index out of range: {index}")
+        row_index = self._indices[index] if self._indices is not None else index
 
-        row = self._mmap[index]
+        row = self._mmap[row_index]
         even_number = int.from_bytes(row[0:8].tobytes(), "little")
         mods = row[8:18].astype(np.int64)
         density = struct.unpack("<f", row[18:22].tobytes())[0]

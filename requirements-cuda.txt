@@ -1,0 +1,7 @@
+# CUDA 12.1 PyTorch stack for project .venv.
+# Install (use cu121 index ONLY — do not mix with default PyPI for torch):
+#   .venv\Scripts\pip install -r requirements-cuda.txt --index-url https://download.pytorch.org/whl/cu121
+numpy>=1.24
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
+torchaudio==2.5.1+cu121
