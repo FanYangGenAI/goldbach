@@ -22,10 +22,23 @@ def _sieve(limit: int) -> list[int]:
 
 PRIMES_UP_TO_MAX_P1: tuple[int, ...] = tuple(_sieve(MAX_P1))
 PRIME_SET_UP_TO_MAX_P1: frozenset[int] = frozenset(PRIMES_UP_TO_MAX_P1)
+# Odd primes only (excludes 2); used as IGOT candidate vocabulary.
+ODD_PRIMES_UP_TO_MAX_P1: tuple[int, ...] = PRIMES_UP_TO_MAX_P1[1:]
 
 
 def is_small_prime(value: int) -> bool:
     return value in PRIME_SET_UP_TO_MAX_P1
+
+
+def first_k_odd_primes(k: int) -> tuple[int, ...]:
+    """Return the first k odd primes (3, 5, 7, ...)."""
+    if k <= 0:
+        raise ValueError(f"k must be positive, got {k}")
+    if k > len(ODD_PRIMES_UP_TO_MAX_P1):
+        raise ValueError(
+            f"k={k} exceeds available odd primes ({len(ODD_PRIMES_UP_TO_MAX_P1)})"
+        )
+    return ODD_PRIMES_UP_TO_MAX_P1[:k]
 
 
 def compute_modulo_features(even_number: int) -> tuple[int, ...]:

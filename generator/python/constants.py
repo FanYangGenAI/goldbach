@@ -4,12 +4,18 @@ from __future__ import annotations
 
 MAGIC = 0x47424B48  # "GBKH"
 VERSION = 1
+VERSION_V2 = 2
 HEADER_SIZE = 64
 SAMPLE_SIZE = 26
+VALID_MASK_BYTES = 63  # ceil(500 / 8)
+SAMPLE_SIZE_V2 = 8 + 10 + 4 + VALID_MASK_BYTES  # 85 bytes
 
 SMALL_PRIMES = (3, 5, 7, 11, 13, 17, 19, 23, 29, 31)
 MR_BASES = (2, 325, 9375, 28178, 450775, 9780504, 1795265022)
 MAX_P1 = 5000
+
+# IGOT v2: default candidate vocabulary size (first K odd primes starting at 3).
+CANDIDATE_PRIME_COUNT = 500
 
 # Full production bucket boundaries (2n value ranges).
 BUCKET_BOUNDS: list[tuple[int, int, int]] = [

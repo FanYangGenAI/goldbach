@@ -16,6 +16,7 @@ from pathlib import Path
 
 from buckets import bucket_range, collect_bucket_samples
 from constants import (
+    CANDIDATE_PRIME_COUNT,
     PHASE0_BUCKET_TARGETS,
     PHASE0_TOTAL,
     PHASE1_BUCKET_TARGETS,
@@ -23,12 +24,15 @@ from constants import (
     PHASE2_BUCKET_TARGETS,
     PHASE2_HARD_CASE_COUNT,
     PHASE2_TOTAL,
+    SAMPLE_SIZE,
+    SAMPLE_SIZE_V2,
+    VERSION,
+    VERSION_V2,
 )
-from format_io import build_header, make_sample
-from constants import SAMPLE_SIZE
+from format_io import build_header, make_sample, make_sample_v2
 from hard_cases import collect_bucket18_evens
 from labeling import find_min_p1
-from worker import label_even_chunk
+from worker import label_even_chunk, label_even_chunk_v2
 
 
 def _repo_root() -> Path:
@@ -107,15 +111,21 @@ def _label_sequential_to_handle(
     processed_offset: int,
     total_target: int,
     started: float,
+    *,
+    dataset_version: int,
 ) -> tuple[int, list[str]]:
     errors: list[str] = []
     written = 0
     for index, even_number in enumerate(evens, start=1):
         try:
-            p1 = find_min_p1(even_number)
-            handle.write(make_sample(even_number, p1).to_bytes())
+            if dataset_version == VERSION_V2:
+                payload = make_sample_v2(even_number).to_bytes()
+            else:
+                p1 = find_min_p1(even_number)
+                payload = make_sample(even_number, p1).to_bytes()
+            handle.write(payload)
             written += 1
-        except RuntimeError as exc:
+        except (RuntimeError, ValueError) as exc:
             errors.append(f"even={even_number}: {exc}")
 
         global_index = processed_offset + index
@@ -136,18 +146,22 @@ def _label_parallel_to_handle(
     processed_offset: int,
     total_target: int,
     started: float,
+    *,
+    dataset_version: int,
 ) -> tuple[int, list[str]]:
+    sample_size = SAMPLE_SIZE_V2 if dataset_version == VERSION_V2 else SAMPLE_SIZE
+    label_chunk = label_even_chunk_v2 if dataset_version == VERSION_V2 else label_even_chunk
     chunks = _chunk_list(evens, chunk_size)
     errors: list[str] = []
     written = 0
     processed = 0
 
     with ProcessPoolExecutor(max_workers=workers) as pool:
-        for chunk_index, (payload, chunk_errors) in enumerate(pool.map(label_even_chunk, chunks), start=1):
+        for chunk_index, (payload, chunk_errors) in enumerate(pool.map(label_chunk, chunks), start=1):
             handle.write(payload)
             errors.extend(chunk_errors)
             processed += len(chunks[chunk_index - 1])
-            written += len(payload) // SAMPLE_SIZE
+            written += len(payload) // sample_size
             global_index = processed_offset + processed
             if global_index % progress_every < chunk_size or global_index == total_target:
                 elapsed = time.perf_counter() - started
@@ -165,6 +179,7 @@ def generate_dataset(
     workers: int,
     chunk_size: int,
     progress_every: int,
+    dataset_version: int = VERSION,
 ) -> None:
     targets = _phase_targets(phase)
     expected_total = {
@@ -181,10 +196,14 @@ def generate_dataset(
     total_written = 0
     all_errors: list[str] = []
 
-    print(f"Generating {phase} dataset ({expected_total:,} samples)...")
+    format_label = "v2" if dataset_version == VERSION_V2 else "v1"
+    use_parallel_workers = workers > 1 and (
+        phase in {"phase1", "phase2"} or dataset_version == VERSION_V2
+    )
+    print(f"Generating {phase} {format_label} dataset ({expected_total:,} samples)...")
 
     with output_path.open("wb") as handle:
-        handle.write(build_header(0))
+        handle.write(build_header(0, version=dataset_version))
 
         for bucket_id in sorted(targets):
             target = targets[bucket_id]
@@ -197,8 +216,7 @@ def generate_dataset(
                 {"id": bucket_id, "range": [low, high], "count": len(evens), "strategy": strategy}
             )
 
-            use_parallel = phase in {"phase1", "phase2"} and workers > 1
-            if use_parallel:
+            if use_parallel_workers:
                 written, errors = _label_parallel_to_handle(
                     handle,
                     evens,
@@ -208,6 +226,7 @@ def generate_dataset(
                     total_written,
                     expected_total,
                     started,
+                    dataset_version=dataset_version,
                 )
             else:
                 written, errors = _label_sequential_to_handle(
@@ -217,6 +236,7 @@ def generate_dataset(
                     total_written,
                     expected_total,
                     started,
+                    dataset_version=dataset_version,
                 )
 
             total_written += written
@@ -232,24 +252,29 @@ def generate_dataset(
 
     with output_path.open("r+b") as handle:
         handle.seek(0)
-        handle.write(build_header(total_written))
+        handle.write(build_header(total_written, version=dataset_version))
 
     digest = _sha256_file(output_path)
+    sample_size = SAMPLE_SIZE_V2 if dataset_version == VERSION_V2 else SAMPLE_SIZE
     manifest = {
         "phase": phase,
-        "version": 1,
+        "version": dataset_version,
         "sample_count": total_written,
+        "sample_size_bytes": sample_size,
         "file": output_path.name,
         "sha256": digest,
         "seed": seed,
-        "workers": workers if phase in {"phase1", "phase2"} else 1,
-        "chunk_size": chunk_size if phase in {"phase1", "phase2"} else None,
+        "workers": workers if use_parallel_workers else 1,
+        "chunk_size": chunk_size if use_parallel_workers else None,
         "buckets": bucket_records,
         "hard_case_count": PHASE2_HARD_CASE_COUNT if phase == "phase2" else 0,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "generator_commit": _git_commit(),
         "payload_offset": 64,
     }
+    if dataset_version == VERSION_V2:
+        manifest["candidate_prime_count"] = CANDIDATE_PRIME_COUNT
+        manifest["coverage_report"] = "data/coverage_report_phase0.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     elapsed = time.perf_counter() - started
@@ -264,7 +289,16 @@ def generate_dataset(
     print(f"  elapsed:  {elapsed:.2f}s")
 
 
-def _default_paths(phase: str, root: Path) -> tuple[Path, Path]:
+def _default_paths(
+    phase: str,
+    root: Path,
+    dataset_version: int,
+) -> tuple[Path, Path]:
+    if phase == "phase0" and dataset_version == VERSION_V2:
+        return (
+            root / "data" / "goldbach_train_v2_phase0.bin",
+            root / "data" / "goldbach_manifest_v2_phase0.json",
+        )
     if phase == "phase0":
         return root / "data" / "goldbach_phase0.bin", root / "data" / "goldbach_phase0_manifest.json"
     if phase == "phase1":
@@ -301,17 +335,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--progress-every",
         type=int,
-        default=500_000,
+        default=None,
         help="Print progress every N samples",
+    )
+    parser.add_argument(
+        "--format",
+        choices=("v1", "v2"),
+        default="v1",
+        help="Dataset format: v1 (p1_label) or v2 (valid_mask)",
     )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    default_output, default_manifest = _default_paths(args.phase, _repo_root())
+    dataset_version = VERSION_V2 if args.format == "v2" else VERSION
+    default_output, default_manifest = _default_paths(args.phase, _repo_root(), dataset_version)
     output_path = args.output or default_output
     manifest_path = args.manifest or default_manifest
+    progress_every = args.progress_every
+    if progress_every is None:
+        progress_every = 10_000 if args.phase == "phase0" else 500_000
+    if args.format == "v2" and args.phase != "phase0":
+        print("ERROR: v2 format is currently supported for phase0 only", file=sys.stderr)
+        return 1
 
     try:
         generate_dataset(
@@ -321,7 +368,8 @@ def main() -> int:
             seed=args.seed,
             workers=args.workers,
             chunk_size=args.chunk_size,
-            progress_every=args.progress_every,
+            progress_every=progress_every,
+            dataset_version=dataset_version,
         )
     except Exception as exc:  # noqa: BLE001 - CLI entrypoint
         print(f"ERROR: {exc}", file=sys.stderr)
