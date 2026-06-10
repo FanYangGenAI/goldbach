@@ -63,10 +63,11 @@ logitᵢ = sieve_logitᵢ + attention_logitᵢ + residual_logitᵢ
 ## 3. 开发阶段总览
 
 ```text
-Phase 0  数据与 coverage 验证     ← 当前阶段，无神经网络
-Phase 1  Explicit Sieve Baseline  ← 第一次训练
-Phase 2  Sieve + Residual MLP
-Phase 3  完整 IGOT Transformer
+Phase 0  数据与 coverage 验证     ← 已完成
+Phase 1  Explicit Sieve Baseline  ← 已完成
+Phase 2  Sieve + Residual MLP      ← 已完成
+Phase 3  完整 IGOT Transformer    ← 基线已完成；深度扫描进行中（见下）
+Phase 3b Self-Attn 深度扫描 + 长训练  ← 当前计划阶段
 Phase 4  Mechanistic Interpretability
 ```
 
@@ -326,8 +327,9 @@ residual_gain = metrics(Phase 2) - metrics(Phase 1)
 
 ### 6.4 完成标准
 
-- [ ] Residual 相对 sieve-only 有统计显著的 `topK_valid_rate` 或 `avg_checks_to_success` 提升
-- [ ] 记录 `residual_gain` 按 bucket 的分布
+- [x] Residual 相对 sieve-only 有统计显著的 `topK_valid_rate` 或 `avg_checks_to_success` 提升
+- [x] 记录 `residual_gain` 按 bucket 的分布
+- 正式报告：`docs/phase2_sieve_residual_experiment.md`
 
 ---
 
@@ -371,11 +373,33 @@ for idx in ranked_indices[:top_k]:
 return None  # 词表内无解
 ```
 
-### 7.4 完成标准
+### 7.4 基线完成标准（2026-06-10）
 
-- [ ] 三部分 logit 可独立输出并记录
-- [ ] 相对 Phase 2 有 `attention_gain`（attention 模块的增量贡献）
-- [ ] 模型支持 module-level ablation（移除 sieve / modulus tokens / 单个 head）
+- [x] 三部分 logit 可独立输出并记录（`sieve` / `attention` / `residual`）
+- [x] 相对 Phase 2 有 `attention_gain`（top1 +0.8pp，top5 未突破平台）
+- [x] 模型支持 module-level ablation（`IGOTAblation`）
+- [x] SDPA 注意力实现，batch=2048 可在 RTX 4090 训练
+- 基线报告：`docs/phase3_igot_transformer_experiment.md`
+
+### 7.5 Phase 3b：深度实验（循序渐进，待实施）
+
+> **详细方案**：`docs/phase3_deep_experiment_plan.md`
+
+基线（1×cross + 1×self，10 epoch，**固定 LR**）已完成。深度实验分 **五个 Stage**，**四套方案均要验证**：
+
+| Stage | 方案 | 内容 |
+|-------|------|------|
+| 0 | 工程 | 可配置 Cross/Self 深度、LR warmup+cosine、损失曲线 tooling |
+| I | **A** | Cross=1 固定，Self **L=1..6** → 得 **L_self\*** |
+| II | **B** | 固定 L_self\*，Cross **C=1..3** → 得 **C_cross\*** |
+| III | **C** | **绑深** L_cross=L_self=1..6，对比解耦最优 |
+| IV | **D** | 局部二维网格（可选，非全 6×6） |
+
+**为何 Stage I 先固定 Cross=1**：控制变量、优先验证 top5 主假设（候选–候选交互）；**不代表 Cross 只需一层**（Stage II/III 专门验证）。
+
+**训练栈**：深度实验统一 **warmup + cosine**；当前 `train.py` 仍为固定 `lr`（实施 Stage 0 时改）。
+
+完成标准见 `phase3_deep_experiment_plan.md` §12。
 
 ---
 
