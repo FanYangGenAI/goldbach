@@ -1,7 +1,7 @@
 # Phase 3 深度实验方案（循序渐进：Attention 深度 + 长训练）
 
 > **文档定位**：在 Phase 3 基线之上，**分阶段**验证 Cross-Attn / Self-Attn 深度与训练预算对排序上限的影响。  
-> **状态**：方案已对齐讨论结论，**待代码就绪后按阶段实施**（尚未开跑）。  
+> **状态**：**全部 Stage 完成**（见 §13）。  
 > **关联文档**：`docs/phase3_igot_transformer_experiment.md`（基线）、`docs/igot_implementation_plan.md`（总路线图）
 
 ---
@@ -135,6 +135,17 @@ final_logits = sieve_logits + attention_logits + residual_logits
 | 0.6 | 单元测试更新 | `test_igot.py` |
 
 **Stage 0 完成门**：L=1,C=1 的 2-epoch smoke 无 NaN；能从 json 生成曲线图。
+
+**Stage 0 验收记录（2026-06-10）**：
+
+| 检查项 | 结果 |
+|--------|------|
+| `IGOTModel` 可配置 `cross_attn_layers` / `self_attn_layers` / `stack_mode` | 通过（11/11 单元测试） |
+| `train.py` warmup+cosine + 新 CLI | 通过 |
+| `tools/plot_train_curves.py` | 通过（基线 6 张 PNG + smoke 验证） |
+| 基线曲线写入 Phase 1/2/3 md §7 | 通过 |
+| `smoke_phase3_pipeline.py --cross-layers/--self-layers` | 通过（batch=2048，~269ms/step） |
+| 2-epoch smoke（cosine LR） | 通过，`results/phase3_stage0_smoke/`，无 NaN |
 
 ---
 
@@ -315,41 +326,100 @@ Stage IV（≤6 runs） 视需要
 
 ## 12. Phase 3 深度实验总完成标准
 
-- [ ] Stage 0 工程就绪；基线损失曲线已写入 Phase 1/2/3 md  
-- [ ] Stage I（方案 A）完成；**L_self\*** 已确定  
-- [ ] Stage II（方案 B）完成；**C_cross\*** 已确定  
-- [ ] Stage III（方案 C）完成；绑深 vs 解耦最优已对比  
-- [ ] Stage IV：已执行或书面说明跳过理由  
-- [ ] 全局汇总：最优配置、框架极限结论、Phase 4 backbone 选定  
+- [x] Stage 0 工程就绪；基线损失曲线已写入 Phase 1/2/3 md  
+- [x] Stage I（方案 A）完成；**L_self\*** 已确定  
+- [x] Stage II（方案 B）完成；**C_cross\*** 已确定  
+- [x] Stage III（方案 C）完成；绑深 vs 解耦最优已对比  
+- [x] Stage IV：已执行或书面说明跳过理由  
+- [x] 全局汇总：最优配置、框架极限结论、Phase 4 backbone 选定  
 
 ---
 
 ## 13. 阶段结果（实施后填写）
 
-### 13.1 Stage I — 方案 A
+> 自动更新于 2026-06-11 03:01 UTC
 
-_（待填写：L_self\*、表格、曲线链接、文字结论）_
+### 13.1 Stage I — 方案 A（固定 Cross=1，扫描 Self L=1..6）
 
-### 13.2 Stage II — 方案 B
+**完成时间**：2026-06-11  
+**L_self\***：2（按 best val top1 选取）
 
-_（待填写：C_cross\*、在 L_self\* 下的增益）_
+| Run | L_self | batch | best ep | best top1 | best top5 | best BCE | checks | 耗时 | 曲线 |
+|-----|--------|-------|---------|-----------|-----------|----------|--------|------|------|
+| `p3-A_L1` | 1 | 2048 | 6 | 43.97% | 87.16% | 0.1256 | 2.84 | 714s | [BCE](docs/figures/phase3_stageI_A_L1_train_val_bce.png) |
+| `p3-A_L2` | 2 | 2048 | 23 | 44.52% | 86.45% | 0.1254 | 2.89 | 7860s | [BCE](docs/figures/phase3_stageI_A_L2_train_val_bce.png) |
+| `p3-A_L3` | 3 | 1024 | 36 | 44.39% | 87.02% | 0.1253 | 2.85 | 1425s | [BCE](docs/figures/phase3_stageI_A_L3_train_val_bce.png) |
+| `p3-A_L4` | 4 | 1024 | 5 | 44.28% | 86.72% | 0.2794 | 3.04 | 1741s | [BCE](docs/figures/phase3_stageI_A_L4_train_val_bce.png) |
+| `p3-A_L5` | 5 | 512 | 19 | 44.12% | 87.37% | 0.1663 | 3.02 | 2124s | [BCE](docs/figures/phase3_stageI_A_L5_train_val_bce.png) |
+| `p3-A_L6` | 6 | 512 | 10 | 44.28% | 87.10% | 0.1743 | 3.02 | 2590s | [BCE](docs/figures/phase3_stageI_A_L6_train_val_bce.png) |
 
-### 13.3 Stage III — 方案 C
+![Stage I depth vs metrics](../figures/phase3_stageI_self_depth_metrics.png)
 
-_（待填写：绑深最优 L；是否超过解耦最优）_
+**结论**：
+- 最优 Self 深度 **L_self* = 2**（top1=44.52%，top5=86.45%）
+- 相对 Phase 3 基线（10ep 固定 LR，top1≈43.5%）：长训练 + cosine 后 top1=提升
+- 若 L≥4 后 top5 增益 <0.2pp，视为深度边际收益递减
 
-### 13.4 Stage IV — 方案 D
+---
 
-_（待填写：或「跳过：原因」）_
+### 13.2 Stage II — 方案 B（固定 L_self*=2，扫描 Cross C=1..3）
+
+| Run | C_cross | L_self | batch | best top1 | best top5 | best BCE | 曲线 |
+|-----|---------|--------|-------|-----------|-----------|----------|------|
+| `p3-B_C1_L2` | 1 | 2 | 2048 | 44.04% | 87.00% | 0.2214 | [BCE](docs/figures/phase3_stageII_B_C1_L2_train_val_bce.png) |
+| `p3-B_C2_L2` | 2 | 2 | 1024 | 44.63% | 87.71% | 0.1258 | [BCE](docs/figures/phase3_stageII_B_C2_L2_train_val_bce.png) |
+| `p3-B_C3_L2` | 3 | 2 | 1024 | 43.79% | 87.67% | 0.1258 | [BCE](docs/figures/phase3_stageII_B_C3_L2_train_val_bce.png) |
+
+![Stage II cross depth at L_self*=2](../figures/phase3_stageII_cross_depth_at_Lselfstar.png)
+
+**结论**：
+- **C_cross* = 2**
+- 解耦最优配置 (C=2, L=2)：top1=44.63%，top5=87.71%
+
+---
+
+### 13.3 Stage III — 方案 C（绑深 L_cross=L_self=1..6，paired 模式）
+
+| Run | L | batch | best top1 | best top5 | best BCE | 曲线 |
+|-----|---|-------|-----------|-----------|----------|------|
+| `p3-C_L1` | 1 | 2048 | 44.47% | 86.98% | 0.1254 | [BCE](docs/figures/phase3_stageIII_C_L1_train_val_bce.png) |
+| `p3-C_L2` | 2 | 1024 | 44.16% | 87.53% | 0.1254 | [BCE](docs/figures/phase3_stageIII_C_L2_train_val_bce.png) |
+| `p3-C_L3` | 3 | 1024 | 44.09% | 87.37% | 0.1257 | [BCE](docs/figures/phase3_stageIII_C_L3_train_val_bce.png) |
+| `p3-C_L4` | 4 | 512 | 43.97% | 86.62% | 0.1796 | [BCE](docs/figures/phase3_stageIII_C_L4_train_val_bce.png) |
+| `p3-C_L5` | 5 | 512 | 43.79% | 87.42% | 0.1366 | [BCE](docs/figures/phase3_stageIII_C_L5_train_val_bce.png) |
+| `p3-C_L6` | 6 | 512 | 43.80% | 87.06% | 0.1421 | [BCE](docs/figures/phase3_stageIII_C_L6_train_val_bce.png) |
+
+![Stage III tied depth curve](../figures/phase3_stageIII_tied_depth_curve.png)
+
+**结论**：
+- 绑深最优 **L_tied* = 1**（top1=44.47%）
+- 解耦最优（Stage II）：top1=44.63%；绑深 未优于解耦组合
+
+---
+
+### 13.4 Stage IV — 方案 D（局部网格）
+
+**跳过**：No ambiguous region; grid empty
+
+
+---
 
 ### 13.5 全局最优配置（Phase 4 backbone）
 
 | 项目 | 定稿值 |
 |------|--------|
-| C_cross | _待填_ |
-| L_self | _待填_ |
-| stack_mode | _待填_ |
-| checkpoint | _待填_ |
+| Run ID | `p3-B_C2_L2` |
+| C_cross | 2 |
+| L_self | 2 |
+| stack_mode | sequential |
+| best top1 | 44.63% |
+| best top5 | 87.71% |
+| checkpoint | `D:\repo\monorepo\goldbach\results\phase3_depth\stageII\B_C2_L2\best.pt` |
+
+**框架极限结论（初稿）**：
+- 深度实验全局最优 top1=44.63%，top5=87.71%
+- top5 ~87% 平台是否打破：见上表 best top5
+- Phase 4 backbone 采用 `p3-B_C2_L2` 的 `best.pt`
 
 ---
 

@@ -8,6 +8,7 @@ Decomposition: final_logit = sieve_logit + attention_logit + residual_logit.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
 import torch
 import torch.nn as nn
@@ -16,6 +17,8 @@ from attention import PrimeModulusCrossAttention, PrimePrimeSelfAttention
 from number_encoder import NumberEncoder
 from sieve_baseline import ExplicitSieveModule
 from tokens import ModulusTokenBuilder, PrimeTokenBuilder
+
+StackMode = Literal["sequential", "paired"]
 
 
 @dataclass
@@ -35,8 +38,8 @@ class IGOTModel(nn.Module):
     """Interpretable Goldbach Offset Transformer (Phase 3).
 
     IGOT Phase 3 完整模型，三路 logit 加法分解。
-    Attention stack: 1× Cross-Attn (prime→modulus) + 1× Self-Attn (prime→prime).
-    注意力栈：1 层交叉注意力 + 1 层自注意力（均为浅层设计）。
+    Attention stack depth is configurable via cross_attn_layers / self_attn_layers.
+    注意力栈深度可配置；stack_mode 控制 cross/self 的堆叠顺序。
     """
 
     def __init__(
@@ -45,11 +48,22 @@ class IGOTModel(nn.Module):
         modulus_count: int = 32,
         d_model: int = 128,
         num_heads: int = 4,
+        cross_attn_layers: int = 1,
+        self_attn_layers: int = 1,
+        stack_mode: StackMode = "sequential",
     ) -> None:
         super().__init__()
+        if cross_attn_layers < 1 or self_attn_layers < 1:
+            raise ValueError("cross_attn_layers and self_attn_layers must be >= 1")
+        if stack_mode not in ("sequential", "paired"):
+            raise ValueError(f"Unknown stack_mode: {stack_mode}")
+
         self.candidate_count = candidate_count
         self.modulus_count = modulus_count
         self.d_model = d_model
+        self.cross_attn_layers_count = cross_attn_layers
+        self.self_attn_layers_count = self_attn_layers
+        self.stack_mode = stack_mode
 
         # --- Branch A: interpretable explicit sieve (Phase 1, reused) ---
         # --- 分支 A：可解释显式筛法（复用 Phase 1）---
@@ -71,15 +85,15 @@ class IGOTModel(nn.Module):
             d_model=d_model,
         )
 
-        # --- Attention stack (1 cross + 1 self, each with FFN) ---
-        # --- 注意力栈（1 层交叉 + 1 层自注意力，各带 FFN）---
-        self.prime_mod_cross_attn = PrimeModulusCrossAttention(
-            d_model=d_model,
-            num_heads=num_heads,
+        # --- Attention stack (configurable depth) ---
+        # --- 注意力栈（深度可配置）---
+        self.cross_attn_layers = nn.ModuleList(
+            PrimeModulusCrossAttention(d_model=d_model, num_heads=num_heads)
+            for _ in range(cross_attn_layers)
         )
-        self.prime_prime_self_attn = PrimePrimeSelfAttention(
-            d_model=d_model,
-            num_heads=num_heads,
+        self.self_attn_layers = nn.ModuleList(
+            PrimePrimeSelfAttention(d_model=d_model, num_heads=num_heads)
+            for _ in range(self_attn_layers)
         )
 
         # Per-candidate scalar heads on final prime tokens.
@@ -95,6 +109,63 @@ class IGOTModel(nn.Module):
 
         self._last_cross_attn_weights: torch.Tensor | None = None
         self._last_self_attn_weights: torch.Tensor | None = None
+
+    def _run_attention_stack(
+        self,
+        prime_tokens: torch.Tensor,
+        modulus_tokens: torch.Tensor,
+        *,
+        return_attention: bool,
+    ) -> torch.Tensor:
+        """Apply cross/self attention blocks according to stack_mode.
+
+        sequential: all cross layers, then all self layers (Stage I / II).
+        paired: repeat (cross -> self) units L times (Stage III).
+        """
+        cross_weights: torch.Tensor | None = None
+        self_weights: torch.Tensor | None = None
+
+        if self.stack_mode == "sequential":
+            for layer in self.cross_attn_layers:
+                if return_attention:
+                    prime_tokens, cross_weights = layer(
+                        prime_tokens,
+                        modulus_tokens,
+                        return_attention=True,
+                    )
+                else:
+                    prime_tokens = layer(prime_tokens, modulus_tokens)
+            for layer in self.self_attn_layers:
+                if return_attention:
+                    prime_tokens, self_weights = layer(
+                        prime_tokens,
+                        return_attention=True,
+                    )
+                else:
+                    prime_tokens = layer(prime_tokens)
+        else:
+            depth = min(len(self.cross_attn_layers), len(self.self_attn_layers))
+            for index in range(depth):
+                cross_layer = self.cross_attn_layers[index]
+                self_layer = self.self_attn_layers[index]
+                if return_attention:
+                    prime_tokens, cross_weights = cross_layer(
+                        prime_tokens,
+                        modulus_tokens,
+                        return_attention=True,
+                    )
+                    prime_tokens, self_weights = self_layer(
+                        prime_tokens,
+                        return_attention=True,
+                    )
+                else:
+                    prime_tokens = cross_layer(prime_tokens, modulus_tokens)
+                    prime_tokens = self_layer(prime_tokens)
+
+        if return_attention:
+            self._last_cross_attn_weights = cross_weights
+            self._last_self_attn_weights = self_weights
+        return prime_tokens
 
     def forward(
         self,
@@ -146,23 +217,13 @@ class IGOTModel(nn.Module):
             global_context,
         )  # [B, M, d]
 
-        # --- Step 4: cross-attention then self-attention on prime tokens ---
-        # --- 步骤 4：先交叉注意力，再候选间自注意力 ---
-        if return_attention:
-            prime_tokens, cross_weights = self.prime_mod_cross_attn(
-                prime_tokens,
-                modulus_tokens,
-                return_attention=True,
-            )
-            prime_tokens, self_weights = self.prime_prime_self_attn(
-                prime_tokens,
-                return_attention=True,
-            )
-            self._last_cross_attn_weights = cross_weights
-            self._last_self_attn_weights = self_weights
-        else:
-            prime_tokens = self.prime_mod_cross_attn(prime_tokens, modulus_tokens)
-            prime_tokens = self.prime_prime_self_attn(prime_tokens)
+        # --- Step 4: configurable cross/self attention stack ---
+        # --- 步骤 4：可配置深度的 cross/self 注意力栈 ---
+        prime_tokens = self._run_attention_stack(
+            prime_tokens,
+            modulus_tokens,
+            return_attention=return_attention,
+        )
 
         # --- Step 5: per-candidate attention / residual logits ---
         # --- 步骤 5：每个候选一个 attention / residual logit ---

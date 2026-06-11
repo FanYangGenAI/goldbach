@@ -31,12 +31,25 @@ def peak_mb() -> float:
     return torch.cuda.max_memory_allocated() / (1024 ** 2)
 
 
-def run_step(batch_size: int, device: torch.device, warmup: int, repeats: int) -> dict:
+def run_step(
+    batch_size: int,
+    device: torch.device,
+    warmup: int,
+    repeats: int,
+    *,
+    cross_attn_layers: int = 1,
+    self_attn_layers: int = 1,
+    stack_mode: str = "sequential",
+) -> dict:
     """Run one training step benchmark: forward + BCE + backward + optimizer.
 
     模拟一个完整训练步：前向 + BCE + 反向 + 优化器更新。
     """
-    model = IGOTModel().to(device)
+    model = IGOTModel(
+        cross_attn_layers=cross_attn_layers,
+        self_attn_layers=self_attn_layers,
+        stack_mode=stack_mode,  # type: ignore[arg-type]
+    ).to(device)
     model.train()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
     loss_fn = torch.nn.BCEWithLogitsLoss()
@@ -92,6 +105,13 @@ def main() -> int:
     parser.add_argument("--repeats", type=int, default=5, help="timed steps after warmup")
     parser.add_argument("--warmup", type=int, default=5, help="untimed warmup steps (use >=5 for batch 2048)")
     parser.add_argument("--device", type=str, default="cuda")
+    parser.add_argument("--cross-attn-layers", type=int, default=1)
+    parser.add_argument("--self-attn-layers", type=int, default=1)
+    parser.add_argument(
+        "--stack-mode",
+        choices=("sequential", "paired"),
+        default="sequential",
+    )
     args = parser.parse_args()
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
@@ -104,7 +124,15 @@ def main() -> int:
     results = []
     for batch_size in args.batch_sizes:
         try:
-            result = run_step(batch_size, device, args.warmup, args.repeats)
+            result = run_step(
+                batch_size,
+                device,
+                args.warmup,
+                args.repeats,
+                cross_attn_layers=args.cross_attn_layers,
+                self_attn_layers=args.self_attn_layers,
+                stack_mode=args.stack_mode,
+            )
             results.append(result)
             print(
                 f"batch={result['batch_size']:4d}  "

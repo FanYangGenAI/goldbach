@@ -67,7 +67,7 @@ Phase 0  数据与 coverage 验证     ← 已完成
 Phase 1  Explicit Sieve Baseline  ← 已完成
 Phase 2  Sieve + Residual MLP      ← 已完成
 Phase 3  完整 IGOT Transformer    ← 基线已完成；深度扫描进行中（见下）
-Phase 3b Self-Attn 深度扫描 + 长训练  ← 当前计划阶段
+Phase 3b Self-Attn 深度扫描 + 长训练  ← **已完成**（见 phase3_deep_experiment_plan.md §13）
 Phase 4  Mechanistic Interpretability
 ```
 
@@ -381,7 +381,7 @@ return None  # 词表内无解
 - [x] SDPA 注意力实现，batch=2048 可在 RTX 4090 训练
 - 基线报告：`docs/phase3_igot_transformer_experiment.md`
 
-### 7.5 Phase 3b：深度实验（循序渐进，待实施）
+### 7.5 Phase 3b：深度实验（2026-06-11 完成）
 
 > **详细方案**：`docs/phase3_deep_experiment_plan.md`
 
@@ -397,7 +397,7 @@ return None  # 词表内无解
 
 **为何 Stage I 先固定 Cross=1**：控制变量、优先验证 top5 主假设（候选–候选交互）；**不代表 Cross 只需一层**（Stage II/III 专门验证）。
 
-**训练栈**：深度实验统一 **warmup + cosine**；当前 `train.py` 仍为固定 `lr`（实施 Stage 0 时改）。
+**训练栈**：深度实验统一 **warmup + cosine**；`train.py` 已支持 `--lr-schedule cosine`（Stage 0 完成）。
 
 完成标准见 `phase3_deep_experiment_plan.md` §12。
 

@@ -224,7 +224,15 @@ Phase 2 最优（ep3）：top1 **43.8%**，BCE **0.130**，checks **2.90**。
 | Phase 3 pilot | MHA | 512 | 197s | 43.5% | **87.4%** | 0.134 | 3.02 |
 | **Phase 3 正式** | **SDPA** | **2048** | **147s** | 43.5% | 86.8% | **0.125** | **2.89** |
 
-### 7.5 收敛性分析
+### 7.5 训练曲线（Stage 0 回溯，不重训）
+
+![Phase 3 baseline train/val BCE](../figures/phase3_baseline_train_val_bce.png)
+
+![Phase 3 baseline top1/top5 vs epoch](../figures/phase3_baseline_top1_top5_vs_epoch.png)
+
+数据来源：`results/phase3_flash_bs2048/train_report.json`（SDPA，batch=2048，lr=0.0025，10 epoch，固定 LR）。
+
+### 7.6 收敛性分析
 
 | 观察 | 结论 |
 |------|------|
@@ -341,7 +349,20 @@ python train\train.py --phase phase3 --epochs 10 --batch-size 2048 --lr 0.0025 -
 
 ## 12. Phase 3 未完成项与深度实验（循序渐进）
 
-基线（1×cross + 1×self、10 epoch、**固定 LR**）已完成；**深度实验尚未开始**。
+基线已完成；**深度实验全部完成**（15 runs，50 epoch + cosine LR），结论见 `docs/phase3_deep_experiment_plan.md` §13。
+
+**深度实验核心结论（2026-06-11）**：
+
+| 项目 | 结果 |
+|------|------|
+| 全局最优 | **C=2, L=2, sequential**（`p3-B_C2_L2`） |
+| best top1 | **44.63%**（+1.1pp vs 基线 43.5%） |
+| best top5 | **87.71%**（+0.9pp vs 基线 86.8%，**突破 ~87% 平台**） |
+| L_self\* | 2（Stage I） |
+| C_cross\* | 2（Stage II） |
+| 绑深 vs 解耦 | 绑深最优 L=1（44.47%）**未超过**解耦最优 |
+| Stage IV | 跳过（解耦结论明确，无模糊区域） |
+| Phase 4 checkpoint | `results/phase3_depth/stageII/B_C2_L2/best.pt` |
 
 完整路线见 **`docs/phase3_deep_experiment_plan.md`**。四套方案**分阶段全部验证**：
 
@@ -357,9 +378,9 @@ python train\train.py --phase phase3 --epochs 10 --batch-size 2048 --lr 0.0025 -
 | Cross / Self | 1 / 1 | 按 Stage 扫描或绑深 |
 | Epoch | 10 | **50**（可增至 100） |
 | 学习率 | **固定** `lr=0.0025` | **warmup + cosine** |
-| 损失曲线 | 仅 JSON | Stage 0 回溯基线 + 每 run 插图写入 md |
+| 损失曲线 | Stage 0 已回溯基线曲线（§7.5） | 每 run 插图写入 md |
 
-**说明**：Stage I 先固定 Cross=1 是为了**控制变量**、优先检验 Self 深度；Cross 深度在 Stage II/III 单独验证。当前 `train.py` 尚无训练 LR warmup（实施 Stage 0 时添加）。
+**说明**：Stage I 先固定 Cross=1 是为了**控制变量**、优先检验 Self 深度；Cross 深度在 Stage II/III 单独验证。Stage 0 已完成：`train.py` 支持 `--cross-attn-layers` / `--self-attn-layers` / `--stack-mode` / `--lr-schedule cosine`；`tools/plot_train_curves.py` 可从 json 生成曲线。
 
 ---
 

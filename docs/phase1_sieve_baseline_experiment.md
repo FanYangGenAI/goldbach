@@ -209,7 +209,15 @@ python train.py --epochs 10 --batch-size 512 --lr 0.01 --seed 7 \
 | 5 | 0.175 | 43.2% | 86.8% | **100%** | 3.05 |
 | 10 | **0.161** | **42.9%** | **87.0%** | **100%** | **3.05** |
 
-### 7.3 收敛性分析
+### 7.3 训练曲线（Stage 0 回溯，不重训）
+
+![Phase 1 train/val BCE](../figures/phase1_train_val_bce.png)
+
+![Phase 1 top1/top5 vs epoch](../figures/phase1_top1_top5_vs_epoch.png)
+
+数据来源：`results/phase1_gpu/train_report.json`（GPU，batch=512，10 epoch，固定 LR）。
+
+### 7.4 收敛性分析
 
 | 观察 | 结论 |
 |------|------|
@@ -219,7 +227,7 @@ python train.py --epochs 10 --batch-size 512 --lr 0.01 --seed 7 \
 | avg_checks | ~3.05，即平均检查约 3 个候选即可找到合法解 |
 | 模数权重 | 全部 32 个 \(w_j\) 均为负，且随 epoch 幅度增大 |
 
-### 7.4 最终模数权重（epoch 10，排除 N=4）
+### 7.5 最终模数权重（epoch 10，排除 N=4）
 
 | 模数 r | 权重 w | 模数 r | 权重 w |
 |--------|--------|--------|--------|
@@ -232,7 +240,7 @@ python train.py --epochs 10 --batch-size 512 --lr 0.01 --seed 7 \
 
 **全部 32 个模数权重均为负数**，与数论筛法预期一致。
 
-### 7.5 分桶观察（epoch 10）
+### 7.6 分桶观察（epoch 10）
 
 - **bucket 1**（小 N）：topK=100%，但 `avg_checks` 较高（候选密集、排序更难）
 - **bucket 3–6**：`avg_checks` 接近 1（小 N 上合法候选多且靠前）

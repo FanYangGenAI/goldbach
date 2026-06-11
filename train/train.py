@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -19,6 +20,7 @@ from typing import Protocol
 
 import torch
 import torch.nn as nn
+from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, random_split
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -122,10 +124,12 @@ def train_epoch(
     loss_fn: nn.Module,
     device: torch.device,
     phase: str,
-) -> float:
+    scheduler: LambdaLR | None = None,
+) -> tuple[float, float]:
     """One training epoch with multi-label BCE loss.
 
     训练一个 epoch，使用多标签 BCE 损失。
+    Returns (mean_train_bce, learning_rate_at_epoch_end).
     """
     model.train()
     total_loss = 0.0
@@ -144,12 +148,45 @@ def train_epoch(
         # 梯度裁剪：稳定 Phase 3 大 batch + 注意力训练，防止 NaN
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
+        if scheduler is not None:
+            scheduler.step()
 
         batch_size = even.shape[0]
         total_loss += loss.item() * batch_size
         total_samples += batch_size
 
-    return total_loss / max(total_samples, 1)
+    epoch_lr = optimizer.param_groups[0]["lr"]
+    return total_loss / max(total_samples, 1), epoch_lr
+
+
+def build_lr_scheduler(
+    optimizer: torch.optim.Optimizer,
+    *,
+    base_lr: float,
+    lr_schedule: str,
+    total_steps: int,
+    warmup_steps: int,
+    eta_min: float,
+) -> LambdaLR | None:
+    """Build per-step LR scheduler: none (fixed) or warmup + cosine decay."""
+    if lr_schedule == "none":
+        return None
+
+    if lr_schedule != "cosine":
+        raise ValueError(f"Unknown lr_schedule: {lr_schedule}")
+
+    warmup_steps = max(0, warmup_steps)
+    decay_steps = max(total_steps - warmup_steps, 1)
+    eta_min_ratio = eta_min / base_lr
+
+    def lr_lambda(step: int) -> float:
+        if warmup_steps > 0 and step < warmup_steps:
+            return (step + 1) / warmup_steps
+        progress = min(max(step - warmup_steps, 0) / decay_steps, 1.0)
+        cosine = 0.5 * (1.0 + math.cos(math.pi * progress))
+        return eta_min_ratio + (1.0 - eta_min_ratio) * cosine
+
+    return LambdaLR(optimizer, lr_lambda)
 
 
 def save_checkpoint(
@@ -225,7 +262,13 @@ def compute_attention_gain(phase3_metrics: dict, phase2_metrics: dict | None) ->
     return compute_metric_gain(phase3_metrics, phase2_metrics)
 
 
-def build_model(phase: str) -> nn.Module:
+def build_model(
+    phase: str,
+    *,
+    cross_attn_layers: int = 1,
+    self_attn_layers: int = 1,
+    stack_mode: str = "sequential",
+) -> nn.Module:
     """Factory for Phase 1/2/3 models.
 
     phase1 -> ExplicitSieveModule
@@ -237,7 +280,11 @@ def build_model(phase: str) -> nn.Module:
     if phase == "phase2":
         return SieveResidualModel()
     if phase == "phase3":
-        return IGOTModel()
+        return IGOTModel(
+            cross_attn_layers=cross_attn_layers,
+            self_attn_layers=self_attn_layers,
+            stack_mode=stack_mode,  # type: ignore[arg-type]
+        )
     raise ValueError(f"Unknown phase: {phase}")
 
 
@@ -267,6 +314,42 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=2048)
     parser.add_argument("--lr", type=float, default=1e-2)
+    parser.add_argument(
+        "--cross-attn-layers",
+        type=int,
+        default=1,
+        help="Phase 3: number of Prime-Modulus cross-attention layers",
+    )
+    parser.add_argument(
+        "--self-attn-layers",
+        type=int,
+        default=1,
+        help="Phase 3: number of Prime-Prime self-attention layers",
+    )
+    parser.add_argument(
+        "--stack-mode",
+        choices=("sequential", "paired"),
+        default="sequential",
+        help="Phase 3: sequential (all cross then all self) or paired (cross->self units)",
+    )
+    parser.add_argument(
+        "--lr-schedule",
+        choices=("none", "cosine"),
+        default="none",
+        help="Learning rate schedule: fixed (none) or warmup+cosine",
+    )
+    parser.add_argument(
+        "--warmup-steps",
+        type=int,
+        default=None,
+        help="LR warmup steps; default max(500, steps_per_epoch) when cosine",
+    )
+    parser.add_argument(
+        "--eta-min",
+        type=float,
+        default=None,
+        help="Minimum LR for cosine decay (default: lr * 0.01)",
+    )
     parser.add_argument("--val-fraction", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--num-workers", type=int, default=0)
@@ -321,11 +404,33 @@ def main() -> int:
         num_workers=args.num_workers,
     )
 
-    model = build_model(args.phase).to(device)
+    model = build_model(
+        args.phase,
+        cross_attn_layers=args.cross_attn_layers,
+        self_attn_layers=args.self_attn_layers,
+        stack_mode=args.stack_mode,
+    ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     loss_fn = nn.BCEWithLogitsLoss()
     phase1_metrics = load_phase1_baseline_metrics(args.baseline_report)
     phase2_metrics = load_baseline_metrics(args.phase2_report)
+
+    steps_per_epoch = len(train_loader)
+    total_steps = args.epochs * steps_per_epoch
+    warmup_steps = args.warmup_steps
+    if warmup_steps is None and args.lr_schedule == "cosine":
+        warmup_steps = max(500, steps_per_epoch)
+    elif warmup_steps is None:
+        warmup_steps = 0
+    eta_min = args.eta_min if args.eta_min is not None else args.lr * 0.01
+    scheduler = build_lr_scheduler(
+        optimizer,
+        base_lr=args.lr,
+        lr_schedule=args.lr_schedule,
+        total_steps=total_steps,
+        warmup_steps=warmup_steps,
+        eta_min=eta_min,
+    )
 
     history: list[dict] = []
     best_score = -1.0
@@ -334,18 +439,39 @@ def main() -> int:
     print(f"Training {args.phase} on {device}", flush=True)
     print(f"  train samples: {train_size:,}", flush=True)
     print(f"  val samples:   {val_size:,}", flush=True)
-    print(f"  train batches/epoch: {len(train_loader)}", flush=True)
+    print(f"  train batches/epoch: {steps_per_epoch}", flush=True)
     print(f"  val batches/epoch:   {len(val_loader)}", flush=True)
+    if args.phase == "phase3":
+        print(
+            f"  attention depth: cross={args.cross_attn_layers} "
+            f"self={args.self_attn_layers} stack={args.stack_mode}",
+            flush=True,
+        )
+    if args.lr_schedule == "cosine":
+        print(
+            f"  lr schedule: cosine  warmup_steps={warmup_steps}  "
+            f"eta_min={eta_min:g}  total_steps={total_steps}",
+            flush=True,
+        )
 
     for epoch in range(1, args.epochs + 1):
         epoch_t0 = time.perf_counter()
-        train_loss = train_epoch(model, train_loader, optimizer, loss_fn, device, args.phase)
+        train_loss, epoch_lr = train_epoch(
+            model,
+            train_loader,
+            optimizer,
+            loss_fn,
+            device,
+            args.phase,
+            scheduler,
+        )
         val_metrics = evaluate(model, val_loader, loss_fn, device, top_k, args.phase)
         epoch_elapsed = time.perf_counter() - epoch_t0
 
         epoch_record = {
             "epoch": epoch,
             "train_bce_loss": train_loss,
+            "learning_rate": epoch_lr,
             **val_metrics,
         }
         if args.phase == "phase2":
@@ -371,6 +497,7 @@ def main() -> int:
                 f"  attn_d_top5={gain['top5_valid_rate']:+.4f}"
                 f"  attn_d_checks={gain['avg_checks_to_success']:+.3f}"
             )
+        lr_text = f"  lr={epoch_lr:.2e}" if args.lr_schedule == "cosine" else ""
         print(
             f"epoch {epoch:02d}  "
             f"train_bce={train_loss:.4f}  "
@@ -380,6 +507,7 @@ def main() -> int:
             f"topK={val_metrics['topk_valid_rate']:.4f}  "
             f"avg_checks={val_metrics['avg_checks_to_success']:.2f}  "
             f"epoch_time={epoch_elapsed:.1f}s"
+            f"{lr_text}"
             f"{gain_text}",
             flush=True,
         )
@@ -407,6 +535,9 @@ def main() -> int:
         "epochs": args.epochs,
         "batch_size": args.batch_size,
         "lr": args.lr,
+        "lr_schedule": args.lr_schedule,
+        "warmup_steps": warmup_steps if args.lr_schedule == "cosine" else 0,
+        "eta_min": eta_min if args.lr_schedule == "cosine" else None,
         "val_fraction": args.val_fraction,
         "seed": args.seed,
         "device": str(device),
@@ -415,6 +546,10 @@ def main() -> int:
         "phase2_report": str(args.phase2_report) if args.phase == "phase3" else None,
         "history": history,
     }
+    if args.phase == "phase3":
+        report["cross_attn_layers"] = args.cross_attn_layers
+        report["self_attn_layers"] = args.self_attn_layers
+        report["stack_mode"] = args.stack_mode
     if hasattr(model, "modulus_weight_table"):
         report["final_modulus_weights"] = model.modulus_weight_table()
     if args.phase == "phase2":

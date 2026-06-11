@@ -215,7 +215,15 @@ python train\train.py --phase phase2 --epochs 10 --batch-size 2048 --device cuda
 
 Pilot 在 top1 上略优（+0.5pp），但 batch=2048 的 BCE 收敛更平滑（epoch 3 后 train/val BCE 均稳定在 0.126 附近）。两种配置下 **topK 均保持 100%**，avg_checks 均显著低于 Phase 1。
 
-### 7.5 收敛性分析
+### 7.5 训练曲线（Stage 0 回溯，不重训）
+
+![Phase 2 train/val BCE](../figures/phase2_train_val_bce.png)
+
+![Phase 2 top1/top5 vs epoch](../figures/phase2_top1_top5_vs_epoch.png)
+
+数据来源：`results/phase2_bs2048/train_report.json`（batch=2048，10 epoch，固定 LR）。
+
+### 7.6 收敛性分析
 
 | 观察 | 结论 |
 |------|------|
@@ -226,7 +234,7 @@ Pilot 在 top1 上略优（+0.5pp），但 batch=2048 的 BCE 收敛更平滑（
 | avg_checks | 从 3.00 降至 2.90，**平均少检查 0.15 个候选** |
 | 模数权重 | 全部 32 个 \(w_j\) 仍为负，sieve 分支行为正常 |
 
-### 7.6 最终模数权重（epoch 10，batch=2048）
+### 7.7 最终模数权重（epoch 10，batch=2048）
 
 训练后 sieve 分支的模数权重仍为负，幅度较 Phase 1 小（联合训练中 residual 分担了部分排序压力）：
 
@@ -241,7 +249,7 @@ Pilot 在 top1 上略优（+0.5pp），但 batch=2048 的 BCE 收敛更平滑（
 
 全部 32 个模数权重均为负数，与数论筛法预期一致。
 
-### 7.7 分桶观察（best epoch 3）
+### 7.8 分桶观察（best epoch 3）
 
 | Bucket | N 范围（约） | topK | avg_checks | 样本数 |
 |--------|-------------|------|------------|--------|

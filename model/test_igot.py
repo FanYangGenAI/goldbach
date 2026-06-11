@@ -85,7 +85,41 @@ class TestIGOT(unittest.TestCase):
         )
         loss.backward()
         self.assertIsNotNone(model.attention_head.weight.grad)
-        self.assertIsNotNone(model.prime_mod_cross_attn.attention.q_proj.weight.grad)
+        self.assertIsNotNone(model.cross_attn_layers[0].attention.q_proj.weight.grad)
+
+    def test_multi_layer_sequential(self) -> None:
+        """sequential stack: C cross layers then L self layers."""
+        model = IGOTModel(
+            candidate_count=8,
+            modulus_count=4,
+            d_model=16,
+            num_heads=2,
+            cross_attn_layers=2,
+            self_attn_layers=3,
+            stack_mode="sequential",
+        )
+        self.assertEqual(len(model.cross_attn_layers), 2)
+        self.assertEqual(len(model.self_attn_layers), 3)
+        even, bits, mods, density = self._sample_batch(batch_size=1)
+        outputs = model(even, bits, mods, density)
+        self.assertEqual(tuple(outputs["final_logits"].shape), (1, 8))
+        self.assertFalse(torch.isnan(outputs["final_logits"]).any())
+
+    def test_paired_stack(self) -> None:
+        """paired stack: L times (cross -> self) units."""
+        model = IGOTModel(
+            candidate_count=8,
+            modulus_count=4,
+            d_model=16,
+            num_heads=2,
+            cross_attn_layers=2,
+            self_attn_layers=2,
+            stack_mode="paired",
+        )
+        even, bits, mods, density = self._sample_batch(batch_size=1)
+        outputs = model(even, bits, mods, density, return_attention=True)
+        self.assertEqual(tuple(outputs["cross_attn_weights"].shape)[-2:], (8, 4))
+        self.assertFalse(torch.isnan(outputs["final_logits"]).any())
 
 
 if __name__ == "__main__":
