@@ -67,7 +67,7 @@ p_i > N - 3  ⇒  logit_i = -1e4，BCE loss 中 mask 掉该位置
 | F-1 出口层 mask | **通过** |
 | bucket 1 交叉校验 | **通过**（§3.3） |
 | F-1b attention 内部污染 | **已立项**，见 `docs/wpf_f2_f1b_report.md` |
-| m≤0 取模审计关闭 | 随 **F-1b key-padding mask** 正式豁免（乱码 token 从注意力剔除） |
+| m≤0 取模审计豁免 | **正式关闭**（F-1 + F-1b + **F-1c**，见 `wpf_f1c_report.md` §4） |
 
 ## 5. 结论
 

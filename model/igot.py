@@ -235,6 +235,7 @@ class IGOTModel(nn.Module):
             even_numbers,
             sieve_matrix,
             global_context,
+            prime_eligibility,
         )  # [B, M, d]
 
         # --- Step 4: configurable cross/self attention stack ---

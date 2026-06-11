@@ -49,12 +49,11 @@ def compute_sieve_matrix(
     candidate_primes: torch.Tensor,
     modulus_bases: torch.Tensor,
 ) -> torch.Tensor:
-    """Compute sieve indicators z[b, i, j].
+    """Raw divisibility indicators (before F-2 bypass and eligibility).
 
-    计算筛法指示矩阵 z[b, i, j]。
+    原始整除事实矩阵；下游消费者应使用 `build_sieve_matrix` 作为单一事实源。
 
     z[b, i, j] = 1 iff (N - p_i) is divisible by modulus r_j.
-    当且仅当偏移量 (N - p_i) 能被模数 r_j 整除时，z[b, i, j] = 1。
 
     Shapes / 张量形状:
         even_numbers:     [B]
@@ -92,6 +91,25 @@ def apply_small_prime_sieve_bypass(
         is_small_prime_offset |= offsets == int(modulus)
     keep = (~is_small_prime_offset).unsqueeze(-1).to(dtype=sieve_matrix.dtype)
     return sieve_matrix * keep
+
+
+def build_sieve_matrix(
+    even_numbers: torch.Tensor,
+    candidate_primes: torch.Tensor,
+    modulus_bases: torch.Tensor,
+) -> torch.Tensor:
+    """Effective sieve matrix shared by sieve / residual / token consumers.
+
+    Semantics: z is a **sieve-kill flag**, not a raw divisibility fact (F-2 bypass
+    clears rows where m is a small prime in the modulus basis).
+    """
+    raw = compute_sieve_matrix(even_numbers, candidate_primes, modulus_bases)
+    return apply_small_prime_sieve_bypass(
+        raw,
+        even_numbers,
+        candidate_primes,
+        modulus_bases,
+    )
 
 
 class ExplicitSieveModule(nn.Module):
@@ -132,13 +150,7 @@ class ExplicitSieveModule(nn.Module):
         """
         # Step 1: build z[b, k, m] from N and fixed prime/modulus tables.
         # 步骤 1：由 N 和固定素数表构建筛法矩阵
-        sieve_matrix = compute_sieve_matrix(
-            even_numbers,
-            self.candidate_primes,
-            self.modulus_bases,
-        )
-        sieve_matrix = apply_small_prime_sieve_bypass(
-            sieve_matrix,
+        sieve_matrix = build_sieve_matrix(
             even_numbers,
             self.candidate_primes,
             self.modulus_bases,

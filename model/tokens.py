@@ -13,6 +13,19 @@ import torch
 import torch.nn as nn
 
 
+def compute_elimination_stats(
+    sieve_matrix: torch.Tensor,
+    eligibility_mask: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Per-modulus elimination counts/rates aggregated over eligible candidates only."""
+    mask = eligibility_mask.unsqueeze(-1).to(dtype=sieve_matrix.dtype)
+    eligible_z = sieve_matrix * mask
+    eliminated_count = eligible_z.sum(dim=1)
+    eligible_count = eligibility_mask.sum(dim=1).clamp_min(1).to(dtype=sieve_matrix.dtype)
+    elimination_rate = eliminated_count / eligible_count.unsqueeze(-1)
+    return eliminated_count, elimination_rate
+
+
 class PrimeTokenBuilder(nn.Module):
     """Build per-candidate prime tokens [B, K, d_model].
 
@@ -151,6 +164,7 @@ class ModulusTokenBuilder(nn.Module):
         even_numbers: torch.Tensor,
         sieve_matrix: torch.Tensor,
         global_context: torch.Tensor,
+        eligibility_mask: torch.Tensor,
     ) -> torch.Tensor:
         """Return modulus tokens [B, M, d_model]."""
         batch_size = even_numbers.shape[0]
@@ -165,11 +179,12 @@ class ModulusTokenBuilder(nn.Module):
             residue_features.append(embedding(n_mod[:, index]).unsqueeze(1))
         residue_tensor = torch.cat(residue_features, dim=1)  # [B, M, 8]
 
-        # --- Step 2: elimination statistics from sieve matrix z[b,k,m] ---
-        # --- 步骤 2：从筛法矩阵统计每个模数淘汰了多少候选 ---
-        eliminated_count = sieve_matrix.sum(dim=1)  # [B, M]
-        candidate_count = sieve_matrix.shape[1]
-        elimination_rate = eliminated_count / float(candidate_count)
+        # --- Step 2: elimination stats from eligible candidates only (F-1c) ---
+        # --- 步骤 2：仅在合法候选上聚合淘汰统计 ---
+        eliminated_count, elimination_rate = compute_elimination_stats(
+            sieve_matrix,
+            eligibility_mask,
+        )
 
         # --- Step 3: modulus id + fourier + global context ---
         # --- 步骤 3：模数 id + 傅里叶特征 + 全局上下文 ---

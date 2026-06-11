@@ -5,21 +5,28 @@
 
 ---
 
-## F-2：m = r_j 小素数边界旁路
+## F-2：m = r_j 小素数边界旁路（方案甲：单一事实源）
+
+### 设计声明
+
+采用 **方案甲**：`build_sieve_matrix()` 在 raw 整除矩阵上应用 F-2 旁路，作为 **唯一** 对外 `z`。
+
+- sieve / residual / prime token / modulus 淘汰统计 **共用同一份** `sieve_outputs["sieve_matrix"]`
+- `z` 语义 = **筛杀标志**，非原始整除事实
+- m = r_j 候选在可学习模型中为普通幸存者；NULL-0 给 p̂ = 1 属确定性窗口，Phase 4R 不对齐为异常
 
 ### 实现
 
-当 `m = N - p_i ∈ {r_1, …, r_M}` 时，该候选为素数，**不得**因 `m % r_j == 0` 被筛惩罚。
-
 | 文件 | 改动 |
 |------|------|
-| `model/sieve_baseline.py` | `apply_small_prime_sieve_bypass`：将对应 sieve 行置零 |
+| `model/sieve_baseline.py` | `build_sieve_matrix()` 单一事实源 |
 | `generator/python/test_labeling.py` | 断言 modulus 基偏移 `valid_mask = 1` |
 
 ### 验收
 
-- `test_small_prime_bypass_clears_sieve_row`：N=10, p=7, m=3 时 raw z 行非零、bypass 后为零
-- `test_modulus_base_offsets_are_valid`：标签生成端 m=r_j 均为 1
+- `test_small_prime_bypass_clears_sieve_row`
+- `test_modulus_base_offsets_are_valid`
+- `test_phase2_uses_bypassed_sieve_matrix` / `test_phase3_uses_bypassed_sieve_matrix`
 
 ---
 
@@ -38,11 +45,12 @@ F-1 仅在 `final_logits` 出口压死非法位；IGOT 中非法 prime token 仍
 | `PrimeModulusCrossAttention` | cross 后清零 ineligible 行（modulus K/V 仍干净） |
 | `igot.py` | 将 `eligibility_mask` 传入 attention stack |
 
-### m≤0 取模审计关闭方式（专家尾巴二）
+### m≤0 取模审计豁免（有条件 → F-1c 后正式关闭）
 
-选用 **key-padding mask (a)**：非法 token 整体从 self-attention 剔除，乱码 z 特征不再经 K/V 泄漏。
-
-**正式结论**：§5.1 负数取模审计项在出口 + 注意力双路径封堵后 **豁免关闭**；无需另补 m≤0 单测（F-1 已有 N∈{6,8,10,100} 出口层测试）。
+| 阶段 | 状态 |
+|------|------|
+| F-1b 初稿 | 有条件豁免（modulus 淘汰统计路径未验证） |
+| **F-1c 完成后** | **正式豁免**，见 `docs/wpf_f1c_report.md` §4 |
 
 ### 验收
 
