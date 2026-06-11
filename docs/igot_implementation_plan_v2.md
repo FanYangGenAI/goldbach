@@ -200,12 +200,24 @@ else            → p̂ = min(0.999, e^γ · ln(r_M) / ln(m))
 | GPU | 0（数据生成 CPU，3–8 h/一夜） |
 | 磁盘 | ~1M × 85B ≈ 85 MB 数据 + manifest |
 
-### 3.5 阶段结果（实施后填写）
+### 3.5 阶段结果
 
-> 完成时间：____  
-> P0 结果：____  
-> v3 manifest SHA：____  
-> 遗留问题：____
+#### N-2 NULL-0 / NULL-1（2026-06-11，**已关账**）
+
+| 项 | 状态 |
+|----|------|
+| 代码 | `model/null_model.py`、`tools/eval_null_model.py`、`tools/shuffle_survivor_analysis.py` |
+| 单元测试 | 8/8 通过 |
+| 实验报告 | `docs/null_model_verification.md` |
+| 原始 JSON | `results/null/eval_report.json`、`results/null/shuffle_survivor_report.json` |
+| 图表 | `docs/figures/null_shuffle_top1_dist.png` |
+| NULL-0 水平线 | top1=**42.91%**, BCE=**0.1259**（与 Phase 3 BCE=0.1258 打平） |
+| NULL-1 修正 | 排序继承 NULL-0 座次；tie-breaking 0.82pp 伪影已消除 |
+| shuffle 标定 | top1 std≈**0.41pp**；Phase 3 44.63% 高于 100 次 shuffle 最大值 44.33% |
+| P0 | **带着剧本的部分通过**（见报告 §3.3） |
+| 下一步 | **WP-F** → checks 重评 → **P1b**；N-1 v3 可并行 |
+
+> v3 manifest SHA：待 N-1
 
 ---
 
