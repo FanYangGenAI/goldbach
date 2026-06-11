@@ -5,6 +5,7 @@ from __future__ import annotations
 MAGIC = 0x47424B48  # "GBKH"
 VERSION = 1
 VERSION_V2 = 2
+VERSION_V3 = 3
 HEADER_SIZE = 64
 SAMPLE_SIZE = 26
 VALID_MASK_BYTES = 63  # ceil(500 / 8)
@@ -104,3 +105,18 @@ PHASE2_BUCKET_TARGETS: dict[int, int] = {
     18: 7_916_667,
 }
 assert sum(PHASE2_BUCKET_TARGETS.values()) == PHASE2_TOTAL
+
+# IGOT v3: train / val / test splits (WP-N N-1).
+V3_SPLIT_NAMES: tuple[str, ...] = ("train", "val", "test")
+V3_SPLIT_IDS: dict[str, int] = {"train": 0, "val": 1, "test": 2}
+V3_SPLIT_COUNTS: dict[str, int] = {
+    "train": 450_000,
+    "val": 50_000,
+    "test": 500_000,
+}
+V3_TOTAL = sum(V3_SPLIT_COUNTS.values())
+V3_SPLIT_RATIOS: dict[str, float] = {
+    name: count / V3_TOTAL for name, count in V3_SPLIT_COUNTS.items()
+}
+# Master seed for hash-based N -> split assignment (independent of per-bucket sampling RNG).
+V3_ASSIGNMENT_SEED = 2026_06_11

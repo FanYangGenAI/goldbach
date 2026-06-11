@@ -17,6 +17,7 @@ from constants import (
     VALID_MASK_BYTES,
     VERSION,
     VERSION_V2,
+    VERSION_V3,
 )
 from labeling import compute_valid_mask_default
 from primes import compute_modulo_features
@@ -126,6 +127,8 @@ class DatasetHeader:
     sample_count: int
     feature_flags: int
     header_crc32: int
+    split_id: int | None = None
+    dedup_hash: int | None = None
 
     @classmethod
     def from_bytes(cls, data: bytes) -> "DatasetHeader":
@@ -134,22 +137,30 @@ class DatasetHeader:
         magic, version, sample_count, feature_flags, header_crc32 = struct.unpack(
             "<IIQQI", data[:28]
         )
+        split_id: int | None = None
+        dedup_hash: int | None = None
+        if version == VERSION_V3:
+            if len(data) < 40:
+                raise ValueError("v3 header is too short")
+            split_id, dedup_hash = struct.unpack("<IQ", data[28:40])
         return cls(
             magic=magic,
             version=version,
             sample_count=sample_count,
             feature_flags=feature_flags,
             header_crc32=header_crc32,
+            split_id=split_id,
+            dedup_hash=dedup_hash,
         )
 
 
-SUPPORTED_VERSIONS = (VERSION, VERSION_V2)
+SUPPORTED_VERSIONS = (VERSION, VERSION_V2, VERSION_V3)
 
 
 def sample_size_for_version(version: int) -> int:
     if version == VERSION:
         return SAMPLE_SIZE
-    if version == VERSION_V2:
+    if version in (VERSION_V2, VERSION_V3):
         return SAMPLE_SIZE_V2
     raise ValueError(f"Unsupported dataset version: {version}")
 
@@ -158,12 +169,21 @@ def build_header(
     sample_count: int,
     feature_flags: int = 0,
     version: int = VERSION,
+    *,
+    split_id: int | None = None,
+    dedup_hash: int | None = None,
 ) -> bytes:
     if version not in SUPPORTED_VERSIONS:
         raise ValueError(f"Unsupported dataset version: {version}")
     body = struct.pack("<IIQQ", MAGIC, version, sample_count, feature_flags)
     crc = zlib.crc32(body) & 0xFFFFFFFF
-    header = body + struct.pack("<I", crc) + bytes(36)
+    if version == VERSION_V3:
+        if split_id is None or dedup_hash is None:
+            raise ValueError("v3 header requires split_id and dedup_hash")
+        header = body + struct.pack("<I", crc) + struct.pack("<IQ", split_id, dedup_hash)
+        header += bytes(HEADER_SIZE - len(header))
+    else:
+        header = body + struct.pack("<I", crc) + bytes(HEADER_SIZE - len(body) - 4)
     if len(header) != HEADER_SIZE:
         raise RuntimeError(f"Unexpected header size: {len(header)}")
     return header

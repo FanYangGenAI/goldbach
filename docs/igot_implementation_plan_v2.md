@@ -92,7 +92,7 @@ Phase 1–3 的架构搜索表明：在模余特征给定条件下，top1 全部
 
 ### 3.2 任务清单
 
-#### N-1 数据集 v3 生成
+#### N-1 数据集 v3 生成（**进行中**）
 
 | 项 | 规格 |
 |----|------|
@@ -130,14 +130,15 @@ data/goldbach_manifest_v3.json
 ```powershell
 $env:PYTHONUNBUFFERED=1
 .\.venv\Scripts\Activate.ps1
-pip install gmpy2
 
-# 一夜批量生成（按 split 顺序执行，各 split 独立 seed）
-python generator\python\generate.py --phase phase0 --format v3 --split train --count 450000 --workers 8
-python generator\python\generate.py --phase phase0 --format v3 --split val   --count 50000  --workers 8
-python generator\python\generate.py --phase phase0 --format v3 --split test  --count 500000 --workers 8
+# 一键生成三 split + manifest（正式 1M）
+python tools\generate_v3_dataset.py --workers 8 --progress-every 50000
 
-python tools\verify_dataset.py --manifest data\goldbach_manifest_v3.json --audit-splits
+# 冒烟（1000 条）
+python tools\generate_v3_dataset.py --smoke --workers 2
+
+# 验收闸门（附录 C 1/2/5/6）
+python tools\v3_data_audit.py
 ```
 
 **降级**：若 test 生成超时，test 降至 200,000（SE ≈ 0.11pp，仍可用）。
@@ -190,7 +191,7 @@ else            → p̂ = min(0.999, e^γ · ln(r_M) / ln(m))
 | N-B | NULL-0 单元测试全绿 | `python -m unittest model.test_null_model` |
 | N-C | **P0**：旧 9,999 val 上 NULL-0 与 Phase 2/3 最优 top1/top5/checks 差 ≤ 1pp/1pp/0.1 | `docs/null_model_verification.md` |
 | N-D | NULL-1 BCE ≤ 0.127（旧 val） | 同上 |
-| N-E | `train.py` 已切换 val BCE 选点 | 代码审查 + 冒烟训练 |
+| N-E | `train.py` 已切换 val BCE 选点 | **已实施**（`--select-metric val_bce`，默认） |
 
 ### 3.4 预估资源
 

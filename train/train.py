@@ -214,6 +214,10 @@ def save_checkpoint(
     epoch: int,
     metrics: dict,
     phase: str,
+    *,
+    cross_attn_layers: int | None = None,
+    self_attn_layers: int | None = None,
+    stack_mode: str | None = None,
 ) -> None:
     """Save model, optimizer, and validation metrics."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -224,9 +228,39 @@ def save_checkpoint(
         "optimizer_state_dict": optimizer.state_dict(),
         "metrics": metrics,
     }
+    if cross_attn_layers is not None:
+        payload["cross_attn_layers"] = cross_attn_layers
+    if self_attn_layers is not None:
+        payload["self_attn_layers"] = self_attn_layers
+    if stack_mode is not None:
+        payload["stack_mode"] = stack_mode
     if hasattr(model, "modulus_weight_table"):
         payload["modulus_weights"] = model.modulus_weight_table()
     torch.save(payload, path)
+
+
+def resolve_dataset_paths(
+    *,
+    dataset: str,
+    data: Path | None,
+    val_data: Path | None,
+    root: Path,
+) -> tuple[Path, Path | None]:
+    """Resolve train/val file paths for v2 (single file + random split) or v3 splits."""
+    if dataset == "v3":
+        train_path = data or root / "data" / "goldbach_train_v3_train.bin"
+        val_path = val_data or root / "data" / "goldbach_train_v3_val.bin"
+        return train_path, val_path
+    train_path = data or root / "data" / "goldbach_train_v2_phase0.bin"
+    return train_path, None
+
+
+def _checkpoint_score(metrics: dict, select_metric: str) -> float:
+    if select_metric == "val_bce":
+        return -metrics["bce_loss"]
+    if select_metric == "val_top1":
+        return metrics["top1_valid_rate"]
+    raise ValueError(f"Unknown select_metric: {select_metric}")
 
 
 def load_baseline_metrics(path: Path | None) -> dict | None:
@@ -315,7 +349,31 @@ def parse_args() -> argparse.Namespace:
         default="phase1",
         help="phase1: sieve; phase2: sieve+residual; phase3: full IGOT",
     )
-    parser.add_argument("--data", type=Path, default=root / "data" / "goldbach_train_v2_phase0.bin")
+    parser.add_argument(
+        "--dataset",
+        choices=("v2", "v3"),
+        default="v2",
+        help="v2: single file + random val split; v3: dedicated train/val files",
+    )
+    parser.add_argument("--data", type=Path, default=None, help="Train dataset .bin path")
+    parser.add_argument(
+        "--val-data",
+        type=Path,
+        default=None,
+        help="Validation dataset .bin path (v3 only)",
+    )
+    parser.add_argument(
+        "--select-metric",
+        choices=("val_bce", "val_top1"),
+        default="val_bce",
+        help="Checkpoint selection metric (F-4 uses val_bce)",
+    )
+    parser.add_argument(
+        "--seeds",
+        type=str,
+        default=None,
+        help="Comma-separated training seeds (e.g. 0,1,2,3,4); runs sequentially",
+    )
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument(
         "--baseline-report",
@@ -382,32 +440,47 @@ def resolve_device(name: str) -> torch.device:
     return torch.device(name)
 
 
-def main() -> int:
-    args = parse_args()
-    if not args.data.exists():
-        print(f"Dataset not found: {args.data}", file=sys.stderr)
+def _parse_seed_list(seed_text: str | None, default_seed: int) -> list[int]:
+    if not seed_text:
+        return [default_seed]
+    return [int(part.strip()) for part in seed_text.split(",") if part.strip()]
+
+
+def train_single_run(args: argparse.Namespace, *, run_seed: int, output_dir: Path) -> int:
+    root = _repo_root()
+    train_path, val_path = resolve_dataset_paths(
+        dataset=args.dataset,
+        data=args.data,
+        val_data=args.val_data,
+        root=root,
+    )
+    if not train_path.exists():
+        print(f"Dataset not found: {train_path}", file=sys.stderr)
+        return 1
+    if val_path is not None and not val_path.exists():
+        print(f"Validation dataset not found: {val_path}", file=sys.stderr)
         return 1
 
-    if args.output_dir is None:
-        args.output_dir = _repo_root() / "results" / args.phase
-
-    # Fix random seed for reproducible train/val split and initialization.
-    # 固定随机种子，保证划分与初始化可复现
-    torch.manual_seed(args.seed)
+    torch.manual_seed(run_seed)
     device = resolve_device(args.device)
 
-    dataset = GoldbachBinDataset(args.data)
-    top_k = dataset.candidate_count or 500
+    train_dataset = GoldbachBinDataset(train_path)
+    top_k = train_dataset.candidate_count or 500
 
-    # 90/10 train-validation split (same seed as Phase 1 for fair comparison).
-    # 90/10 训练验证划分（与 Phase 1 相同 seed，便于公平对比）
-    val_size = max(1, int(len(dataset) * args.val_fraction))
-    train_size = len(dataset) - val_size
-    train_set, val_set = random_split(
-        dataset,
-        [train_size, val_size],
-        generator=torch.Generator().manual_seed(args.seed),
-    )
+    if val_path is not None:
+        val_dataset = GoldbachBinDataset(val_path)
+        train_set = train_dataset
+        val_set = val_dataset
+        train_size = len(train_set)
+        val_size = len(val_set)
+    else:
+        val_size = max(1, int(len(train_dataset) * args.val_fraction))
+        train_size = len(train_dataset) - val_size
+        train_set, val_set = random_split(
+            train_dataset,
+            [train_size, val_size],
+            generator=torch.Generator().manual_seed(run_seed),
+        )
 
     train_loader = DataLoader(
         train_set,
@@ -454,9 +527,13 @@ def main() -> int:
     best_score = -1.0
     started = time.perf_counter()
 
-    print(f"Training {args.phase} on {device}", flush=True)
+    print(f"Training {args.phase} on {device} (seed={run_seed})", flush=True)
+    print(f"  train data:    {train_path}", flush=True)
+    if val_path is not None:
+        print(f"  val data:      {val_path}", flush=True)
     print(f"  train samples: {train_size:,}", flush=True)
     print(f"  val samples:   {val_size:,}", flush=True)
+    print(f"  select metric: {args.select_metric}", flush=True)
     print(f"  train batches/epoch: {steps_per_epoch}", flush=True)
     print(f"  val batches/epoch:   {len(val_loader)}", flush=True)
     if args.phase == "phase3":
@@ -530,16 +607,34 @@ def main() -> int:
             flush=True,
         )
 
-        # Checkpoint by top1_valid_rate (primary ranking quality metric).
-        # 以 top1_valid_rate 作为最优模型选择标准
-        score = val_metrics["top1_valid_rate"]
+        score = _checkpoint_score(val_metrics, args.select_metric)
         if score >= best_score:
             best_score = score
-            save_checkpoint(args.output_dir / "best.pt", model, optimizer, epoch, val_metrics, args.phase)
+            save_checkpoint(
+                output_dir / "best.pt",
+                model,
+                optimizer,
+                epoch,
+                val_metrics,
+                args.phase,
+                cross_attn_layers=args.cross_attn_layers if args.phase == "phase3" else None,
+                self_attn_layers=args.self_attn_layers if args.phase == "phase3" else None,
+                stack_mode=args.stack_mode if args.phase == "phase3" else None,
+            )
 
     elapsed = time.perf_counter() - started
     final_metrics = history[-1]
-    save_checkpoint(args.output_dir / "last.pt", model, optimizer, args.epochs, final_metrics, args.phase)
+    save_checkpoint(
+        output_dir / "last.pt",
+        model,
+        optimizer,
+        args.epochs,
+        final_metrics,
+        args.phase,
+        cross_attn_layers=args.cross_attn_layers if args.phase == "phase3" else None,
+        self_attn_layers=args.self_attn_layers if args.phase == "phase3" else None,
+        stack_mode=args.stack_mode if args.phase == "phase3" else None,
+    )
 
     phase_labels = {
         "phase1": "phase1_sieve_baseline",
@@ -549,7 +644,9 @@ def main() -> int:
     report = {
         "phase": phase_labels[args.phase],
         "model_phase": args.phase,
-        "data": str(args.data),
+        "dataset": args.dataset,
+        "data": str(train_path),
+        "val_data": str(val_path) if val_path is not None else None,
         "epochs": args.epochs,
         "batch_size": args.batch_size,
         "lr": args.lr,
@@ -557,7 +654,8 @@ def main() -> int:
         "warmup_steps": warmup_steps if args.lr_schedule == "cosine" else 0,
         "eta_min": eta_min if args.lr_schedule == "cosine" else None,
         "val_fraction": args.val_fraction,
-        "seed": args.seed,
+        "seed": run_seed,
+        "select_metric": args.select_metric,
         "device": str(device),
         "elapsed_seconds": round(elapsed, 3),
         "baseline_report": str(args.baseline_report) if args.phase == "phase2" else None,
@@ -575,13 +673,13 @@ def main() -> int:
     if args.phase == "phase3":
         report["final_attention_gain"] = compute_attention_gain(final_metrics, phase2_metrics)
 
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    report_path = args.output_dir / "train_report.json"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report_path = output_dir / "train_report.json"
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
     print()
     print("Training complete.")
-    print(f"  best checkpoint: {args.output_dir / 'best.pt'}")
+    print(f"  best checkpoint: {output_dir / 'best.pt'}")
     print(f"  report:          {report_path}")
     print(f"  elapsed:         {elapsed:.1f}s")
     if args.phase == "phase2" and report.get("final_residual_gain"):
@@ -601,6 +699,20 @@ def main() -> int:
         print(f"  checks: {gain['avg_checks_to_success']:+.3f}")
         print(f"  bce:    {gain['bce_loss']:+.4f}")
     return 0
+
+
+def main() -> int:
+    args = parse_args()
+    seeds = _parse_seed_list(args.seeds, args.seed)
+    base_output = args.output_dir or (_repo_root() / "results" / args.phase)
+
+    exit_code = 0
+    for run_seed in seeds:
+        output_dir = base_output / f"seed_{run_seed}" if len(seeds) > 1 else base_output
+        result = train_single_run(args, run_seed=run_seed, output_dir=output_dir)
+        if result != 0:
+            exit_code = result
+    return exit_code
 
 
 if __name__ == "__main__":
