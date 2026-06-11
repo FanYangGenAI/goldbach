@@ -225,7 +225,8 @@ else            → p̂ = min(0.999, e^γ · ln(r_M) / ln(m))
 
 > **科学目标**：消除阻碍公平比较与机制归因的三类管线缺陷。  
 > **硬性闸门**：§4.3 完成前不得启动 Phase 4R。  
-> **可与 WP-N 并行**。
+> **修复部分关账**：见 `wpf_summary.md`（F-1 / F-1b / F-1c / F-2 ✓）。  
+> **F-4 设计**：见 `wpf_f4_design.md`。
 
 ### 4.1 任务清单
 
@@ -352,7 +353,9 @@ python train\train.py --phase phase1 --dataset v3 --seeds 0,1,2,3,4 `
 | 测试 | `model/test_tokens.py`（N=100 + Phase 2/3 z 版本断言） |
 | 报告 | `docs/wpf_f1c_report.md` |
 | m≤0 取模审计 | **正式豁免关闭**（四层封堵齐备） |
-| 下一步 | **F-4** 回归重训 |
+| 下一步 | **F-4**（见 `wpf_f4_design.md`） |
+
+> **WP-F 修复关账**：`docs/wpf_summary.md` · **F-4 预注册**：`docs/wpf_f4_design.md`
 
 > F-3（Null-anchored Δ）仍排在 Phase 4R 前；F-4 前不必单独再训一轮
 
