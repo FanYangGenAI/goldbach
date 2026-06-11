@@ -115,22 +115,36 @@ build_sieve_matrix() = compute_sieve_matrix(raw) + apply_small_prime_sieve_bypas
 
 | # | 移交项 | 责任方 | 截止 |
 |---|--------|--------|------|
-| 1 | **F-4 回归重训**（见 `wpf_f4_design.md`） | WP-F | v3 就绪后正式批；可先 v2 冒烟 |
+| 1 | **F-4 回归重训**（见 `wpf_f4_design.md`） | WP-F | F-4a v2 对照批；v3 就绪后 F-4b 正式批 |
 | 2 | **P0 checks 子项重评**（checks 项，post F-4） | WP-C | F-4 完成后 |
 | 3 | **P1b 冠军复测** | WP-C | **必须在 v3 上**；与 F-4 正式批合并 |
-| 4 | **NULL-0 v1.1 确定性窗口交叉验证** | WP-N / WP-C | **M-scaling 标尺跑之前** |
+| 4 | **NULL-0 v1.1 确定性窗口实现与回归** | WP-N / WP-C | **M-scaling 标尺跑之前** |
 | 5 | **F-3 Null-anchored Δ** | WP-F | Phase 4R 启动前 |
 
-### 移交项 4 说明：NULL-0 v1.1 确定性窗口
+### 移交项 4 说明：NULL-0 v1.1 确定性窗口（**尚未实现**）
 
-当前 NULL-0 已对 `m ∈ {r_1,…,r_M}` 设 p̂ = 1；可学习管线经 F-2 对同行 z 旁路。  
-在 **M-scaling 标尺**（WP-C 标尺二）开跑前，须完成一次书面交叉验证：
+**与 v1.0 的区分**：v1.0 已对 `m ∈ {r_1,…,r_M}`（m 本身是基底小素数）设 p̂ = 1——该分支已实现且经 N-2 验收。**v1.1 是新增规则**，不是对既有分支的复核：
 
-- NULL-0 在 `m = r_j` 的 p̂ / logit 与标签 `valid_mask` 一致率；
-- `build_sieve_matrix` 旁路后 z 行全零与 NULL-0 筛杀语义一致；
-- 记录于 `docs/null_model_verification.md` 增补节（或 `null_model_v11_window.md`）。
+```text
+幸存者（z 行全零）且 3 ≤ m < r_M²  ⇒  p̂ = 1
+```
 
-此项不阻塞 F-4 冒烟，但 **阻塞 M-scaling 正式标尺**。
+| M | r_M | 窗口上界 r_M² |
+|---|-----|---------------|
+| 32 | 137 | 18,769 |
+| 1229 | （M-scaling 档） | ~10⁸ |
+
+交付 **(1)+(2)** 通过后可启用 P1b 的 v1.1 裁决；交付 **(3)** 为 M-scaling 专用闸门。在 **M-scaling 标尺**（WP-C 标尺二）开跑前，须完成以下 **三项**：
+
+| # | 交付物 | 内容 |
+|---|--------|------|
+| (1) | **窗口实现** | `model/null_model.py` 实现 v1.1 规则；单测覆盖窗口内/外边界 |
+| (2) | **v1.0 vs v1.1 回归对照** | 旧 val（9,999 条）上逐桶 top1 / BCE / checks 差异表；小 N 桶预期有系统性偏移 |
+| (3) | **M-scaling P2 预测表重算** | 标尺二各 M 档的解析预测用 v1.1 重算并归档 |
+
+记录于 `docs/null_model_verification.md` 增补节（或独立 `null_model_v11_window.md`）。
+
+此项不阻塞 F-4a；**(1)+(2)** 完成前 P1b 用 v1.0，完成后可切换 v1.1（见 `wpf_f4_design.md` §3.6）。**(3)** 不阻塞 P1b，仅 **阻塞 M-scaling 正式标尺**。
 
 ---
 
