@@ -355,9 +355,11 @@ python train\train.py --phase phase1 --dataset v3 --seeds 0,1,2,3,4 `
 | m≤0 取模审计 | **正式豁免关闭**（四层封堵齐备） |
 | 下一步 | **F-4**（见 `wpf_f4_design.md`） |
 
-> **WP-F 修复关账**：`docs/wpf_summary.md` · **F-4 预注册**：`docs/wpf_f4_design.md`
+> **WP-F 修复关账**：`docs/wpf_summary.md` · **F-4 预注册（v0.3 放行）**：`docs/wpf_f4_design.md`（commit `7b3d2cc`）
 
 > F-3（Null-anchored Δ）仍排在 Phase 4R 前；F-4 前不必单独再训一轮
+
+**F-4 开工顺序**（见 `wpf_f4_design.md` §5）：N-1 数据生成（CPU）→ v3 审计闸门 → F-4a v2 对照批（可与 N-1 并行）→ F-4b + P1b。F-4b 开跑前在 `wpf_f4_design.md` §7 填入 `NULL-0_ref` 版本与 commit hash。§2.1 多种子时先对种子取均值再套三级规则（见该文档实施笔记）。
 
 ---
 
