@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 
 from number_encoder import NumberEncoder
-from sieve_baseline import ExplicitSieveModule
+from sieve_baseline import ExplicitSieveModule, apply_eligibility_mask
 
 
 class SieveResidualModel(nn.Module):
@@ -136,12 +136,18 @@ class SieveResidualModel(nn.Module):
         # --- Step 5: additive decomposition (core IGOT design) ---
         # --- 步骤 5：可解释加法分解（IGOT 核心设计） ---
         final_logits = sieve_logits + residual_logits
+        final_logits = apply_eligibility_mask(
+            final_logits,
+            even_numbers,
+            self.sieve_module.candidate_primes,
+        )
 
         return {
             "final_logits": final_logits,
             "sieve_logits": sieve_logits,
             "residual_logits": residual_logits,
             "sieve_matrix": sieve_matrix,
+            "eligibility_mask": sieve_outputs["eligibility_mask"],
         }
 
     def modulus_weight_table(self) -> list[tuple[int, float]]:

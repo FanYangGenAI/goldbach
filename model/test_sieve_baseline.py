@@ -13,7 +13,12 @@ _MODEL_ROOT = Path(__file__).resolve().parent
 if str(_MODEL_ROOT) not in sys.path:
     sys.path.insert(0, str(_MODEL_ROOT))
 
-from sieve_baseline import ExplicitSieveModule, compute_sieve_matrix  # noqa: E402
+from sieve_baseline import (  # noqa: E402
+    INELIGIBLE_LOGIT,
+    ExplicitSieveModule,
+    compute_eligibility_mask,
+    compute_sieve_matrix,
+)
 
 
 class TestExplicitSieve(unittest.TestCase):
@@ -30,6 +35,37 @@ class TestExplicitSieve(unittest.TestCase):
         even = torch.tensor([100, 204], dtype=torch.int64)
         outputs = model(even)
         self.assertEqual(tuple(outputs["sieve_logits"].shape), (2, 16))
+
+    def test_eligibility_masks_small_n(self) -> None:
+        model = ExplicitSieveModule(candidate_count=500, modulus_count=32)
+        for even_value in (6, 8, 10, 100):
+            even = torch.tensor([even_value], dtype=torch.int64)
+            outputs = model(even)
+            eligible = compute_eligibility_mask(even, model.candidate_primes)[0]
+            logits = outputs["sieve_logits"][0]
+            for index, is_eligible in enumerate(eligible.tolist()):
+                if is_eligible:
+                    self.assertGreater(logits[index].item(), INELIGIBLE_LOGIT / 10)
+                else:
+                    self.assertAlmostEqual(logits[index].item(), INELIGIBLE_LOGIT, places=1)
+
+    def test_sieve_matrix_offsets_for_small_n(self) -> None:
+        model = ExplicitSieveModule(candidate_count=500, modulus_count=32)
+        even_values = torch.tensor([6, 8, 10, 100], dtype=torch.int64)
+        matrix = compute_sieve_matrix(
+            even_values,
+            model.candidate_primes,
+            model.modulus_bases,
+        )
+        offsets = even_values.unsqueeze(1) - model.candidate_primes.unsqueeze(0)
+        # Negative offsets must not be treated as eligible by the model forward path.
+        outputs = model(even_values)
+        for row, n_value in enumerate(even_values.tolist()):
+            ineligible = offsets[row] < 3
+            if ineligible.any():
+                self.assertTrue(torch.all(outputs["sieve_logits"][row, ineligible] <= INELIGIBLE_LOGIT / 10))
+            self.assertEqual(matrix[row].shape[0], model.candidate_count)
+            self.assertEqual(matrix[row].shape[1], model.modulus_count)
 
     def test_backward_updates_parameters(self) -> None:
         model = ExplicitSieveModule(candidate_count=8, modulus_count=4)

@@ -319,11 +319,20 @@ python train\train.py --phase phase1 --dataset v3 --seeds 0,1,2,3,4 `
 | 人力 | ~1.5 天 |
 | GPU | ~2 h（回归 15 runs） |
 
-### 4.4 阶段结果（实施后填写）
+### 4.4 阶段结果
 
-> 完成时间：____  
-> bucket 1 avg_checks（修复后）：____  
-> 回归测试摘要路径：____
+#### F-1 Eligibility Mask（2026-06-11，**已完成**）
+
+| 项 | 状态 |
+|----|------|
+| 代码 | `sieve_baseline.py`、`sieve_residual.py`、`igot.py`、`train/train.py` |
+| 单元测试 | 21/21 通过（含 N∈{6,8,10,100}） |
+| 实验报告 | `docs/wpf_f1_eligibility_report.md` |
+| bucket 1 avg_checks | **1.27**（修复前 Phase 2 参照 24.1） |
+| 冒烟 JSON | `results/wpf/eligibility_smoke.json` |
+| 下一步 | **F-2** m=r_j 边界 |
+
+> F-4 回归测试 / bucket 大 N 噪声带：待 F-2、F-3 后执行
 
 ---
 

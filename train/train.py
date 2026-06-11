@@ -32,7 +32,7 @@ if str(_REPO_ROOT / "train") not in sys.path:
 from dataset import GoldbachBinDataset  # noqa: E402
 from metrics import compute_ranking_metrics  # noqa: E402
 from igot import IGOTModel  # noqa: E402
-from sieve_baseline import ExplicitSieveModule  # noqa: E402
+from sieve_baseline import ExplicitSieveModule, compute_eligibility_mask  # noqa: E402
 from sieve_residual import SieveResidualModel  # noqa: E402
 
 
@@ -48,6 +48,21 @@ def _repo_root() -> Path:
     return _REPO_ROOT
 
 
+def _masked_bce_loss(
+    logits: torch.Tensor,
+    valid_mask: torch.Tensor,
+    eligibility: torch.Tensor,
+) -> torch.Tensor:
+    """BCE averaged only over eligible candidate positions."""
+    loss = torch.nn.functional.binary_cross_entropy_with_logits(
+        logits,
+        valid_mask,
+        reduction="none",
+    )
+    mask = eligibility.to(dtype=loss.dtype)
+    return (loss * mask).sum() / mask.sum().clamp_min(1.0)
+
+
 def _forward_logits(model: nn.Module, batch: dict[str, torch.Tensor], phase: str) -> dict[str, torch.Tensor]:
     """Run model forward and normalize output dict across phases.
 
@@ -61,6 +76,7 @@ def _forward_logits(model: nn.Module, batch: dict[str, torch.Tensor], phase: str
             "final_logits": outputs["sieve_logits"],
             "sieve_logits": outputs["sieve_logits"],
             "residual_logits": None,
+            "eligibility_mask": outputs["eligibility_mask"],
         }
 
     # Phase 2/3 need full feature batch: N, bits, mods, density.
@@ -95,7 +111,8 @@ def evaluate(
 
         outputs = _forward_logits(model, device_batch, phase)
         logits = outputs["final_logits"]
-        loss = loss_fn(logits, valid_mask)
+        eligibility = outputs["eligibility_mask"]
+        loss = _masked_bce_loss(logits, valid_mask, eligibility)
 
         batch_size = even.shape[0]
         total_loss += loss.item() * batch_size
@@ -141,8 +158,9 @@ def train_epoch(
         device_batch = {key: value.to(device) for key, value in batch.items()}
 
         optimizer.zero_grad(set_to_none=True)
-        logits = _forward_logits(model, device_batch, phase)["final_logits"]
-        loss = loss_fn(logits, valid_mask)
+        outputs = _forward_logits(model, device_batch, phase)
+        logits = outputs["final_logits"]
+        loss = _masked_bce_loss(logits, valid_mask, outputs["eligibility_mask"])
         loss.backward()
         # Gradient clip stabilizes Phase 3 (large batch + attention can NaN).
         # 梯度裁剪：稳定 Phase 3 大 batch + 注意力训练，防止 NaN

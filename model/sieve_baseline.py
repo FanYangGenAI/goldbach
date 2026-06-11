@@ -20,6 +20,29 @@ if str(_GENERATOR_PYTHON) not in sys.path:
 from constants import CANDIDATE_PRIME_COUNT, MODULUS_BASE_COUNT  # noqa: E402
 from primes import first_k_odd_primes, first_m_modulus_bases  # noqa: E402
 
+# Candidates with m = N - p_i < 3 are invalid (p_i > N - 3); mask in loss and ranking.
+INELIGIBLE_LOGIT = -1e4
+MIN_CANDIDATE_OFFSET = 3
+
+
+def compute_eligibility_mask(
+    even_numbers: torch.Tensor,
+    candidate_primes: torch.Tensor,
+) -> torch.Tensor:
+    """Return [B, K] bool mask: True when m = N - p_i >= MIN_CANDIDATE_OFFSET."""
+    offsets = even_numbers.unsqueeze(1) - candidate_primes.unsqueeze(0)
+    return offsets >= MIN_CANDIDATE_OFFSET
+
+
+def apply_eligibility_mask(
+    logits: torch.Tensor,
+    even_numbers: torch.Tensor,
+    candidate_primes: torch.Tensor,
+) -> torch.Tensor:
+    """Force ineligible candidate logits to INELIGIBLE_LOGIT."""
+    eligible = compute_eligibility_mask(even_numbers, candidate_primes)
+    return torch.where(eligible, logits, torch.full_like(logits, INELIGIBLE_LOGIT))
+
 
 def compute_sieve_matrix(
     even_numbers: torch.Tensor,
@@ -104,9 +127,16 @@ class ExplicitSieveModule(nn.Module):
             sieve_matrix,
             self.modulus_weights,
         )
+        sieve_logits = apply_eligibility_mask(
+            sieve_logits,
+            even_numbers,
+            self.candidate_primes,
+        )
+        eligibility_mask = compute_eligibility_mask(even_numbers, self.candidate_primes)
         return {
             "sieve_logits": sieve_logits,
             "sieve_matrix": sieve_matrix,
+            "eligibility_mask": eligibility_mask,
         }
 
     def modulus_weight_table(self) -> list[tuple[int, float]]:

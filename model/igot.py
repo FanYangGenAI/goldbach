@@ -15,7 +15,7 @@ import torch.nn as nn
 
 from attention import PrimeModulusCrossAttention, PrimePrimeSelfAttention
 from number_encoder import NumberEncoder
-from sieve_baseline import ExplicitSieveModule
+from sieve_baseline import ExplicitSieveModule, apply_eligibility_mask
 from tokens import ModulusTokenBuilder, PrimeTokenBuilder
 
 StackMode = Literal["sequential", "paired"]
@@ -242,6 +242,11 @@ class IGOTModel(nn.Module):
         # --- Step 7: additive decomposition (core IGOT design) ---
         # --- 步骤 7：可解释加法分解 ---
         final_logits = sieve_logits + attention_logits + residual_logits
+        final_logits = apply_eligibility_mask(
+            final_logits,
+            even_numbers,
+            self.sieve_module.candidate_primes,
+        )
 
         outputs: dict[str, torch.Tensor] = {
             "final_logits": final_logits,
@@ -249,6 +254,7 @@ class IGOTModel(nn.Module):
             "attention_logits": attention_logits,
             "residual_logits": residual_logits,
             "sieve_matrix": sieve_matrix,
+            "eligibility_mask": sieve_outputs["eligibility_mask"],
             "prime_tokens": prime_tokens,
             "modulus_tokens": modulus_tokens,
         }
