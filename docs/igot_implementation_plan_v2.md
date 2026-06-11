@@ -330,9 +330,20 @@ python train\train.py --phase phase1 --dataset v3 --seeds 0,1,2,3,4 `
 | 实验报告 | `docs/wpf_f1_eligibility_report.md` |
 | bucket 1 avg_checks | **1.27**（修复前 Phase 2 参照 24.1） |
 | 冒烟 JSON | `results/wpf/eligibility_smoke.json` |
-| 下一步 | **F-2** m=r_j 边界 |
+| 交叉校验 | NULL-0 bucket 1 avg_checks=**1.00** vs 冒烟 **1.27**（§3.3） |
+| 开放尾巴 | F-1b、取模审计 → 见 `wpf_f2_f1b_report.md` |
 
-> F-4 回归测试 / bucket 大 N 噪声带：待 F-2、F-3 后执行
+#### F-2 / F-1b（2026-06-11，**已完成**）
+
+| 项 | 状态 |
+|----|------|
+| F-2 | `apply_small_prime_sieve_bypass` + 标签断言 |
+| F-1b | self-attn key-padding mask + cross 后清零 ineligible |
+| 取模审计 | 随 F-1b 方案 (a) **正式豁免** |
+| 报告 | `docs/wpf_f2_f1b_report.md` |
+| 下一步 | **F-4** 回归重训（与 F-2/F-1b 合批验收） |
+
+> F-3（Null-anchored Δ）仍排在 Phase 4R 前；F-4 前不必单独再训一轮
 
 ---
 

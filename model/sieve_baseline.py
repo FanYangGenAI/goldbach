@@ -75,6 +75,25 @@ def compute_sieve_matrix(
     return (remainders == 0).to(dtype=torch.float32)
 
 
+def apply_small_prime_sieve_bypass(
+    sieve_matrix: torch.Tensor,
+    even_numbers: torch.Tensor,
+    candidate_primes: torch.Tensor,
+    modulus_bases: torch.Tensor,
+) -> torch.Tensor:
+    """Zero sieve penalties when m = N - p_i is a modulus base (small prime).
+
+    When m equals r_j in the sieve basis, m is prime and must not be penalized
+    for being divisible by r_j.
+    """
+    offsets = even_numbers.unsqueeze(1) - candidate_primes.unsqueeze(0)
+    is_small_prime_offset = torch.zeros_like(offsets, dtype=torch.bool)
+    for modulus in modulus_bases.tolist():
+        is_small_prime_offset |= offsets == int(modulus)
+    keep = (~is_small_prime_offset).unsqueeze(-1).to(dtype=sieve_matrix.dtype)
+    return sieve_matrix * keep
+
+
 class ExplicitSieveModule(nn.Module):
     """Interpretable linear sieve: logit_i = b_i + sum_j w_j * z[i, j].
 
@@ -114,6 +133,12 @@ class ExplicitSieveModule(nn.Module):
         # Step 1: build z[b, k, m] from N and fixed prime/modulus tables.
         # 步骤 1：由 N 和固定素数表构建筛法矩阵
         sieve_matrix = compute_sieve_matrix(
+            even_numbers,
+            self.candidate_primes,
+            self.modulus_bases,
+        )
+        sieve_matrix = apply_small_prime_sieve_bypass(
+            sieve_matrix,
             even_numbers,
             self.candidate_primes,
             self.modulus_bases,

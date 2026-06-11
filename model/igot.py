@@ -115,6 +115,7 @@ class IGOTModel(nn.Module):
         prime_tokens: torch.Tensor,
         modulus_tokens: torch.Tensor,
         *,
+        prime_eligibility: torch.Tensor,
         return_attention: bool,
     ) -> torch.Tensor:
         """Apply cross/self attention blocks according to stack_mode.
@@ -131,18 +132,27 @@ class IGOTModel(nn.Module):
                     prime_tokens, cross_weights = layer(
                         prime_tokens,
                         modulus_tokens,
+                        prime_eligibility=prime_eligibility,
                         return_attention=True,
                     )
                 else:
-                    prime_tokens = layer(prime_tokens, modulus_tokens)
+                    prime_tokens = layer(
+                        prime_tokens,
+                        modulus_tokens,
+                        prime_eligibility=prime_eligibility,
+                    )
             for layer in self.self_attn_layers:
                 if return_attention:
                     prime_tokens, self_weights = layer(
                         prime_tokens,
+                        prime_eligibility=prime_eligibility,
                         return_attention=True,
                     )
                 else:
-                    prime_tokens = layer(prime_tokens)
+                    prime_tokens = layer(
+                        prime_tokens,
+                        prime_eligibility=prime_eligibility,
+                    )
         else:
             depth = min(len(self.cross_attn_layers), len(self.self_attn_layers))
             for index in range(depth):
@@ -152,15 +162,24 @@ class IGOTModel(nn.Module):
                     prime_tokens, cross_weights = cross_layer(
                         prime_tokens,
                         modulus_tokens,
+                        prime_eligibility=prime_eligibility,
                         return_attention=True,
                     )
                     prime_tokens, self_weights = self_layer(
                         prime_tokens,
+                        prime_eligibility=prime_eligibility,
                         return_attention=True,
                     )
                 else:
-                    prime_tokens = cross_layer(prime_tokens, modulus_tokens)
-                    prime_tokens = self_layer(prime_tokens)
+                    prime_tokens = cross_layer(
+                        prime_tokens,
+                        modulus_tokens,
+                        prime_eligibility=prime_eligibility,
+                    )
+                    prime_tokens = self_layer(
+                        prime_tokens,
+                        prime_eligibility=prime_eligibility,
+                    )
 
         if return_attention:
             self._last_cross_attn_weights = cross_weights
@@ -196,6 +215,7 @@ class IGOTModel(nn.Module):
         sieve_outputs = self.sieve_module(even_numbers)
         sieve_logits = sieve_outputs["sieve_logits"]      # [B, K]
         sieve_matrix = sieve_outputs["sieve_matrix"]    # [B, K, M]
+        prime_eligibility = sieve_outputs["eligibility_mask"]  # [B, K]
 
         # --- Step 2: global N encoding ---
         # --- 步骤 2：全局 N 编码 ---
@@ -222,6 +242,7 @@ class IGOTModel(nn.Module):
         prime_tokens = self._run_attention_stack(
             prime_tokens,
             modulus_tokens,
+            prime_eligibility=prime_eligibility,
             return_attention=return_attention,
         )
 

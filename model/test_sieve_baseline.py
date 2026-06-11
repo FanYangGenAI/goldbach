@@ -16,6 +16,7 @@ if str(_MODEL_ROOT) not in sys.path:
 from sieve_baseline import (  # noqa: E402
     INELIGIBLE_LOGIT,
     ExplicitSieveModule,
+    apply_small_prime_sieve_bypass,
     compute_eligibility_mask,
     compute_sieve_matrix,
 )
@@ -66,6 +67,20 @@ class TestExplicitSieve(unittest.TestCase):
                 self.assertTrue(torch.all(outputs["sieve_logits"][row, ineligible] <= INELIGIBLE_LOGIT / 10))
             self.assertEqual(matrix[row].shape[0], model.candidate_count)
             self.assertEqual(matrix[row].shape[1], model.modulus_count)
+
+    def test_small_prime_bypass_clears_sieve_row(self) -> None:
+        model = ExplicitSieveModule(candidate_count=500, modulus_count=32)
+        even = torch.tensor([10], dtype=torch.int64)  # 10 - 7 = 3 (modulus base r_1)
+        raw = compute_sieve_matrix(even, model.candidate_primes, model.modulus_bases)
+        bypassed = apply_small_prime_sieve_bypass(
+            raw,
+            even,
+            model.candidate_primes,
+            model.modulus_bases,
+        )
+        prime_index = 2  # candidate 7
+        self.assertGreater(raw[0, prime_index].sum().item(), 0.0)
+        self.assertEqual(bypassed[0, prime_index].sum().item(), 0.0)
 
     def test_backward_updates_parameters(self) -> None:
         model = ExplicitSieveModule(candidate_count=8, modulus_count=4)

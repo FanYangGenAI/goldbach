@@ -56,6 +56,7 @@ class MultiHeadSDPA(nn.Module):
         query: torch.Tensor,
         key: torch.Tensor,
         value: torch.Tensor,
+        attn_mask: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         """Explicit softmax attention for weight export (Phase 4 interpretability).
 
@@ -64,6 +65,8 @@ class MultiHeadSDPA(nn.Module):
         """
         scale = self.head_dim ** -0.5
         scores = torch.matmul(query, key.transpose(-2, -1)) * scale
+        if attn_mask is not None:
+            scores = scores.masked_fill(~attn_mask, float("-inf"))
         weights = torch.softmax(scores, dim=-1)
         if self.training and self.dropout > 0.0:
             weights = F.dropout(weights, p=self.dropout)
@@ -76,6 +79,7 @@ class MultiHeadSDPA(nn.Module):
         key: torch.Tensor,
         value: torch.Tensor,
         *,
+        attn_mask: torch.Tensor | None = None,
         return_attention: bool = False,
     ) -> tuple[torch.Tensor, torch.Tensor | None]:
         """Run multi-head attention.
@@ -96,7 +100,7 @@ class MultiHeadSDPA(nn.Module):
         # --- Step 2: attention (SDPA fast path vs manual weights path) ---
         # --- 步骤 2：注意力（SDPA 快速路径 vs 手算权重路径）---
         if return_attention:
-            attn_output, attn_weights = self._manual_attention(q, k, v)
+            attn_output, attn_weights = self._manual_attention(q, k, v, attn_mask=attn_mask)
         else:
             # SDPA: avoids materializing full [Lq,Lk] matrix in HBM when Flash is active.
             # SDPA：Flash 启用时不物化完整 [Lq,Lk] 注意力矩阵，降低峰值显存
@@ -104,6 +108,7 @@ class MultiHeadSDPA(nn.Module):
                 q,
                 k,
                 v,
+                attn_mask=attn_mask,
                 dropout_p=self.dropout if self.training else 0.0,
                 is_causal=False,
             )
@@ -146,6 +151,7 @@ class PrimeModulusCrossAttention(nn.Module):
         prime_tokens: torch.Tensor,
         modulus_tokens: torch.Tensor,
         *,
+        prime_eligibility: torch.Tensor | None = None,
         return_attention: bool = False,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         """Update prime tokens by attending to modulus tokens.
@@ -166,11 +172,23 @@ class PrimeModulusCrossAttention(nn.Module):
         prime_tokens = self.norm(prime_tokens + attn_output)
         prime_tokens = self.ffn_norm(prime_tokens + self.ffn(prime_tokens))
 
+        if prime_eligibility is not None:
+            prime_tokens = prime_tokens * prime_eligibility.unsqueeze(-1).to(prime_tokens.dtype)
+
         if return_attention:
             if attn_weights is None:
                 raise RuntimeError("Attention weights missing in return_attention mode")
             return prime_tokens, attn_weights
         return prime_tokens
+
+
+def _prime_self_attn_mask(
+    prime_eligibility: torch.Tensor,
+    num_heads: int,
+) -> torch.Tensor:
+    """Build [B, heads, K, K] mask: True only when both query and key are eligible."""
+    pair = prime_eligibility.unsqueeze(2) & prime_eligibility.unsqueeze(1)
+    return pair.unsqueeze(1).expand(-1, num_heads, -1, -1)
 
 
 class PrimePrimeSelfAttention(nn.Module):
@@ -201,17 +219,25 @@ class PrimePrimeSelfAttention(nn.Module):
         self,
         prime_tokens: torch.Tensor,
         *,
+        prime_eligibility: torch.Tensor | None = None,
         return_attention: bool = False,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         """Apply self-attention among K prime tokens [B, K, d_model]."""
+        attn_mask = None
+        if prime_eligibility is not None:
+            attn_mask = _prime_self_attn_mask(prime_eligibility, self.attention.num_heads)
         attn_output, attn_weights = self.attention(
             prime_tokens,
             prime_tokens,
             prime_tokens,
+            attn_mask=attn_mask,
             return_attention=return_attention,
         )
         prime_tokens = self.norm(prime_tokens + attn_output)
         prime_tokens = self.ffn_norm(prime_tokens + self.ffn(prime_tokens))
+
+        if prime_eligibility is not None:
+            prime_tokens = prime_tokens * prime_eligibility.unsqueeze(-1).to(prime_tokens.dtype)
 
         if return_attention:
             if attn_weights is None:

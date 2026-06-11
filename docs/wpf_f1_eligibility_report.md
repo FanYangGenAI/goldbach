@@ -47,10 +47,30 @@ p_i > N - 3  ⇒  logit_i = -1e4，BCE loss 中 mask 掉该位置
 
 > 冒烟使用随机初始化权重，全局 top1 无意义；bucket 1 改善完全来自 eligibility 硬约束，与训练无关。
 
+### 3.3 交叉校验：vs NULL-0 分桶（N-2 独立实现）
+
+| 来源 | bucket 1 avg_checks | bucket 1 n |
+|------|---------------------|------------|
+| F-1 冒烟（SieveResidual，随机权重） | **1.27** | 11 |
+| NULL-0（`results/null/eval_report.json`） | **1.00** | 11 |
+
+两者同属「第一次检查即命中」量级（小 N 合法候选 valid 密度高），**互相印证**指标实现无伪影。NULL-0 更优因其排序按解析公式而非随机权重。
+
+**1.27 关账**：交叉校验通过。
+
 ---
 
-## 4. 结论
+## 4. 专家审核记录与开放尾巴
 
-F-1 **达成验收**：bucket 1 `avg_checks` 从 ~24 降至 **1.27**（≤ 6）。
+| 项 | 状态 |
+|----|------|
+| F-1 出口层 mask | **通过** |
+| bucket 1 交叉校验 | **通过**（§3.3） |
+| F-1b attention 内部污染 | **已立项**，见 `docs/wpf_f2_f1b_report.md` |
+| m≤0 取模审计关闭 | 随 **F-1b key-padding mask** 正式豁免（乱码 token 从注意力剔除） |
 
-**下一步**：F-2（m = r_j 边界旁路）→ F-4 回归重训后重评 P0 checks 子项。
+## 5. 结论
+
+F-1 **达成验收**：bucket 1 `avg_checks` 从 ~24 降至 **1.27**（≤ 6），与 NULL-0 bucket 1=1.00 交叉印证。
+
+**下一步**：F-2 → F-1b → F-4 回归重训 → P0 checks 重评。
