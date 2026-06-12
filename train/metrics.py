@@ -131,6 +131,7 @@ def compute_ranking_metrics(
             bucket_id = int(bucket_id)
             mask = bucket_ids == bucket_id
             bucket_ranked = ranked_valid[mask][:, :top_k]
+            bucket_top1 = bucket_ranked[:, 0].float().mean().item()
             bucket_topk = bucket_ranked.any(dim=1).float().mean().item()
             bucket_checks = _checks_to_first_success(bucket_ranked)
             bucket_covered = bucket_checks > 0
@@ -139,6 +140,7 @@ def compute_ranking_metrics(
             else:
                 bucket_avg_checks = float(top_k)
             by_bucket[bucket_id] = {
+                "top1_valid_rate": bucket_top1,
                 "topk_valid_rate": bucket_topk,
                 "avg_checks_to_success": bucket_avg_checks,
                 "sample_count": int(mask.sum().item()),

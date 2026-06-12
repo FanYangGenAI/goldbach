@@ -27,15 +27,30 @@ from train import (  # noqa: E402
 )
 
 
+def _remap_legacy_phase3_state(state_dict: dict) -> dict:
+    if "prime_mod_cross_attn.attention.q_proj.weight" not in state_dict:
+        return state_dict
+    remapped: dict = {}
+    for key, value in state_dict.items():
+        if key.startswith("prime_mod_cross_attn."):
+            remapped["cross_attn_layers.0." + key[len("prime_mod_cross_attn.") :]] = value
+        elif key.startswith("prime_prime_self_attn."):
+            remapped["self_attn_layers.0." + key[len("prime_prime_self_attn.") :]] = value
+        else:
+            remapped[key] = value
+    return remapped
+
+
 def _load_checkpoint(path: Path, phase: str, device: torch.device) -> nn.Module:
     payload = torch.load(path, map_location=device, weights_only=False)
+    state_dict = _remap_legacy_phase3_state(payload["model_state_dict"])
     model = build_model(
         phase,
-        cross_attn_layers=int(payload.get("cross_attn_layers", 1)),
-        self_attn_layers=int(payload.get("self_attn_layers", 1)),
-        stack_mode=str(payload.get("stack_mode", "sequential")),
+        cross_attn_layers=int(payload.get("cross_attn_layers") or 1),
+        self_attn_layers=int(payload.get("self_attn_layers") or 1),
+        stack_mode=str(payload.get("stack_mode") or "sequential"),
     )
-    model.load_state_dict(payload["model_state_dict"])
+    model.load_state_dict(state_dict)
     model.to(device)
     model.eval()
     return model
@@ -88,7 +103,13 @@ def _build_val_loader(
     val_fraction: float,
     seed: int,
     batch_size: int,
+    val_data: Path | None = None,
 ) -> tuple[DataLoader, int]:
+    if val_data is not None:
+        dataset = GoldbachBinDataset(val_data)
+        loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+        return loader, dataset.candidate_count or 500
+
     dataset = GoldbachBinDataset(data_path)
     top_k = dataset.candidate_count or 500
     val_size = max(1, int(len(dataset) * val_fraction))
@@ -111,6 +132,7 @@ def reval_checkpoint(
     seed: int,
     batch_size: int,
     device_name: str,
+    val_data: Path | None = None,
 ) -> dict:
     device = torch.device(device_name)
     loader, top_k = _build_val_loader(
@@ -118,6 +140,7 @@ def reval_checkpoint(
         val_fraction=val_fraction,
         seed=seed,
         batch_size=batch_size,
+        val_data=val_data,
     )
     model = _load_checkpoint(checkpoint, phase, device)
     metrics = evaluate_checkpoint(model, loader, device, phase=phase, top_k=top_k)
@@ -143,6 +166,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--val-fraction", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument(
+        "--val-data",
+        type=Path,
+        default=None,
+        help="Evaluate on this file directly (no random split)",
+    )
     parser.add_argument("--batch-size", type=int, default=2048)
     parser.add_argument("--device", type=str, default="auto")
     parser.add_argument("--output", type=Path, default=None)
@@ -154,8 +183,11 @@ def main() -> int:
     if not args.checkpoint.exists():
         print(f"Checkpoint not found: {args.checkpoint}", file=sys.stderr)
         return 1
-    if not args.data.exists():
+    if args.val_data is None and not args.data.exists():
         print(f"Dataset not found: {args.data}", file=sys.stderr)
+        return 1
+    if args.val_data is not None and not args.val_data.exists():
+        print(f"Val dataset not found: {args.val_data}", file=sys.stderr)
         return 1
 
     device_name = "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
@@ -170,6 +202,7 @@ def main() -> int:
         seed=args.seed,
         batch_size=args.batch_size,
         device_name=device_name,
+        val_data=args.val_data,
     )
     output_path = args.output or args.checkpoint.parent / "reval_report.json"
     output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
