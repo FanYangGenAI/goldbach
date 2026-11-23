@@ -1,0 +1,16 @@
+p_min for N <= 1,000,000,000: 4.0s, unresolved=0
+N=37998938: primes<=N/2 1211022, survivors at sqrt(N) 93215, naive pred 102733, ratio 0.907
+N=60119912: primes<=N/2 1861367, survivors at sqrt(N) 144023, naive pred 159159, ratio 0.905
+N=97245246: primes<=N/2 2923278, survivors at sqrt(N) 511471, naive pred 564676, ratio 0.906
+N=81254772: primes<=N/2 2469465, survivors at sqrt(N) 363620, naive pred 401573, ratio 0.905
+N=96996900: primes<=N/2 2916249, survivors at sqrt(N) 931793, naive pred 1028545, ratio 0.906
+{'Y': 10000, 'n_primes': 1227, 'covered_at_l': 443, 'n_moduli': 85, 'sqrt_2Y': 141.4213562373095, 'ratio_to_sqrt2Y': 3.1324830406564055} 25.3s
+{'Y': 30000, 'n_primes': 3243, 'covered_at_l': 1009, 'n_moduli': 168, 'sqrt_2Y': 244.94897427831782, 'ratio_to_sqrt2Y': 4.119225250780378} 25.3s
+{'Y': 100000, 'n_primes': 9590, 'covered_at_l': 2393, 'n_moduli': 355, 'sqrt_2Y': 447.21359549995793, 'ratio_to_sqrt2Y': 5.350910670156996} 25.3s
+{'Y': 300000, 'n_primes': 25995, 'covered_at_l': 5711, 'n_moduli': 751, 'sqrt_2Y': 774.5966692414834, 'ratio_to_sqrt2Y': 7.372869296730186} 25.3s
+{'Y': 1000000, 'n_primes': 78496, 'covered_at_l': 15083, 'n_moduli': 1761, 'sqrt_2Y': 1414.213562373095, 'ratio_to_sqrt2Y': 10.665291580636696} 25.3s
+{'Y': 3000000, 'n_primes': 216814, 'covered_at_l': 37223, 'n_moduli': 3943, 'sqrt_2Y': 2449.489742783178, 'ratio_to_sqrt2Y': 15.196226115936375} 25.6s
+{'Y': 10000000, 'n_primes': 664577, 'covered_at_l': 102607, 'n_moduli': 9824, 'sqrt_2Y': 4472.13595499958, 'ratio_to_sqrt2Y': 22.943622696732092} 27.0s
+{'Y': 30000000, 'n_primes': 1857857, 'covered_at_l': 264283, 'n_moduli': 23172, 'sqrt_2Y': 7745.966692414834, 'ratio_to_sqrt2Y': 34.11878858952449} 36.2s
+E:\repo\monorepo\goldbach\research\goldbach_explore\out\exp3_summary.json
+done 37.5s

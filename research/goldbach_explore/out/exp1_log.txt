@@ -1,0 +1,5 @@
+sieve+FFT to X=33,554,432: 7.2s, pi(X)=2,063,689
+HL ready: 12.0s
+random models ready: 55.7s
+E:\repo\monorepo\goldbach\research\goldbach_explore\out\exp1_summary.json
+{'z_sd_real': 0.7693417972946256, 'z_sd_model': 1.2745153006472343, 'z_skew_real': 0.003122357379081913, 'z_kurt_real': 0.014347770406966553} done 91.4s

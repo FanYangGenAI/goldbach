@@ -1,0 +1,8 @@
+sum/diff counts ready 9.8s
+1 {'n_b': 600, 'mean_ratio': 0.9982113140564337, 'std_ratio': 0.0032943495343935878, 'min_ratio': 0.9869512706418885, 'max_ratio': 1.0098374619766224}
+2 {'n_b': 600, 'mean_ratio': 0.9982746749937613, 'std_ratio': 0.00418423967292084, 'min_ratio': 0.9857980823109415, 'max_ratio': 1.011190270311491}
+3 {'n_b': 600, 'mean_ratio': 0.9984621836103605, 'std_ratio': 0.002994648781629028, 'min_ratio': 0.9888704640576251, 'max_ratio': 1.0071921503547459}
+4 {'n_b': 600, 'mean_ratio': 0.9987830969902387, 'std_ratio': 0.004188478620246333, 'min_ratio': 0.9856362189417216, 'max_ratio': 1.0130472742513217}
+6 {'n_b': 600, 'mean_ratio': 0.998653346508156, 'std_ratio': 0.0031016530051933824, 'min_ratio': 0.9900734110148609, 'max_ratio': 1.0082433627741103}
+E:\repo\monorepo\goldbach\research\goldbach_explore\out\exp2_summary.json
+done 24.4s
