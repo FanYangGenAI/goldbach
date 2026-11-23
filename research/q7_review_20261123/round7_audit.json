@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "hub_baseline": "7e46846",
+  "source_commit": "17c42efdfc7101d25e8ad626a9267805ae841a05",
+  "purpose": "Retrospective round-seven audit and exact local-root certificate",
+  "preregistered": false,
+  "status": "PASS",
+  "log_log_regression_slope": 0.05862657241447302,
+  "real_axis_exponent_checks": [
+    {
+      "x": 0.25,
+      "reported_alpha": 0.8508244415443508,
+      "recomputed_alpha": 0.8508244415443508,
+      "adjacent_decade_slopes": [
+        0.8151803585596393,
+        0.9072697525515238,
+        0.8112081098528309
+      ],
+      "last_three_scales_slope": 0.8592389312021772,
+      "first_omitted_log_term_apparent_slope": 0.8534335689638175
+    },
+    {
+      "x": 0.5,
+      "reported_alpha": 0.8925326133913464,
+      "recomputed_alpha": 0.8925326133913464,
+      "adjacent_decade_slopes": [
+        0.8657246577935435,
+        0.789264596200655,
+        1.057031258576737
+      ],
+      "last_three_scales_slope": 0.9231479273886967,
+      "first_omitted_log_term_apparent_slope": 0.882746855171054
+    },
+    {
+      "x": 0.75,
+      "reported_alpha": 0.924728673881779,
+      "recomputed_alpha": 0.924728673881779,
+      "adjacent_decade_slopes": [
+        0.9342605326633298,
+        0.7614534434452113,
+        1.1328971223489852
+      ],
+      "last_three_scales_slope": 0.9471752828970991,
+      "first_omitted_log_term_apparent_slope": 0.9120601413782905
+    },
+    {
+      "x": -0.25,
+      "reported_alpha": 0.7660793280694332,
+      "recomputed_alpha": 0.7660793280694332,
+      "adjacent_decade_slopes": [
+        0.7051284931953244,
+        1.1837044203728366,
+        0.27019670653900457
+      ],
+      "last_three_scales_slope": 0.7269505634559206,
+      "first_omitted_log_term_apparent_slope": 0.7948069965493444
+    },
+    {
+      "x": -0.5,
+      "reported_alpha": 0.6369960340859215,
+      "recomputed_alpha": 0.6369960340859215,
+      "adjacent_decade_slopes": [
+        0.5717915879835896,
+        1.1909232654860418,
+        -0.03636916167857424
+      ],
+      "last_three_scales_slope": 0.5772770519037344,
+      "first_omitted_log_term_apparent_slope": 0.7654937103421079
+    },
+    {
+      "x": -0.75,
+      "reported_alpha": 0.5155126435111173,
+      "recomputed_alpha": 0.5155126435111173,
+      "adjacent_decade_slopes": [
+        0.19585771666347232,
+        0.9394883602420881,
+        0.2698666147174677
+      ],
+      "last_three_scales_slope": 0.6046774874797782,
+      "first_omitted_log_term_apparent_slope": 0.7361804241348714
+    },
+    {
+      "x": -1.0,
+      "reported_alpha": 0.5282077315514249,
+      "recomputed_alpha": 0.5282077315514249,
+      "adjacent_decade_slopes": [
+        0.41778432530464676,
+        0.5234172381973171,
+        0.6450184622703451
+      ],
+      "last_three_scales_slope": 0.584217850233831,
+      "first_omitted_log_term_apparent_slope": null
+    }
+  ],
+  "posthoc_counterfit": {
+    "free_power_log_rms": 0.13087106333535842,
+    "constructed_N_over_log8_log_rms": 0.05911996508809066,
+    "warning": "A deliberately post-hoc counterfit demonstrating non-identifiability; not a proposed law"
+  },
+  "phase_exponent_log_term_comparison": [
+    {
+      "theta": 0.0,
+      "reported_alpha": 0.8860101845634298,
+      "first_omitted_log_term_apparent_slope": 0.882746855171054
+    },
+    {
+      "theta": 0.39269908169872414,
+      "reported_alpha": 0.8779993243439498,
+      "first_omitted_log_term_apparent_slope": 0.8782841730716033
+    },
+    {
+      "theta": 0.7853981633974483,
+      "reported_alpha": 0.8711036499165219,
+      "first_omitted_log_term_apparent_slope": 0.865575529668579
+    },
+    {
+      "theta": 1.1780972450961724,
+      "reported_alpha": 0.8558605133418348,
+      "first_omitted_log_term_apparent_slope": 0.846555700715952
+    },
+    {
+      "theta": 1.5707963267948966,
+      "reported_alpha": 0.8492019210821946,
+      "first_omitted_log_term_apparent_slope": 0.824120282756581
+    },
+    {
+      "theta": 1.9634954084936207,
+      "reported_alpha": 0.8135339828702005,
+      "first_omitted_log_term_apparent_slope": 0.8016848647972099
+    },
+    {
+      "theta": 2.356194490192345,
+      "reported_alpha": 0.7814574437006474,
+      "first_omitted_log_term_apparent_slope": 0.7826650358445829
+    },
+    {
+      "theta": 2.748893571891069,
+      "reported_alpha": 0.7409714773146444,
+      "first_omitted_log_term_apparent_slope": 0.7699563924415584
+    },
+    {
+      "theta": 3.141592653589793,
+      "reported_alpha": 0.7727467592377791,
+      "first_omitted_log_term_apparent_slope": 0.7654937103421079
+    }
+  ],
+  "sample_mod3_composition": {
+    "61": [
+      {
+        "scale": 1000000,
+        "sample_size": 20,
+        "multiples_of_3": 6
+      },
+      {
+        "scale": 10000000,
+        "sample_size": 20,
+        "multiples_of_3": 6
+      },
+      {
+        "scale": 100000000,
+        "sample_size": 20,
+        "multiples_of_3": 15
+      },
+      {
+        "scale": 1000000000,
+        "sample_size": 20,
+        "multiples_of_3": 4
+      }
+    ],
+    "71": [
+      {
+        "scale": 1000000,
+        "sample_size": 20,
+        "multiples_of_3": 9
+      },
+      {
+        "scale": 10000000,
+        "sample_size": 20,
+        "multiples_of_3": 5
+      },
+      {
+        "scale": 100000000,
+        "sample_size": 20,
+        "multiples_of_3": 7
+      },
+      {
+        "scale": 1000000000,
+        "sample_size": 20,
+        "multiples_of_3": 12
+      }
+    ]
+  },
+  "saved_polynomial_audit": {
+    "cases": 180,
+    "grids": [
+      2048,
+      4096,
+      8192
+    ],
+    "disagreements": [],
+    "minimum_numerical_root_distance_to_boundary": 0.0001383971146584062,
+    "maximum_phase_step_on_8192_grid": 1.1839903711265838,
+    "scales": [
+      {
+        "scale": 1000000,
+        "n": 60,
+        "nu2_max": 8,
+        "rouche_grid_min": 585.0616296401406,
+        "rouche_grid_median": 18595.223941004577
+      },
+      {
+        "scale": 10000000,
+        "n": 60,
+        "nu2_max": 7,
+        "rouche_grid_min": 264.5672519702598,
+        "rouche_grid_median": 10592.412995518202
+      },
+      {
+        "scale": 100000000,
+        "n": 60,
+        "nu2_max": 8,
+        "rouche_grid_min": 167.61988895919458,
+        "rouche_grid_median": 8003.15494394154
+      }
+    ],
+    "small_independent_histograms_rebuilt": 3,
+    "note": "Root locations and grid counts are stability checks, not interval-certified counts"
+  },
+  "high_nu2_counterexample": {
+    "N": 104857600,
+    "nu2": 22,
+    "mod3": 1,
+    "polynomial_coefficients_ascending": [
+      4194304,
+      -2097152,
+      2097152,
+      -1048576,
+      1048576,
+      -524288,
+      524288,
+      -262144,
+      262144,
+      -131072,
+      131072,
+      -65536,
+      65536,
+      -32768,
+      32768,
+      -16384,
+      16384,
+      -8192,
+      8192,
+      -4096,
+      4096,
+      -2048,
+      2048,
+      -1024,
+      1024,
+      -512,
+      512,
+      -256,
+      256,
+      -128,
+      128,
+      -64,
+      64,
+      -32,
+      32,
+      -16,
+      16,
+      -8,
+      8,
+      -4,
+      4,
+      -2,
+      2,
+      -1,
+      0,
+      1
+    ],
+    "root_center_real_rational": "-69809248922325348728381/50000000000000000000000",
+    "root_center_imag_rational": "207858721091317597084639/1000000000000000000000000",
+    "certificate_disk_radius": "1/1000000000",
+    "exact_rouche_inequality_pass": true,
+    "exact_disk_containment_pass": true,
+    "upper_over_lower_diagnostic": 1.742113245207701e-08,
+    "approximate_root": [
+      -1.396184978446507,
+      0.2078587210913176
+    ],
+    "distance_to_minus_one": 0.44740114559573646,
+    "rigorous_model_zero_count_lower_bound": 5,
+    "supplementary_numerical_model_winding": 5,
+    "supplementary_max_phase_step": 0.1385025805953224
+  },
+  "finite_average_checks": [
+    {
+      "cutoff": 100000,
+      "exact_cumulative_even_ordered_prime_pairs": 50728833,
+      "cumulative_leading_model_coefficient": 41522341.11284764,
+      "difference_scaled_by_log3_over_X2": 1.4049188964684354
+    },
+    {
+      "cutoff": 1000000,
+      "exact_cumulative_even_ordered_prime_pairs": 3343718028,
+      "cumulative_leading_model_coefficient": 2833487332.233315,
+      "difference_scaled_by_log3_over_X2": 1.3454494940544934
+    }
+  ],
+  "Q4a_against_previous_independent_audit": {
+    "0.25": {
+      "previous_independent_audit": -0.014463101875075384,
+      "new_Q4a_report": -0.014463115828297407
+    },
+    "0.5": {
+      "previous_independent_audit": -0.014056494336522833,
+      "new_Q4a_report": -0.014056488853793824
+    },
+    "0.75": {
+      "previous_independent_audit": -0.005713897240794555,
+      "new_Q4a_report": -0.005713896539437134
+    }
+  },
+  "limits": [
+    "No independent 1e8/1e9 Omega run",
+    "No bootstrap of Q4c/d: per-N errors are not saved in their summaries",
+    "The exact Gaussian-rational certificate concerns the model local factor, not an actual H_N root",
+    "Finite average checks do not prove the asymptotic; the proof is supplied separately"
+  ],
+  "script_hash_scheme": "sha256-utf8-lf-v1",
+  "script_sha256": "1b9968b3c7e7e91aab76b8a09fdb4342670816043891fa1cfbbc308b6d1e7a4d"
+}
