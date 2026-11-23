@@ -1,4 +1,4 @@
-"""Q6 (exploratory): background v2 (patched density + analytic first-order local term) and residual
+"""Q6 (exploratory; 2026-11-23 fix: separate real/imag standard errors, phase arg(H/B) added per round-9 review): background v2 (patched density + analytic first-order local term) and residual
 statistics on the 300 saved integer polynomials. See DESIGN.md."""
 import json, math, os, subprocess, time
 import numpy as np
@@ -156,7 +156,8 @@ for src, X in sorted({(r["src"], r["X"]) for r in rows}):
         ss = [r for r in rows if r["src"] == src and r["X"] == X and g(r)]
         if len(ss) < 5: continue
         E = np.array([[complex(*e) for e in r["eps"]] for r in ss])     # n x 16
-        mu = E.mean(0); sem = E.std(0, ddof=1) / math.sqrt(len(ss))
+        mu = E.mean(0); sem_re_ = E.real.std(0, ddof=1) / math.sqrt(len(ss)); sem_im_ = E.imag.std(0, ddof=1) / math.sqrt(len(ss))
+        ph = np.angle(1 + E); ph_mu = ph.mean(0); ph_sem = ph.std(0, ddof=1) / math.sqrt(len(ss))
         Xc = E - mu
         C = (Xc.T @ Xc.conj()) / (len(ss) - 1)
         w, V = np.linalg.eigh(C)
@@ -166,7 +167,8 @@ for src, X in sorted({(r["src"], r["X"]) for r in rows}):
             n=len(ss), drift_mean=float(dr.mean()), drift_sem=float(dr.std(ddof=1) / math.sqrt(len(ss))),
             sens_median=float(np.median([r["sens"] for r in ss])),
             mu_re=[float(x) for x in mu.real], mu_im=[float(x) for x in mu.imag],
-            sem_re=[float(x) for x in sem.real], sem_im=[float(x) for x in sem.imag],
+            sem_re=[float(x) for x in sem_re_], sem_im=[float(x) for x in sem_im_],
+            phase_mean=[float(x) for x in ph_mu], phase_sem=[float(x) for x in ph_sem],
             rms_centered=[float(x) for x in np.sqrt(np.real(np.diag(C)))],
             top_eig_fraction=float(w[-1] / w.sum()), second_eig_fraction=float(w[-2] / w.sum()),
             top_eig_abs=[float(x) for x in np.abs(top)], top_eig_phase=[float(x) for x in np.angle(top)])
