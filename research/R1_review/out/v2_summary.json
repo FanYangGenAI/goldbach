@@ -1,0 +1,22 @@
+{
+  "l3c_corrected": {
+    "23": {
+      "reported_ratio": 2.1372088937006297,
+      "corrected_ratio": 2.122498998788486
+    },
+    "24": {
+      "reported_ratio": 2.068277111594732,
+      "corrected_ratio": 2.054078246987912
+    },
+    "25": {
+      "reported_ratio": 2.043977308954577,
+      "corrected_ratio": 2.0337533865226436
+    },
+    "26": {
+      "reported_ratio": 2.018437948808998,
+      "corrected_ratio": 2.0072650364211846
+    }
+  },
+  "identity_max_rel_err": 7.11736840230603e-16,
+  "V2_identity": true
+}
