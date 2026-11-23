@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "purpose": "Small retrospective audit; not evidence for an infinite conjecture",
+  "hub_commit": "cdd152d",
+  "source_commit": "1fdca2376704ecbc2e98e40f0095d3e79ea6e725",
+  "preregistered": false,
+  "status": "PASS",
+  "versions": {
+    "numpy": "2.2.3",
+    "numba": "0.65.0",
+    "scipy": "1.15.2"
+  },
+  "omega_sieve_limit": 10000000,
+  "Q2d_reproduction": {
+    "count": 100,
+    "seed": 41,
+    "N_min": 1003608,
+    "N_max": 1099428,
+    "results": {
+      "0.25": {
+        "base_signed_mean": 0.07167518160562361,
+        "published_base_signed_mean": 0.07167518160563251,
+        "source_Q2f_signed_mean": 0.11540460889219117,
+        "published_Q2f_signed_mean": 0.11540461521492393,
+        "Q2f_reproduction_absolute_difference": 6.322732754027172e-09,
+        "corrected_density_integral_signed_mean": -0.014463101875075384,
+        "corrected_density_integral_sd": 0.010357684926649128,
+        "density_bracket_correct": 0.29970518771267585,
+        "density_bracket_source_Q2f": 1.299705187712676,
+        "cumulative_relative_coefficient_correct": 0.5252211092154931
+      },
+      "0.5": {
+        "base_signed_mean": 0.024105852533199048,
+        "published_base_signed_mean": 0.02410585253322516,
+        "source_Q2f_signed_mean": 0.06995784179437319,
+        "published_Q2f_signed_mean": 0.06995784082835037,
+        "Q2f_reproduction_absolute_difference": 9.660228172947427e-10,
+        "corrected_density_integral_signed_mean": -0.014056494336522833,
+        "corrected_density_integral_sd": 0.00916797827593439,
+        "density_bracket_correct": 0.5192907415482728,
+        "density_bracket_source_Q2f": 1.5192907415482728,
+        "cumulative_relative_coefficient_correct": 0.2403546292258636
+      },
+      "0.75": {
+        "base_signed_mean": 0.008836822242105557,
+        "published_base_signed_mean": 0.008836822242058943,
+        "source_Q2f_signed_mean": 0.03494891627129508,
+        "published_Q2f_signed_mean": 0.03494886784075883,
+        "Q2f_reproduction_absolute_difference": 4.843053624803417e-08,
+        "corrected_density_integral_signed_mean": -0.005713897240794555,
+        "corrected_density_integral_sd": 0.0037193725999139847,
+        "density_bracket_correct": 0.6294593494927371,
+        "density_bracket_source_Q2f": 1.6294593494927372,
+        "cumulative_relative_coefficient_correct": 0.09263516262681573
+      }
+    }
+  },
+  "single_variable_control": {
+    "0.25": [
+      {
+        "x_limit": 1000000,
+        "exact_weighted_sum_excluding_1": 37585.80662402952,
+        "relative_error_leading": 0.04085384640766532,
+        "relative_error_correct_second_term": 0.0027331685769398373,
+        "relative_error_Q2f_bracket_induced_second_term": 0.05806866447587122
+      },
+      {
+        "x_limit": 10000000,
+        "exact_weighted_sum_excluding_1": 332904.3865020683,
+        "relative_error_leading": 0.03489308798819679,
+        "relative_error_correct_second_term": 0.0022344717144695547,
+        "relative_error_Q2f_bracket_induced_second_term": 0.0495295621684293
+      }
+    ],
+    "0.5": [
+      {
+        "x_limit": 1000000,
+        "exact_weighted_sum_excluding_1": 140828.67343139648,
+        "relative_error_leading": 0.01776950717259007,
+        "relative_error_correct_second_term": 0.00036569678624687185,
+        "relative_error_Q2f_bracket_induced_second_term": 0.03726358869400803
+      },
+      {
+        "x_limit": 10000000,
+        "exact_weighted_sum_excluding_1": 1300632.5771974325,
+        "relative_error_leading": 0.015281257931689884,
+        "relative_error_correct_second_term": 0.00036373542005296855,
+        "relative_error_Q2f_bracket_induced_second_term": 0.03190413557725025
+      }
+    ],
+    "0.75": [
+      {
+        "x_limit": 1000000,
+        "exact_weighted_sum_excluding_1": 394818.78887379175,
+        "relative_error_leading": 0.0069150025855433395,
+        "relative_error_correct_second_term": 0.0002084482475483984,
+        "relative_error_Q2f_bracket_induced_second_term": 0.018516358938888366
+      },
+      {
+        "x_limit": 10000000,
+        "exact_weighted_sum_excluding_1": 3795155.4495599903,
+        "relative_error_leading": 0.005914958633035372,
+        "relative_error_correct_second_term": 0.00016672329107114692,
+        "relative_error_Q2f_bracket_induced_second_term": 0.015832777918716623
+      }
+    ]
+  },
+  "exact_local_identity_cases": 25,
+  "exact_local_correlation_ratio_cases": 192,
+  "model_zero_order_at_minus_one": {
+    "3_divides_N": 2,
+    "3_does_not_divide_N": 3
+  },
+  "phase_grid": {
+    "N": 1066412,
+    "points_per_axis": 64,
+    "prime_cutoff": 10000,
+    "observed_ordered_prime_pairs": 8524,
+    "model_coefficient_11": 7308.769258907869,
+    "prime_pair_count_over_model": 1.1662702293701526,
+    "budget_limit_at_zero": 0.16627022937015257,
+    "rows": [
+      {
+        "radius": 0.125,
+        "grid_budget": 0.24023557229166548,
+        "max_absolute_error_angles": [
+          0.0,
+          0.0
+        ],
+        "max_relative_error_angles": [
+          3.141592653589793,
+          3.141592653589793
+        ],
+        "absolute_error_positive": 27.43478696346037,
+        "absolute_error_negative": 12.222552712811343,
+        "relative_error_positive": 0.12045625091016267,
+        "relative_error_negative": 0.22477585102791015
+      },
+      {
+        "radius": 0.25,
+        "grid_budget": 0.3209214180684688,
+        "max_absolute_error_angles": [
+          0.0,
+          0.0
+        ],
+        "max_relative_error_angles": [
+          3.141592653589793,
+          3.141592653589793
+        ],
+        "absolute_error_positive": 146.59628718149656,
+        "absolute_error_negative": 29.602373705040648,
+        "relative_error_positive": 0.08397178796746359,
+        "relative_error_negative": 0.3062302453475388
+      },
+      {
+        "radius": 0.5,
+        "grid_budget": 0.5524423674405244,
+        "max_absolute_error_angles": [
+          -0.8835729338221292,
+          -0.8835729338221292
+        ],
+        "max_relative_error_angles": [
+          -3.0434178831651124,
+          -2.9452431127404313
+        ],
+        "absolute_error_positive": 818.2323592912144,
+        "absolute_error_negative": 36.093578696142075,
+        "relative_error_positive": 0.034693542495996495,
+        "relative_error_negative": 0.6585076978551672
+      },
+      {
+        "radius": 0.75,
+        "grid_budget": 1.401265538921217,
+        "max_absolute_error_angles": [
+          0.9817477042468103,
+          0.9817477042468103
+        ],
+        "max_relative_error_angles": [
+          3.141592653589793,
+          3.141592653589793
+        ],
+        "absolute_error_positive": 2066.4148899661377,
+        "absolute_error_negative": 108.14128240034555,
+        "relative_error_positive": 0.012029987341772875,
+        "relative_error_negative": 16.266781992637124
+      }
+    ]
+  },
+  "source_json_checks": {
+    "q1q3_summary.json": {
+      "strict_json": false,
+      "sha256": "f2d4de7fd04b7cf91446d2ce5de4f865da3d491c5dcf0c26442ca05cb520c57c"
+    },
+    "q1b_summary.json": {
+      "strict_json": true,
+      "sha256": "bb48df60fe3714c6f3f6c2d0e2910125b3eb224d5712049dec7fc1bc48cbb7ae"
+    },
+    "q2_summary.json": {
+      "strict_json": true,
+      "sha256": "74680c0fa326fe6f64d1779e56aac60616e6dfe5b7a8ad12fed1f56bbc269de1"
+    }
+  },
+  "limits": [
+    "No independent rerun of 1e8 or 1e9 experiments",
+    "Corrected density product is a diagnostic heuristic, not a two-variable theorem",
+    "Phase maxima are sampled grid values, not certified continuous suprema",
+    "The zero orders refer to the untruncated analytic model, not the exact finite polynomial"
+  ],
+  "script_hash_scheme": "sha256-utf8-lf-v1",
+  "script_sha256": "2f231a510947d39b13dd330fecd51cfc3320a7636ae434d62b98db5ef4994ce1"
+}
