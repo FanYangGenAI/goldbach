@@ -39,7 +39,7 @@
 | L0 | `gb/L0-baseline-survey` | — | 基线：HL 精度、对偶、覆盖 | 已完成 |
 | L1 | `gb/L1-parity-probe` | 墙 B | 构造“筛法上与素数不可区分”的伪素数集合，看它们是否满足哥德巴赫。若不满足，就精确知道素数还需要什么额外性质 | **高** |
 | L2 | `gb/L2-minor-arc` | 墙 A | 把 r(N) 数值分解为主弧/次弧，测次弧贡献逐点有多大、相位相消有多强、随 N 和截断 Q 如何标度 | **高** |
-| L3 | `gb/L3-variance-rigidity` | 两者之间 | 用素数对关联（Hardy–Littlewood k 元组 / Montgomery–Soundararajan）理论推导 Var(r(N))，解释 L0 中 Fano≈0.5；由此估计例外集的启发式大小 | 中 |
+| L3 | `gb/L3-variance-moments` | 两者之间 | 用素数对关联（Hardy–Littlewood k 元组 / Montgomery–Soundararajan）理论推导 Var(r(N))，解释 L0 中 Fano≈0.5；由此估计例外集的启发式大小 | 中 |
 | L4 | `gb/L4-sumdiff-anomaly` | — | L0 中和/差残差 −0.10 相关：到 10⁹–10¹⁰（GPU）确认或证伪 | 中（需 GPU） |
 | L5 | `gb/L5-covering-bound` | 墙 B 的组合版本 | 覆盖问题的整数规划下界，取代贪心上界 | 低 |
 
