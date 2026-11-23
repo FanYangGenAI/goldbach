@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "purpose": "Exact finite checks of identities, not evidence for an infinite conjecture",
+  "arithmetic": "integer and rational; no fitted constants",
+  "status": "PASS",
+  "affine_conjugacy_cases": 20,
+  "arbitrary_boolean_reflection_cases": 510,
+  "rough_sieve_identities": {
+    "even_totals_from": 4,
+    "even_totals_through": 2000,
+    "cases": 999,
+    "nonempty_survivor_sets": 999,
+    "cutoff": "floor(cuberoot(N)); both sides have all prime factors greater than cutoff",
+    "verified": [
+      "prime indicator equals (1-Liouville)/2 on survivors",
+      "4*r_rough = T-2*L+C",
+      "r_rough-s_rough = -L",
+      "r_rough/T = rho^2 + covariance when T>0",
+      "0 <= r_full-r_rough <= 2*pi(cutoff)"
+    ]
+  },
+  "semigroup_and_parity_checks": 1600,
+  "entanglement_counterexample": {
+    "N": 10,
+    "state": "sum_{n=1}^{N-1}|n>|N-n>/sqrt(N-1)",
+    "schmidt_rank": 9,
+    "entropy": "log(9)",
+    "selected_predicate": [
+      2,
+      3
+    ],
+    "joint_projection_probability": "0",
+    "meaning": "Maximal entanglement alone does not force overlap for specified predicates"
+  },
+  "counterfactual_subset": {
+    "N": 2000,
+    "original_prime_set_size": 302,
+    "deleted_endpoints": 37,
+    "remaining_set_size": 265,
+    "target_sum_representations": 0,
+    "limitation": "A proper prime subset; not a counterexample for the full primes and not an exact preservation of arithmetic statistics"
+  },
+  "script_sha256": "4e4400bd9760b3a0be8a638e386e82a9d5db3fcf5a1a8387f4d5164bd1905c7e"
+}
