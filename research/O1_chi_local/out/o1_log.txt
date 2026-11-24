@@ -1,0 +1,11 @@
+sieve to 1,100,000,010: 14s
+1000000 14s
+10000000 14s
+100000000 15s
+1000000000 22s
+1000000 {"rho": -0.2996, "sd_ratio": 0.00897, "R2_pred": -0.00546, "mean_chi_obs": -0.0089, "mean_chi_pred": -0.00763, "mean_mu_obs": -0.30417, "mean_mu_pred": -0.28108, "mean_A_ratio": 0.96252, "mean_PP_ratio": 0.99692}
+10000000 {"rho": 0.05919, "sd_ratio": 0.00599, "R2_pred": 0.00067, "mean_chi_obs": -0.00364, "mean_chi_pred": -0.0051, "mean_mu_obs": -0.27496, "mean_mu_pred": -0.26384, "mean_A_ratio": 0.98107, "mean_PP_ratio": 0.99935}
+100000000 {"rho": -0.20348, "sd_ratio": 0.01195, "R2_pred": -0.005, "mean_chi_obs": -0.00363, "mean_chi_pred": -0.00361, "mean_mu_obs": -0.26343, "mean_mu_pred": -0.25145, "mean_A_ratio": 0.98089, "mean_PP_ratio": 0.99978}
+1000000000 {"rho": -0.0748, "sd_ratio": 0.01958, "R2_pred": -0.00331, "mean_chi_obs": -0.00286, "mean_chi_pred": -0.00267, "mean_mu_obs": -0.24707, "mean_mu_pred": -0.24206, "mean_A_ratio": 0.99194, "mean_PP_ratio": 0.99985}
+verdict: reject
+done 22s
