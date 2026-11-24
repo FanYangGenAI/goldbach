@@ -1,0 +1,917 @@
+{
+  "hub_commit": "133d82c83e66c9bef4ff9158ba03928fc62c06c5",
+  "source_manifest": {
+    "1": {
+      "commit": "8948b7aa714b4353bf23efdd615621b6ad46fb85",
+      "files": [
+        "research/O1_chi_local/DESIGN.md",
+        "research/O1_chi_local/o1_chi_local.py"
+      ],
+      "design_history": [
+        "8948b7a O1 results: local HL-type model matches the mean of chi but none of its N-to-N fluctuation (prereg verdict reject, as disclosed).",
+        "fdff13b O1: preregister HL-type local-model prediction of the signed parity two-point chi (design + runner; smoke result disclosed)."
+      ]
+    },
+    "2": {
+      "commit": "cfa6111d9faa08db246030c5654a5cc7a64e79e1",
+      "files": [
+        "research/O2_gpu_drift/DESIGN.md",
+        "research/O2_gpu_drift/o2_gpu_drift.py"
+      ],
+      "design_history": [
+        "cfa6111 O2 results: background-coefficient drift shrinks to -2.0e-5 at 8.6e9 (P1, P2 pass); drift ~ -1.5/sqrt(N).",
+        "25d012d O2: preregister overnight GPU drift test of the background coefficient to 8.8e9 (design + runner)."
+      ]
+    },
+    "3": {
+      "commit": "6c774e1bb9fadb5a7ea69af27021817831ab4a28",
+      "files": [
+        "research/O3_function_field/DESIGN.md",
+        "research/O3_function_field/brute_check.py",
+        "research/O3_function_field/fail_analysis.py",
+        "research/O3_function_field/o3_function_field.py"
+      ],
+      "design_history": [
+        "6c774e1 O3 results: HL analogue in F_q[t] exact to ~q^-n; only failures are F_3[t] deg 3 (Artin-Schreier value-set obstruction) and deg 4.",
+        "d7d0b96 O3: function-field Goldbach exploration (design, runner, brute-force cross-check, smoke)."
+      ]
+    },
+    "4": {
+      "commit": "8042a0ea59854040017ab8de46192d685d911735",
+      "files": [
+        "research/O4_ff_parity/DESIGN.md",
+        "research/O4_ff_parity/deg4_failures.py",
+        "research/O4_ff_parity/o4_ff_parity.py",
+        "research/O4_ff_parity/o4_int_parity.py"
+      ],
+      "design_history": [
+        "8042a0e O4 results: H2 holds for integers and q<=7 (fails q>=11), H3 fails everywhere (chi fluctuation largely local, R2 0.3-0.94), H4 holds (omega_big dominant).",
+        "b749007 O4 prereg: signed parity chi in F_q[t] and integers: random-labelling dispersion and locality (smoke disclosed)."
+      ]
+    },
+    "5": {
+      "commit": "610a25efd1bad918b0268eb89cef68060368a072",
+      "files": [
+        "research/O5_drift_theta/DESIGN.md",
+        "research/O5_drift_theta/o5_drift_theta.py"
+      ],
+      "design_history": [
+        "610a25e O5 results: P1,P2 pass - first-order prime-counting term predicts the O2 drift (corr 0.995, slope 0.999, residual 0.04/sqrt(x)).",
+        "00d3586 O5 prereg: first-order prime-counting correction as predictor of the O2 1/sqrt(N) drift (smoke disclosed)."
+      ]
+    },
+    "6": {
+      "commit": "299b2053f5b4b880fb68a28d85e2f218f605a4d8",
+      "files": [
+        "research/O6_chi_refined/DESIGN.md",
+        "research/O6_chi_refined/o6_chi_refined.py",
+        "research/O6_chi_refined/resid_dispersion.py"
+      ],
+      "design_history": [
+        "299b205 O6 results: prereg SUPPORT - p > z local factors predict ~60% of chi's N-to-N variance (rho 0.78 at 1e9); residual ~1.2x random-labelling scale.",
+        "33d4392 O6 prereg addendum: disclose O4 1e9 result seen at commit time (criteria unchanged).",
+        "9f11a6c O6 prereg: refined local model of chi with p > z local factors (smoke disclosed)."
+      ]
+    },
+    "7": {
+      "commit": "b73ccb478c947e15d82892e42dd9617dd518488a",
+      "files": [
+        "research/O7_ff_refined/DESIGN.md",
+        "research/O7_ff_refined/o7_ff_refined.py"
+      ],
+      "design_history": [
+        "b73ccb4 O7 results: prereg SUPPORT for every q; refined local model explains 45-93% of chi variance, 'all' version reproduces the mean exactly; residual D 0.7-0.9.",
+        "d5b65e7 O7 prereg: correct disclosure (partial O4 q=3 output had been seen).",
+        "218b50e O7 prereg: function-field refined local model of chi (exhaustive; smoke disclosed)."
+      ]
+    },
+    "8": {
+      "commit": "f0bd7aea11ac5b6a6d115422ab2d87eaafbd95d8",
+      "files": [
+        "research/O8_variance_constant/DESIGN.md",
+        "research/O8_variance_constant/o8_ff.py",
+        "research/O8_variance_constant/o8_int.py"
+      ],
+      "design_history": [
+        "f0bd7ae O8 addendum: small-j windows and functional-form fits for c2 - form undetermined; best a*(log x)^0.51 (consistent with L3 effective exponent ~2.5).",
+        "281734b O8 results: Goldbach variance constant sub-Poisson in both settings; integers c2 ~ 1 - 7/log x; F_q[t] large-q limits c2(n=3)=1/q, n=4 ~0.080, n=5 ~0.14.",
+        "1cb24e5 O8 (exploratory): Goldbach variance constant c^2 in F_q[t] and integers; design, runners, smoke."
+      ]
+    },
+    "9": {
+      "commit": "17a586448ec874545d038ed956d94823732ae58f",
+      "files": [
+        "research/O9_gpu_2e10/DESIGN.md",
+        "research/O9_gpu_2e10/o9_gpu_2e10.py"
+      ],
+      "design_history": [
+        "17a5864 O9 results: P1,P2 pass at j=34,35 (drift residual 0.02-0.03/sqrt(x); c2 0.692/0.700 vs 1-7.2/log x).",
+        "6632e5e O9: reduce j=35 to 2 windows (sieve oversubscribed GPU memory; no results had been produced).",
+        "d9375c7 O9 design erratum: actual TOP 4.94e10 (window formula unchanged).",
+        "953afd9 O9 prereg: odd-only GPU sieve to 3.6e10; O5 drift predictor and O8 variance constant at j=34,35 (smoke disclosed)."
+      ]
+    },
+    "10": {
+      "commit": "335878fc2645f8e83482e5f79af23080c6b9660c",
+      "files": [
+        "research/O10_ff_largeq/DESIGN.md",
+        "research/O10_ff_largeq/o10_ff_largeq.py"
+      ],
+      "design_history": [
+        "335878f O10 addendum: small-q large-n - factorization type explains a vanishing share of the HL residual (q=3,n=14: 1e-4).",
+        "16ea850 O10 results: large-q limit - n=3 HL residual = mean/q and mostly factorization-type (local); n>=4 a type-independent limit noise c2 -> 0.080 (n=4), ~0.14 (n=5).",
+        "558d77c O10 (exploratory): large-q limit in F_q[t] - is r(F) determined by the factorization type of F? design, runner, smoke."
+      ]
+    },
+    "11": {
+      "commit": "b5aac2abf57a0d55fb90864521444f4c029d82c8",
+      "files": [
+        "research/O11_chi_gpu/DESIGN.md",
+        "research/O11_chi_gpu/o11_chi_gpu.py",
+        "research/O11_chi_gpu/oracle_shared.py",
+        "research/O11_chi_gpu/resid_locality.py"
+      ],
+      "design_history": [
+        "b5aac2a O11 post-hoc (negative): oracle r_z(N/p) for shared-p SS pairs leaves D_after unchanged.",
+        "5c73fe3 O11 post-hoc: residual after refined model carries no detectable local structure (R2 0.005-0.034 vs chance 0.013).",
+        "94e1de7 O11 results: prereg SUPPORT at 1e10 (rho 0.83, R2 0.69); residual D 1.16-1.26.",
+        "3665e1c O11 prereg: O6 refined chi model at N~1e10 with exact GPU counts for whole windows (smoke disclosed)."
+      ]
+    },
+    "12": {
+      "commit": "4b31656bfc1a79df1672ac7d9c48ba2d09adff64",
+      "files": [
+        "research/O12_ff_spectrum/DESIGN.md",
+        "research/O12_ff_spectrum/o12_ff_spectrum.py"
+      ],
+      "design_history": [
+        "4b31656 O12: fix cross-reference.",
+        "fc8d636 O12 results: KR level variance confirmed per level; noise lives in level -1; independence heuristic overestimates c2 4-6x (L^ and P^ correlated via the same L-function).",
+        "9e336f7 O12 (exploratory): Fourier level spectrum of F_q[t] Goldbach noise vs Keating-Rudnick; design, runner, smoke."
+      ]
+    },
+    "13": {
+      "commit": "8790da9b1467b9583f05a3d4a4b56b35a04a9322",
+      "files": [
+        "research/O13_noise_locality/DESIGN.md",
+        "research/O13_noise_locality/o13_noise_locality.py"
+      ],
+      "design_history": [
+        "8790da9 O13 results: H1,H2 pass - Goldbach residual mean independent of local features (R2 ~2e-6), variance mildly smaller with more small prime factors.",
+        "8e243c8 O13 prereg: locality of the integer Goldbach residual (mean and variance vs local features of N); smoke disclosed."
+      ]
+    },
+    "14": {
+      "commit": "c05abb35d461d594af03cbe821e006ed3443de80",
+      "files": [
+        "research/O14_noise_structure/DESIGN.md",
+        "research/O14_noise_structure/o14_noise_structure.py"
+      ],
+      "design_history": [
+        "c05abb3 O14 results: H1,H2 pass - residual noise Gaussian (skew<0.006, exkurt 0.005); cross-N covariance has mod-3/105/210 congruence structure, decaying slowly; spectrum concentrated near small-denominator rationals.",
+        "4f62738 O14 prereg: integer Goldbach residual noise - distribution, cross-N autocorrelation (mod-3 structure), spectrum (smoke disclosed)."
+      ]
+    },
+    "15": {
+      "commit": "e4d8631533592c589e964a88fc2ac3dd7767de6f",
+      "files": [
+        "research/O15_ff_chowla/DESIGN.md",
+        "research/O15_ff_chowla/o15_ff_chowla.py"
+      ],
+      "design_history": [
+        "e4d8631 O15 results: H1,H2 pass (Liouville fibre sum is exactly random-sign scale, sd*q^(n/2)=1.00+-0.05, type-independent); H3 fails at small q (heavier tails q=3 n=6-10).",
+        "14d4d2a O15 prereg: Liouville two-point sum over the Goldbach fibre in F_q[t] (Chowla-type), smoke disclosed."
+      ]
+    },
+    "16": {
+      "commit": "6e1d2a74cfaf316b4e2e1522f56b4e57343e5d45",
+      "files": [
+        "research/O16_noise_kernel/DESIGN.md",
+        "research/O16_noise_kernel/o16_noise_kernel.py"
+      ],
+      "design_history": [
+        "6e1d2a7 O16 results: K1,K2 pass - residual covariance kernel rho(h/2) = a + b*s(h) (Pearson 0.94-0.96); note ordered-pair Poisson baseline is 2 for integers.",
+        "2f05a49 O16 prereg: covariance kernel of the Goldbach residual vs twin singular series s(2L) (smoke disclosed)."
+      ]
+    },
+    "17": {
+      "commit": "44d374e53d87f387cbfaee52a23da433ded44932",
+      "files": [
+        "research/O17_race_mod3/DESIGN.md",
+        "research/O17_race_mod3/o17_race_mod3.py"
+      ],
+      "design_history": [
+        "44d374e O17 results: R1,R2 pass - Chebyshev race mod 3 in Goldbach counts predicted by class-split first-order term (corr 0.997, slope 0.990).",
+        "437e2d3 O17 prereg: Chebyshev race mod 3 in Goldbach counts - class-split first-order term vs observed (smoke disclosed)."
+      ]
+    },
+    "18": {
+      "commit": "20214368a6cf4b02bb444904cdada23f8eb25f2e",
+      "files": [
+        "research/O18_race_general/DESIGN.md",
+        "research/O18_race_general/o18_race_general.py"
+      ],
+      "design_history": [
+        "2021436 O18 results: G1 pass for q=5,7,12 (corr >= 0.9987, slope 1.00+-0.01), G0 pass for null q=4.",
+        "3aaeefa O18 prereg: Chebyshev races in Goldbach counts mod 4 (null), 5, 7, 12 (smoke disclosed)."
+      ]
+    },
+    "19": {
+      "commit": "4930a207d4266b6213fcc025ec27acf23d8271e4",
+      "files": [
+        "research/O19_int_chowla/DESIGN.md",
+        "research/O19_int_chowla/lambda_sieve.py",
+        "research/O19_int_chowla/o19_int_chowla.py"
+      ],
+      "design_history": [
+        "4930a20 O19 results: C1-C3 pass - integer Liouville fibre sum is exactly random-sign scale (sd/sqrt(2N)=1.000), Gaussian, uncorrelated across N, non-local.",
+        "fbcc6e6 O19 prereg: integer Chowla-Goldbach fibre sum (Liouville), scale/Gaussianity/locality (smoke disclosed)."
+      ]
+    },
+    "20": {
+      "commit": "9a54f67ffcd56285093bcc32207c5d39be0f5582",
+      "files": [
+        "research/O20_kernel_diagonal/DESIGN.md",
+        "research/O20_kernel_diagonal/o20_kernel_diagonal.py"
+      ],
+      "design_history": [
+        "9a54f67 O20: soften L3c link.",
+        "38bca49 O20 results: variance = 0.32-0.33 x diagonal (2r); for h>0 the off-diagonal cancels the diagonal triple term to within +-3%, sign set by s(h).",
+        "6d236f3 O20 (exploratory): exact diagonal part of the Goldbach covariance kernel; design, runner, smoke."
+      ]
+    },
+    "21": {
+      "commit": "4eba6746ddffbfd1bc0d29eb0af46bccffd97e1d",
+      "files": [
+        "research/O21_race_3e10/DESIGN.md",
+        "research/O21_race_3e10/o21_race_3e10.py"
+      ],
+      "design_history": [
+        "4eba674 O21 results: G0,G1 pass up to 3.2e10 (corr >= 0.9995).",
+        "a0d656c O21 prereg: O18 race test extended to 1.2e10-3.2e10 (same code and criteria)."
+      ]
+    },
+    "22": {
+      "commit": "df10efdd213fd412c7a16ddb706e09ec48063432",
+      "files": [
+        "research/O22_kernel_omega/DESIGN.md",
+        "research/O22_kernel_omega/o22_kernel_omega.py"
+      ],
+      "design_history": [
+        "df10efd O22 results: W1-W3 pass - kernel carries a stable negative omega(h) term beyond s(h) (c = -0.003..-0.005) on fresh windows/lags up to h=2000.",
+        "5992167 O22 prereg: omega(h) term in the Goldbach noise covariance kernel on fresh windows/lags (post-hoc origin disclosed)."
+      ]
+    },
+    "23": {
+      "commit": "2f941aa273c41e8d64240f1e607f37c783feed46",
+      "files": [
+        "research/O23_ff_chowla_large/DESIGN.md",
+        "research/O23_ff_chowla_large/o23_ff_chowla_large.py"
+      ],
+      "design_history": [
+        "2f941aa O23 results: H1,H2 pass (sd*q^(n/2) 0.999-1.018, R2_type <= 7e-4 up to 6.9e7 F); H3 fails once (q=11,n=6).",
+        "5f574e9 O23 prereg: O15 Liouville fibre sum on larger q and degree."
+      ]
+    },
+    "24": {
+      "commit": "73940de2d607c86dbc39cd6a0adebb4c22697c67",
+      "files": [
+        "research/O24_c2_form/DESIGN.md",
+        "research/O24_c2_form/o24_c2_form.py"
+      ],
+      "design_history": [
+        "73940de O24 results: F1 pass - sqrt(log)-type forms beat 1/log forms on fresh windows; form still not pinned.",
+        "83e6bae O24 prereg: c2 functional form with 4 windows per scale, forms frozen from O8 fits (smoke disclosed)."
+      ]
+    }
+  },
+  "saved_prediction_recomputations": {
+    "O5": {
+      "corr": 0.9948103018354287,
+      "slope": 0.9990039193804523,
+      "mean_abs_obs": 2.178224238267335,
+      "mean_abs_resid": 0.039955995043524095
+    },
+    "O5_plus_O9": {
+      "corr": 0.9950887478004058,
+      "slope": 0.9976112707789171,
+      "mean_abs_obs": 2.1611558561750903,
+      "mean_abs_resid": 0.03819094629625761,
+      "n_windows": 106
+    },
+    "O6": {
+      "100000000": {
+        "rho": 0.7434271666592621,
+        "sd_ratio": 0.6494839042079006,
+        "R2_pred": 0.5438586155670129,
+        "n_prediction_samples": 300
+      },
+      "1000000000": {
+        "rho": 0.7777454204969985,
+        "sd_ratio": 0.7030149733056934,
+        "R2_pred": 0.5993032993666412,
+        "n_prediction_samples": 300
+      }
+    },
+    "O11": {
+      "1000000000": {
+        "rho": 0.7739479796043803,
+        "sd_ratio": 0.7468286825785294,
+        "R2_pred": 0.598260018862526,
+        "n_prediction_samples": 300
+      },
+      "3000000000": {
+        "rho": 0.7348818861828111,
+        "sd_ratio": 0.7665563512438587,
+        "R2_pred": 0.5390481149027023,
+        "n_prediction_samples": 300
+      },
+      "10000000000": {
+        "rho": 0.8318112701838861,
+        "sd_ratio": 0.7754866847596943,
+        "R2_pred": 0.6887375302817227,
+        "n_prediction_samples": 300
+      }
+    },
+    "O17": {
+      "corr": 0.9971556736499658,
+      "slope": 0.9902077587700269,
+      "mean_abs_obs": 4.256675036338763,
+      "mean_abs_resid": 0.0819192943642429
+    },
+    "O18": {
+      "4": {
+        "mean_abs_obs": 0.0037644445576741153
+      },
+      "5": {
+        "corr": 0.9992389117638437,
+        "slope": 1.0082446864003616,
+        "mean_abs_obs": 0.6218221395886568,
+        "mean_abs_resid": 0.02322292016515997
+      },
+      "7": {
+        "corr": 0.9987363201360043,
+        "slope": 1.0026347811256844,
+        "mean_abs_obs": 0.45200262208385433,
+        "mean_abs_resid": 0.02338238145698168
+      },
+      "12": {
+        "corr": 0.9996754124422681,
+        "slope": 1.0010208576531345,
+        "mean_abs_obs": 1.3720967034589393,
+        "mean_abs_resid": 0.030661368593882268
+      }
+    },
+    "O21": {
+      "4": {
+        "mean_abs_obs": 0.004762889020214862
+      },
+      "5": {
+        "corr": 0.9997504739833284,
+        "slope": 1.0056418788647457,
+        "mean_abs_obs": 0.5397544669751597,
+        "mean_abs_resid": 0.012524506503664577
+      },
+      "7": {
+        "corr": 0.9994983906021546,
+        "slope": 0.9954622832455844,
+        "mean_abs_obs": 0.4587409746241644,
+        "mean_abs_resid": 0.015224811973265025
+      },
+      "12": {
+        "corr": 0.9997848150579969,
+        "slope": 1.0038679683792193,
+        "mean_abs_obs": 1.1879139508858698,
+        "mean_abs_resid": 0.024659341630045233
+      }
+    }
+  },
+  "kernel": {
+    "O16_tie_corrected_spearman": [
+      {
+        "x": 1000000000,
+        "source": 0.7735503521260841,
+        "correct": 0.7730775033672321
+      },
+      {
+        "x": 10000000000,
+        "source": 0.8572627276326517,
+        "correct": 0.8579901833643635
+      },
+      {
+        "x": 30000000000,
+        "source": 0.8073342169739326,
+        "correct": 0.8076701901010545
+      }
+    ],
+    "O22": [
+      {
+        "x": 3000000000,
+        "coef_fresh": [
+          -0.02665685411193223,
+          0.02107452574425445,
+          -0.003065949567114
+        ],
+        "gain_R2": 0.013395664468882535,
+        "W1": true,
+        "W2": true,
+        "W3": true,
+        "old_lag_fit_to_new_lag_MSE_ratio": 0.8178868394710104
+      },
+      {
+        "x": 20000000000,
+        "coef_fresh": [
+          -0.041284931054139336,
+          0.03251554704251228,
+          -0.0046375368582302415
+        ],
+        "gain_R2": 0.01262920049297182,
+        "W1": true,
+        "W2": true,
+        "W3": true,
+        "old_lag_fit_to_new_lag_MSE_ratio": 0.8589171708665854
+      }
+    ]
+  },
+  "O24_overlap_and_scores": {
+    "n_total": 84,
+    "training_overlap_windows": [
+      {
+        "j": 14,
+        "x": 18432,
+        "H": 2048,
+        "overlap_length": 2048
+      },
+      {
+        "j": 14,
+        "x": 20480,
+        "H": 2048,
+        "overlap_length": 2048
+      },
+      {
+        "j": 15,
+        "x": 36864,
+        "H": 4096,
+        "overlap_length": 4096
+      },
+      {
+        "j": 15,
+        "x": 40960,
+        "H": 4096,
+        "overlap_length": 4096
+      },
+      {
+        "j": 16,
+        "x": 73728,
+        "H": 8192,
+        "overlap_length": 4096
+      },
+      {
+        "j": 17,
+        "x": 147456,
+        "H": 16384,
+        "overlap_length": 8192
+      },
+      {
+        "j": 18,
+        "x": 294912,
+        "H": 32768,
+        "overlap_length": 16384
+      },
+      {
+        "j": 19,
+        "x": 589824,
+        "H": 65536,
+        "overlap_length": 32768
+      },
+      {
+        "j": 20,
+        "x": 1179648,
+        "H": 131072,
+        "overlap_length": 65536
+      },
+      {
+        "j": 21,
+        "x": 2359296,
+        "H": 262144,
+        "overlap_length": 131072
+      },
+      {
+        "j": 22,
+        "x": 4718592,
+        "H": 524288,
+        "overlap_length": 262144
+      },
+      {
+        "j": 23,
+        "x": 9437184,
+        "H": 1048576,
+        "overlap_length": 524288
+      },
+      {
+        "j": 24,
+        "x": 18874368,
+        "H": 2097152,
+        "overlap_length": 1048576
+      },
+      {
+        "j": 25,
+        "x": 37748736,
+        "H": 4194304,
+        "overlap_length": 2097152
+      },
+      {
+        "j": 26,
+        "x": 75497472,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 27,
+        "x": 150994944,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 28,
+        "x": 301989888,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 29,
+        "x": 603979776,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 30,
+        "x": 1207959552,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 31,
+        "x": 2415919104,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 32,
+        "x": 4831838208,
+        "H": 4194304,
+        "overlap_length": 4194304
+      },
+      {
+        "j": 33,
+        "x": 9663676416,
+        "H": 4194304,
+        "overlap_length": 4194304
+      }
+    ],
+    "n_without_training_overlap": 62,
+    "n_without_training_or_smoke_overlap": 57,
+    "source_MSE": {
+      "a*L^b": 0.00022934396007880938,
+      "A(1-C/sqrtL)": 0.00018812891653213269,
+      "A-C/L": 0.0006004940777765042,
+      "1-C/L": 0.002832124911839963,
+      "A-C/L^2": 0.0023661186732252615
+    },
+    "clean_training_MSE_exploratory": {
+      "a*L^b": 0.00011380908460689851,
+      "A(1-C/sqrtL)": 0.00035089352277430227,
+      "A-C/L": 0.000924830906789958,
+      "1-C/L": 0.003482318565554713,
+      "A-C/L^2": 0.0030287786196302397
+    },
+    "clean_training_and_smoke_MSE_exploratory": {
+      "a*L^b": 7.636273199740636e-05,
+      "A(1-C/sqrtL)": 0.0002708284541225478,
+      "A-C/L": 0.0005751719627495756,
+      "1-C/L": 0.0021529768400173673,
+      "A-C/L^2": 0.0015019909502512192
+    },
+    "high_scale_j28plus_MSE_exploratory": {
+      "a*L^b": 9.350433697935175e-05,
+      "A(1-C/sqrtL)": 9.257256004499776e-05,
+      "A-C/L": 0.00010504136306316715,
+      "1-C/L": 6.294989137339973e-05,
+      "A-C/L^2": 0.00017837462160718358
+    }
+  },
+  "O20_diagonal": {
+    "exhaustive_cases": 162,
+    "examples": [
+      {
+        "N": 10,
+        "h": 0,
+        "actual_shared_prime_pairs": 5,
+        "source_formula": 6,
+        "corrected": 5
+      },
+      {
+        "N": 10,
+        "h": 2,
+        "actual_shared_prime_pairs": 6,
+        "source_formula": 8,
+        "corrected": 6
+      }
+    ]
+  },
+  "O23_checks": [
+    {
+      "q": 3,
+      "n": 16,
+      "sd_l_scaled": 1.0011593394332954,
+      "R2_type": 0.00020518315314432822,
+      "tail_ratio": 1.0454074043600954,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 5,
+      "n": 11,
+      "sd_l_scaled": 0.9996249729095871,
+      "R2_type": 0.00012075814064893553,
+      "tail_ratio": 0.8876403639702366,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 7,
+      "n": 9,
+      "sd_l_scaled": 0.9998110609484654,
+      "R2_type": 0.00012202400386673862,
+      "tail_ratio": 1.054108362946636,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 11,
+      "n": 6,
+      "sd_l_scaled": 1.0183028457854282,
+      "R2_type": 0.0002980362730000685,
+      "tail_ratio": 1.6317077874734167,
+      "H1": true,
+      "H2": true,
+      "H3": false
+    },
+    {
+      "q": 11,
+      "n": 7,
+      "sd_l_scaled": 1.0036082455925994,
+      "R2_type": 5.249933344930735e-05,
+      "tail_ratio": 0.7980535986465784,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 13,
+      "n": 6,
+      "sd_l_scaled": 0.9999394436600687,
+      "R2_type": 0.0001793564261267644,
+      "tail_ratio": 0.966791328634544,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 17,
+      "n": 6,
+      "sd_l_scaled": 1.0051624679375661,
+      "R2_type": 0.00010339735316466925,
+      "tail_ratio": 0.8521004034817051,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 19,
+      "n": 6,
+      "sd_l_scaled": 1.0023065504399293,
+      "R2_type": 8.16329121254844e-05,
+      "tail_ratio": 1.040834657618858,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 53,
+      "n": 4,
+      "sd_l_scaled": 0.9990321311191437,
+      "R2_type": 0.0006518250968577943,
+      "tail_ratio": 0.842525037626745,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 59,
+      "n": 4,
+      "sd_l_scaled": 1.0000690834814885,
+      "R2_type": 0.0005363761706987935,
+      "tail_ratio": 0.7185594179448543,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 61,
+      "n": 4,
+      "sd_l_scaled": 0.9994689970712127,
+      "R2_type": 0.0005200364876668528,
+      "tail_ratio": 0.7941371158408073,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    },
+    {
+      "q": 37,
+      "n": 5,
+      "sd_l_scaled": 0.9986366932658378,
+      "R2_type": 4.185065388717657e-05,
+      "tail_ratio": 0.9371393355222906,
+      "H1": true,
+      "H2": true,
+      "H3": true
+    }
+  ],
+  "integer_chi_symmetry_reference": [
+    {
+      "experiment": "O6",
+      "scale": 100000000,
+      "D_old_per_row_reference": 1.1832322748910182,
+      "D_unordered_pair_reference": 0.8971787899740465,
+      "median_null_variance_ratio": 1.7389361096792426,
+      "mean_source_D_if_saved": null
+    },
+    {
+      "experiment": "O6",
+      "scale": 1000000000,
+      "D_old_per_row_reference": 1.216908438654268,
+      "D_unordered_pair_reference": 0.9149489693969084,
+      "median_null_variance_ratio": 1.7691120255862889,
+      "mean_source_D_if_saved": null
+    },
+    {
+      "experiment": "O11",
+      "scale": 1000000000,
+      "D_old_per_row_reference": 1.2571060978269177,
+      "D_unordered_pair_reference": 0.9453135449868567,
+      "median_null_variance_ratio": 1.768374228274966,
+      "mean_source_D_if_saved": 1.2571138182121013
+    },
+    {
+      "experiment": "O11",
+      "scale": 3000000000,
+      "D_old_per_row_reference": 1.233582481838328,
+      "D_unordered_pair_reference": 0.925028698957464,
+      "median_null_variance_ratio": 1.7783925963372935,
+      "mean_source_D_if_saved": 1.2335819161094155
+    },
+    {
+      "experiment": "O11",
+      "scale": 10000000000,
+      "D_old_per_row_reference": 1.1553427019932,
+      "D_unordered_pair_reference": 0.865373660025512,
+      "median_null_variance_ratio": 1.7824604598527598,
+      "mean_source_D_if_saved": 1.15534069517737
+    }
+  ],
+  "function_field_spectral_diagnostic": [
+    {
+      "q": 3,
+      "n": 4,
+      "c2_raw": 1.8253968253968258,
+      "c2_residual": 0.3077914131690163,
+      "c2_background": 2.4718869488599196,
+      "twice_cov_r_background": 3.9894923610877284,
+      "raw_independent_spectral_baseline": 0.5357142857142855,
+      "raw_to_independent_ratio": 3.4074074074074097,
+      "raw_Parseval_error": 8.881784197001252e-16,
+      "asymmetric_chi": {
+        "max_abs_PS_minus_SP": 5.0,
+        "source_chi_mean": 0.04988062442607896,
+        "connected_chi_mean": 0.0,
+        "source_chi_sd": 0.43151484719555205,
+        "connected_chi_sd": 0.0,
+        "mean_mu_low": -1.0,
+        "mean_mu_top": -0.4835016835016835,
+        "max_identity_error": 2.7755575615628914e-17
+      }
+    },
+    {
+      "q": 3,
+      "n": 5,
+      "c2_raw": 4.496696566358025,
+      "c2_residual": 0.2172626654645585,
+      "c2_background": 5.3165841024196485,
+      "twice_cov_r_background": 9.596018003313116,
+      "raw_independent_spectral_baseline": 0.6084587191358024,
+      "raw_to_independent_ratio": 7.390306729016408,
+      "raw_Parseval_error": 8.881784197001252e-16,
+      "asymmetric_chi": {
+        "max_abs_PS_minus_SP": 12.0,
+        "source_chi_mean": 0.10439344655799866,
+        "connected_chi_mean": 5.254141886086132e-18,
+        "source_chi_sd": 0.18664644840539685,
+        "connected_chi_sd": 0.17994050409605578,
+        "mean_mu_low": -0.6522149600580973,
+        "mean_mu_top": -0.3333333333333333,
+        "max_identity_error": 5.551115123125783e-17
+      }
+    },
+    {
+      "q": 3,
+      "n": 8,
+      "c2_raw": 53.76023135996889,
+      "c2_residual": 0.2098724941232655,
+      "c2_background": 54.21071498703531,
+      "twice_cov_r_background": 107.76107385288094,
+      "raw_independent_spectral_baseline": 0.7584417045605921,
+      "raw_to_independent_ratio": 70.88248317135357,
+      "raw_Parseval_error": 3.552713678800501e-14,
+      "asymmetric_chi": {
+        "max_abs_PS_minus_SP": 169.0,
+        "source_chi_mean": 0.05113394972017627,
+        "connected_chi_mean": -0.00017829945495475907,
+        "source_chi_sd": 0.06591433672241626,
+        "connected_chi_sd": 0.06476064635555179,
+        "mean_mu_low": -0.47209303104662337,
+        "mean_mu_top": -0.1867817087767835,
+        "max_identity_error": 4.163336342344337e-17
+      }
+    },
+    {
+      "q": 5,
+      "n": 4,
+      "c2_raw": 3.6321212121212123,
+      "c2_residual": 0.13931020604481814,
+      "c2_background": 4.201606303303885,
+      "twice_cov_r_background": 7.694417309380279,
+      "raw_independent_spectral_baseline": 0.5016969696969696,
+      "raw_to_independent_ratio": 7.239671418216962,
+      "raw_Parseval_error": 0.0,
+      "asymmetric_chi": {
+        "max_abs_PS_minus_SP": 38.0,
+        "source_chi_mean": 0.24362452309186028,
+        "connected_chi_mean": 0.0,
+        "source_chi_sd": 0.013603298578197665,
+        "connected_chi_sd": 0.0,
+        "mean_mu_low": -1.0,
+        "mean_mu_top": -0.4635497711964572,
+        "max_identity_error": 2.7755575615628914e-17
+      }
+    },
+    {
+      "q": 13,
+      "n": 4,
+      "c2_raw": 17.96262752306708,
+      "c2_residual": 0.08451533750670481,
+      "c2_background": 18.44982464834172,
+      "twice_cov_r_background": 36.32793683390209,
+      "raw_independent_spectral_baseline": 0.4968224380734947,
+      "raw_to_independent_ratio": 36.155024706049765,
+      "raw_Parseval_error": 3.552713678800501e-15,
+      "asymmetric_chi": {
+        "max_abs_PS_minus_SP": 1384.0,
+        "source_chi_mean": 0.2388224478785301,
+        "connected_chi_mean": 0.0,
+        "source_chi_sd": 0.0018125043861870398,
+        "connected_chi_sd": 0.0,
+        "mean_mu_low": -1.0,
+        "mean_mu_top": -0.39463627261166606,
+        "max_identity_error": 2.7755575615628914e-17
+      }
+    }
+  ],
+  "integer_Liouville_dilation_exploratory": {
+    "exploratory": true,
+    "N_range": [
+      400000,
+      799998
+    ],
+    "n_even_N": 200000,
+    "corr_yN_y2N": 0.7081397493241759,
+    "sd_yN": 1.411952830974865,
+    "sd_y2N": 1.4144906302459443,
+    "adjacent_even_corr": -0.004573542306162101,
+    "dilation_identity_errors": [
+      0,
+      0,
+      0
+    ],
+    "gcd_decomposition_errors": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "scope": "Large CUDA runs and O25 not rerun. New diagnostics are exploratory; original rules and verdicts preserved."
+}
