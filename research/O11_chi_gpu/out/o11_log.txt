@@ -1,0 +1,9 @@
+GPU odd prime sieve to 10,008,388,610: 1.1s
+X=1e+09: z=1000, window 1000000000..1002097152, conv 8s
+1000000000 {"z": 1000, "x": 1000000000, "rho": 0.77395, "sd_ratio": 0.74683, "R2_pred": 0.59826, "mean_obs": -0.00273, "mean_ref": -0.00247, "mean_base": -0.00268, "D_window": 1.92043, "D_sample_before": 2.03466, "D_sample_after": 1.25711, "window_chi_mean": -0.00273, "window_chi_sd": 0.00054, "n_window": 1048576, "secs": 10.21906}
+X=3e+09: z=1442, window 3000000000..3002097152, conv 24s
+3000000000 {"z": 1442, "x": 3000000000, "rho": 0.73488, "sd_ratio": 0.76656, "R2_pred": 0.53905, "mean_obs": -0.00239, "mean_ref": -0.00223, "mean_base": -0.00236, "D_window": 2.03468, "D_sample_before": 1.8549, "D_sample_after": 1.23358, "window_chi_mean": -0.00238, "window_chi_sd": 0.00035, "n_window": 1048576, "secs": 25.97145}
+X=1e+10: z=2154, window 10000000000..10002097152, conv 79s
+10000000000 {"z": 2154, "x": 10000000000, "rho": 0.83181, "sd_ratio": 0.77549, "R2_pred": 0.68874, "mean_obs": -0.0021, "mean_ref": -0.00197, "mean_base": -0.00206, "D_window": 2.16729, "D_sample_before": 2.12911, "D_sample_after": 1.15534, "window_chi_mean": -0.00209, "window_chi_sd": 0.00021, "n_window": 1048576, "secs": 80.74285}
+verdict: support
+done 118s
