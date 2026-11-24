@@ -10,8 +10,9 @@ OUT = os.path.join(HERE, "out"); os.makedirs(OUT, exist_ok=True)
 SMOKE = "--smoke" in sys.argv
 C2 = 0.6601618158468695739278121100145
 dev = torch.device("cuda")
-JS = [16, 18, 20] if SMOKE else list(range(16, 34))
-HJ = {j: 1 << min(22, j - 4) for j in JS}
+SMALLJ = "--smallj" in sys.argv
+JS = [16, 18, 20] if SMOKE else (list(range(10, 16)) if SMALLJ else list(range(16, 34)))
+HJ = {j: 1 << min(22, j - (2 if SMALLJ else 4)) for j in JS}
 TOP = (1 << max(JS)) + (1 << (max(JS) - 3)) + 4 * max(HJ.values()) + 2
 CH = 1 << 27
 t0 = time.time()
@@ -107,5 +108,5 @@ for j in JS:
                c2_mod3_0=float(z[m3].var()), c2_mod3_nz=float(z[~m3].var()), secs=time.time() - tw)
     rows.append(row)
     print(json.dumps(row), flush=True)
-    json.dump(dict(rows=rows, smoke=SMOKE), open(os.path.join(OUT, "o8_int_smoke.json" if SMOKE else "o8_int_summary.json"), "w"), indent=1, allow_nan=False)
+    json.dump(dict(rows=rows, smoke=SMOKE), open(os.path.join(OUT, "o8_int_smoke.json" if SMOKE else ("o8_int_smallj.json" if SMALLJ else "o8_int_summary.json")), "w"), indent=1, allow_nan=False)
 print(f"done {time.time()-t0:.0f}s")
