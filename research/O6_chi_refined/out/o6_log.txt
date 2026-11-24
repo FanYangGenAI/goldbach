@@ -1,0 +1,5 @@
+sieve to 1,100,000,010: 15s
+100000000 {"rho": 0.74343, "sd_ratio": 0.64948, "R2_pred": 0.54386, "rho_plain": 0.74186, "sd_ratio_plain": 0.64993, "R2_plain": 0.5419, "mean_obs": -0.00365, "mean_base": -0.0036, "mean_ref": -0.00306, "sd_base_over_obs": 0.01006, "secs": 21.63981}
+1000000000 {"rho": 0.77775, "sd_ratio": 0.70301, "R2_pred": 0.5993, "rho_plain": 0.7794, "sd_ratio_plain": 0.70467, "R2_plain": 0.60188, "mean_obs": -0.00274, "mean_base": -0.00267, "mean_ref": -0.00248, "sd_base_over_obs": 0.01742, "secs": 77.12144}
+verdict: support
+done 77s
