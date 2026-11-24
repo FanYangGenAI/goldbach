@@ -14,7 +14,8 @@ dev = torch.device("cuda")
 H = 1 << (16 if SMOKE else 22)
 JS = [22, 23] if SMOKE else [34, 35]
 NW = 3 if SMOKE else 8
-XS = [(j, (1 << j) + w * (1 << (j - 4))) for j in JS for w in range(NW)]
+NWJ = {22: 3, 23: 3} if SMOKE else {34: 8, 35: 2}      # j=35 limited to 2 windows so the sieve fits in 24 GB
+XS = [(j, (1 << j) + w * (1 << (j - 4))) for j in JS for w in range(NWJ[j])]
 TOP = max(x for _, x in XS) + 4 * H + 2
 CH = 1 << 25
 t0 = time.time()
