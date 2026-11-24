@@ -1,0 +1,13 @@
+{"q": 3, "n": 16, "mean_l": -0.0, "mean_l_scaled": -0.0003, "sd_l_scaled": 1.00116, "max_abs_l": 0.00094, "R2_type": 0.00021, "mean_lam_top": 0.00015, "mean_lam_low": -0.0003, "secs": 149.56601}
+{"q": 5, "n": 11, "mean_l": -0.0, "mean_l_scaled": -0.0, "sd_l_scaled": 0.99962, "max_abs_l": 0.00076, "R2_type": 0.00012, "mean_lam_top": -0.00032, "mean_lam_low": 0.0, "secs": 88.86466}
+{"q": 7, "n": 9, "mean_l": -0.0, "mean_l_scaled": -0.0, "sd_l_scaled": 0.99981, "max_abs_l": 0.00098, "R2_type": 0.00012, "mean_lam_top": -0.00042, "mean_lam_low": 0.0, "secs": 53.8781}
+{"q": 11, "n": 6, "mean_l": -1e-05, "mean_l_scaled": -0.00751, "sd_l_scaled": 1.0183, "max_abs_l": 0.00658, "R2_type": 0.0003, "mean_lam_top": 0.00075, "mean_lam_low": -0.00751, "secs": 1.19114}
+{"q": 11, "n": 7, "mean_l": -0.0, "mean_l_scaled": -0.0, "sd_l_scaled": 1.00361, "max_abs_l": 0.00105, "R2_type": 5e-05, "mean_lam_top": -0.00075, "mean_lam_low": 0.0, "secs": 18.63948}
+{"q": 13, "n": 6, "mean_l": -0.0, "mean_l_scaled": -0.00546, "sd_l_scaled": 0.99994, "max_abs_l": 0.00244, "R2_type": 0.00018, "mean_lam_top": 0.00046, "mean_lam_low": -0.00546, "secs": 4.05272}
+{"q": 17, "n": 6, "mean_l": -0.0, "mean_l_scaled": -0.00326, "sd_l_scaled": 1.00516, "max_abs_l": 0.00101, "R2_type": 0.0001, "mean_lam_top": 0.0002, "mean_lam_low": -0.00326, "secs": 22.93371}
+{"q": 19, "n": 6, "mean_l": -0.0, "mean_l_scaled": -0.00262, "sd_l_scaled": 1.00231, "max_abs_l": 0.0009, "R2_type": 8e-05, "mean_lam_top": 0.00015, "mean_lam_low": -0.00262, "secs": 47.62188}
+{"q": 53, "n": 4, "mean_l": -1e-05, "mean_l_scaled": -0.01851, "sd_l_scaled": 0.99903, "max_abs_l": 0.00169, "R2_type": 0.00065, "mean_lam_top": 0.00036, "mean_lam_low": -0.01851, "secs": 5.37104}
+{"q": 59, "n": 4, "mean_l": -0.0, "mean_l_scaled": -0.01666, "sd_l_scaled": 1.00007, "max_abs_l": 0.00118, "R2_type": 0.00054, "mean_lam_top": 0.00029, "mean_lam_low": -0.01666, "secs": 8.97578}
+{"q": 61, "n": 4, "mean_l": -0.0, "mean_l_scaled": -0.01612, "sd_l_scaled": 0.99947, "max_abs_l": 0.00122, "R2_type": 0.00052, "mean_lam_top": 0.00027, "mean_lam_low": -0.01612, "secs": 10.59984}
+{"q": 37, "n": 5, "mean_l": -0.0, "mean_l_scaled": -0.0, "sd_l_scaled": 0.99864, "max_abs_l": 0.00068, "R2_type": 4e-05, "mean_lam_top": -0.00073, "mean_lam_low": 0.0, "secs": 62.78259}
+done 475s
