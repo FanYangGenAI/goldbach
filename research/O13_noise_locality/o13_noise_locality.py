@@ -1,4 +1,4 @@
-"""O13 (GPU, preregistered): is the Goldbach residual local in the integers?  For every even N in a window,
+r"""O13 (GPU, preregistered): is the Goldbach residual local in the integers?  For every even N in a window,
 z_N = (r(N) - b2(N)(1 + rel_pred)) / sqrt(b2(N)) (HL background + O5 first-order correction), regressed on local
 features of N.  Run:  .venv\Scripts\python.exe research/O13_noise_locality/o13_noise_locality.py [--smoke]"""
 import json, math, os, sys, time
