@@ -8,7 +8,10 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out"); os.makedirs(OUT, exist_ok=True)
 SMOKE = "--smoke" in sys.argv
-if SMOKE:
+SMALLQ = "--smallq" in sys.argv
+if SMALLQ:
+    PLAN = [(3, list(range(4, 15))), (5, [6, 7, 8, 9]), (7, [6, 7])]
+elif SMOKE:
     PLAN = [(5, [3, 4]), (7, [3])]
 else:
     PLAN = [(q, [3]) for q in (5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61)] +            [(q, [4]) for q in (5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43)] + [(q, [5]) for q in (5, 7, 11, 13, 17, 19, 23, 29, 31)]
@@ -199,5 +202,5 @@ for q, ns in PLAN:
                    types=types, secs=time.time() - tq)
         rows.append(row)
         print(json.dumps({k_: (round(v, 5) if isinstance(v, float) else v) for k_, v in row.items() if k_ != "types"}), flush=True)
-        json.dump(dict(rows=rows, smoke=SMOKE), open(os.path.join(OUT, "o10_smoke.json" if SMOKE else "o10_summary.json"), "w"), indent=1, allow_nan=False)
+        json.dump(dict(rows=rows, smoke=SMOKE), open(os.path.join(OUT, "o10_smoke.json" if SMOKE else ("o10_smallq.json" if SMALLQ else "o10_summary.json")), "w"), indent=1, allow_nan=False)
 print(f"done {time.time()-t0:.0f}s")
