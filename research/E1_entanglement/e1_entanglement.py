@@ -59,7 +59,7 @@ def ent_without11(T):
 
 # frozen Q1b model (base Euler product computed once)
 src = subprocess.check_output(["git", "show", f"{Q1C}:research/Q1_fugacity/q1b_euler_model.py"], cwd=HERE).decode("utf-8")
-src = src.split("\nNMAX = 10**8\n")[0].replace("cache=True", "cache=False")
+src = src.split("\nNMAX = 10**8\n")[0].replace("cache=True)", "cache=False)")
 src = src.replace('src = open(os.path.join(HERE, "q1q3_sectors_zeros.py"), encoding="utf-8").read()',
                   'src = subprocess.check_output(["git", "show", "' + Q1C + ':research/Q1_fugacity/q1q3_sectors_zeros.py"], cwd=HERE).decode("utf-8")')
 g = {"__name__": "e1"}
