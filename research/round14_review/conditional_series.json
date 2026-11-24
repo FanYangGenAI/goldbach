@@ -1,0 +1,8 @@
+{
+  "status": "conditional on the unproved reconstructed integer moments",
+  "series": {
+    "1": "1 + u/6 - u**2/6 + 31*u**3/6 + O(u**4)",
+    "2": "1 - u/6 + 7*u**2/2 + 25*u**3/6 + O(u**4)"
+  },
+  "C3_series": "23453*u**8/3360 + 1171*u**7/210 - 47*u**6/60 + 39*u**5/20 - 7*u**4/4 - u**3 - 2*u**2 - u + 1"
+}
