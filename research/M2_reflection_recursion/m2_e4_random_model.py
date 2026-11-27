@@ -6,6 +6,7 @@
 起点 j0 = y mod q（对应 qn 所在的层级），终点 0。
   model "qa"   : D = {2..Aq} ∪ {q·a : a ≤ Aq}（与 M2-E1 的乘数集相同，Z = Aq）
   model "plain": D = {2..2Aq}
+  model "smooth": D = {2 ≤ a ≤ Aq : P⁺(a) ≤ √q} ∪ {q·a : a ≤ Aq, P⁺(a) ≤ √q}
 输出：未覆盖率 u（j0 与 0 不连通的比例）及标准误、连通时的最短路长均值。"""
 import sys, json, math, random, time
 from collections import deque, defaultdict
@@ -14,6 +15,17 @@ def D_of(model, q, A):
     Z = A * q
     if model == "qa":
         return sorted(set(range(2, Z + 1)) | {q * a for a in range(1, Z + 1)}), Z
+    if model == "smooth":
+        # 只用 K-光滑乘数（K = ⌊√q⌋），对应"所有乘数整除一个 Q ≤ p^{1/2}"的可转移版本（RESULTS 第 8 节）
+        K = math.isqrt(q)
+        def P_plus(m):
+            r, x, f = 1, m, 2
+            while f * f <= x:
+                while x % f == 0: r = max(r, f); x //= f
+                f += 1
+            return max(r, x) if x > 1 else r
+        sm = [a for a in range(1, Z + 1) if P_plus(a) <= K]
+        return sorted({a for a in sm if a >= 2} | {q * a for a in sm}), Z
     return list(range(2, 2 * Z + 1)), 2 * Z
 
 def bits_needed(x, q):
