@@ -1,0 +1,4 @@
+{"N": 1009, "t_considered": 1680, "reflection_closure_frac": 0.9761904761904762}
+{"N": 4099, "t_considered": 7055, "reflection_closure_frac": 0.9397590361445783}
+{"N": 16411, "t_considered": 28834, "reflection_closure_frac": 0.9188458070333634}
+{"N": 4096, "t_considered": 7048, "reflection_closure_frac": 0.6818955732122588}
