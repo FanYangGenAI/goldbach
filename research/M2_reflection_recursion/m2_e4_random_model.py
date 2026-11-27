@@ -15,9 +15,10 @@ def D_of(model, q, A):
     Z = A * q
     if model == "qa":
         return sorted(set(range(2, Z + 1)) | {q * a for a in range(1, Z + 1)}), Z
-    if model == "smooth":
-        # 只用 K-光滑乘数（K = ⌊√q⌋），对应"所有乘数整除一个 Q ≤ p^{1/2}"的可转移版本（RESULTS 第 8 节）
-        K = math.isqrt(q)
+    if model in ("smooth", "smooth3"):
+        # 只用 K-光滑乘数，对应"所有乘数整除一个 Q ≤ p^{1/2}"的可转移版本（RESULTS 第 8 节）
+        # smooth: K = ⌊√q⌋；smooth3: K = ⌊(Aq)^{1/3}⌋（固定光滑指数 u0 = 3）
+        K = math.isqrt(q) if model == "smooth" else int(round((A * q) ** (1 / 3) - 0.5))
         def P_plus(m):
             r, x, f = 1, m, 2
             while f * f <= x:
