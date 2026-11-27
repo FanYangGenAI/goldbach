@@ -2,3 +2,4 @@
 {"q": 307, "A": 1, "Z": 1285, "S": 3000, "u": 0.0487, "se_u": 0.0039, "no_escape": 0.029, "se_ne": 0.0031, "comp_median": 5, "comp_max": 11, "frac_small_comp": 1.0, "sec": 5.2, "eta": 0.25}
 {"q": 1009, "A": 1, "Z": 5687, "S": 2000, "u": 0.03, "se_u": 0.0038, "no_escape": 0.016, "se_ne": 0.0028, "comp_median": 6, "comp_max": 15, "frac_small_comp": 1.0, "sec": 51.7, "eta": 0.25}
 {"q": 3001, "A": 1, "Z": 22212, "S": 800, "u": 0.0163, "se_u": 0.0045, "no_escape": 0.0075, "se_ne": 0.0031, "comp_median": 7, "comp_max": 13, "frac_small_comp": 1.0, "sec": 159.0, "eta": 0.25}
+{"q": 10007, "A": 1, "Z": 100088, "S": 300, "u": 0.0033, "se_u": 0.0033, "no_escape": 0.0, "se_ne": 0.0, "comp_median": 21, "comp_max": 21, "frac_small_comp": 0.0, "sec": 1024.0, "eta": 0.25}
