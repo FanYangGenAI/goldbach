@@ -1,0 +1,3 @@
+{"q": 307, "eta": 0.25, "Z": 1285, "Gmax": 4, "n": 796, "P_meet": 0.5616, "P_cov": 0.9698, "P_meet_given_cov": 0.579, "meet_vertices_median": 2, "sec": 1.0}
+{"q": 1009, "eta": 0.25, "Z": 5687, "Gmax": 5, "n": 400, "P_meet": 0.5875, "P_cov": 0.98, "P_meet_given_cov": 0.5995, "meet_vertices_median": 2, "sec": 5.8}
+{"q": 3001, "eta": 0.25, "Z": 22212, "Gmax": 7, "n": 150, "P_meet": 0.6733, "P_cov": 0.98, "P_meet_given_cov": 0.6871, "meet_vertices_median": 3, "sec": 27.1}
