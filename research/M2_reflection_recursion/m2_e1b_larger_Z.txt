@@ -1,0 +1,6 @@
+{"p": 1009, "q": 23, "Z": 92, "u_q": 0.00198, "max_path": 10, "mean_path": 2.703, "M_q": 66, "q_squared": 529}
+{"p": 1009, "q": 23, "Z": 138, "u_q": 0.0, "max_path": 6, "mean_path": 2.639, "M_q": 66, "q_squared": 529}
+{"p": 1009, "q": 31, "Z": 124, "u_q": 0.00992, "max_path": 10, "mean_path": 2.853, "M_q": 102, "q_squared": 961}
+{"p": 1009, "q": 31, "Z": 186, "u_q": 0.0, "max_path": 8, "mean_path": 2.794, "M_q": 105, "q_squared": 961}
+{"p": 1009, "q": 41, "Z": 164, "u_q": 0.00595, "max_path": 9, "mean_path": 3.005, "M_q": 139, "q_squared": 1681}
+{"p": 1009, "q": 41, "Z": 246, "u_q": 0.0, "max_path": 7, "mean_path": 2.922, "M_q": 153, "q_squared": 1681}
