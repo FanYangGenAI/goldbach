@@ -32,4 +32,5 @@ def run(q, eta, S, pairs, seed, a=0.15, b=0.45):
                 exact_median=round(exact[len(exact) // 2], 4), exact_min=round(exact[0], 4), sec=round(time.time() - t0, 1))
 if __name__ == "__main__":
     q, S, pairs, seed = int(sys.argv[1]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]); eta = float(sys.argv[2])
-    print(json.dumps(run(q, eta, S, pairs, seed)), flush=True)
+    bb = float(sys.argv[6]) if len(sys.argv) > 6 else 0.45
+    print(json.dumps(dict(run(q, eta, S, pairs, seed, b=bb), b=bb)), flush=True)

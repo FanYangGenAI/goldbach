@@ -1,0 +1,1 @@
+{"q": 1009, "eta": 0.5, "W": 32051, "nP": 25, "n_pairs": 24, "PZ_median": 0.3804, "PZ_min": 0.2552, "exact_median": 0.4153, "exact_min": 0.2652, "sec": 0.8}
