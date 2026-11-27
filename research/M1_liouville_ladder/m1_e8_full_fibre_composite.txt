@@ -1,0 +1,5 @@
+{"p": 10201, "n_vars": 1253, "rank": 1251, "dim": 2, "trivial": [0], "legendre": [0]}
+{"p": 29791, "n_vars": 3229, "rank": 3227, "dim": 2, "trivial": [0], "legendre": []}
+{"p": 9998, "n_vars": 1230, "rank": 1228, "dim": 2, "trivial": [0], "legendre": [0]}
+{"p": 4096, "n_vars": 565, "rank": 563, "dim": 2, "trivial": [0], "legendre": [0]}
+{"p": 6859, "n_vars": 883, "rank": 881, "dim": 2, "trivial": [0], "legendre": []}
