@@ -1,0 +1,5 @@
+{"q": 101, "A": 1, "S": 4000, "u": 0.1568, "se_u": 0.0057, "no_escape": 0.1148, "se_ne": 0.005, "comp_median": 3, "comp_max": 11, "frac_small_comp": 1.0, "sec": 0.3}
+{"q": 307, "A": 1, "S": 3000, "u": 0.193, "se_u": 0.0072, "no_escape": 0.1437, "se_ne": 0.0064, "comp_median": 3, "comp_max": 18, "frac_small_comp": 0.998, "sec": 0.9}
+{"q": 1009, "A": 1, "S": 2000, "u": 0.2425, "se_u": 0.0096, "no_escape": 0.1975, "se_ne": 0.0089, "comp_median": 3, "comp_max": 11, "frac_small_comp": 1.0, "sec": 4.0}
+{"q": 3001, "A": 1, "S": 1000, "u": 0.245, "se_u": 0.0136, "no_escape": 0.202, "se_ne": 0.0127, "comp_median": 3, "comp_max": 9, "frac_small_comp": 1.0, "sec": 14.6}
+{"q": 10007, "A": 1, "S": 400, "u": 0.2625, "se_u": 0.022, "no_escape": 0.2275, "se_ne": 0.021, "comp_median": 3, "comp_max": 6, "frac_small_comp": 1.0, "sec": 59.2}

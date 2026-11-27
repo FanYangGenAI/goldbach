@@ -12,8 +12,8 @@ import sys, json, math, random, time
 from collections import defaultdict, deque
 from m2_e4_random_model import bits_needed
 
-def one(rng, q, A, B):
-    Z = 2 * A * q
+def one(rng, q, A, B, Z=None):
+    Z = Z or 2 * A * q
     y = rng.getrandbits(B)
     adj = defaultdict(list); adj[0].append(-1); adj[-1].append(0)
     for d in range(2, Z + 1):
@@ -41,16 +41,17 @@ def one(rng, q, A, B):
             if w not in seen: seen.add(w); dq.append(w)
     return False, esc, len(seen)
 
-def run(q, A, S, seed):
-    rng = random.Random(seed); B = bits_needed(2 * A * q, q); t0 = time.time()
+def run(q, A, S, seed, Z=None):
+    Zv = Z or 2 * A * q
+    rng = random.Random(seed); B = bits_needed(Zv, q); t0 = time.time()
     unc = 0; noesc = 0; comps = []
     for _ in range(S):
-        c, e, n = one(rng, q, A, B)
+        c, e, n = one(rng, q, A, B, Zv)
         if not c: unc += 1; comps.append(n)
         if not e: noesc += 1
     u = unc / S; ne = noesc / S
     comps.sort()
-    return dict(q=q, A=A, S=S, u=round(u, 4), se_u=round(math.sqrt(max(u * (1 - u), 1e-12) / S), 4),
+    return dict(q=q, A=A, Z=Zv, S=S, u=round(u, 4), se_u=round(math.sqrt(max(u * (1 - u), 1e-12) / S), 4),
                 no_escape=round(ne, 4), se_ne=round(math.sqrt(max(ne * (1 - ne), 1e-12) / S), 4),
                 comp_median=comps[len(comps) // 2] if comps else 0,
                 comp_max=comps[-1] if comps else 0,
@@ -58,5 +59,9 @@ def run(q, A, S, seed):
                 sec=round(time.time() - t0, 1))
 
 if __name__ == "__main__":
-    q, A, S, seed = map(int, sys.argv[1:5])
-    print(json.dumps(run(q, A, S, seed)), flush=True)
+    q = int(sys.argv[1]); S, seed = int(sys.argv[3]), int(sys.argv[4])
+    if sys.argv[2].startswith("eta"):   # M2-E9：Z = round(q^{1+η})
+        eta = float(sys.argv[2][3:]); Z = round(q ** (1 + eta)); A = 0
+        print(json.dumps(dict(run(q, 1, S, seed, Z), eta=eta)), flush=True)
+    else:
+        print(json.dumps(run(q, int(sys.argv[2]), S, seed)), flush=True)
