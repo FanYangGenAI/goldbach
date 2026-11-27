@@ -1,0 +1,8 @@
+{"model": "smooth3", "q": 101, "A": 24, "S": 2000, "u": 0.0255, "se": 0.00352, "mean_len": 3.926, "max_len": 9, "sec": 1.8}
+{"model": "smooth3", "q": 307, "A": 24, "S": 2000, "u": 0.087, "se": 0.0063, "mean_len": 4.629, "max_len": 10, "sec": 11.8}
+{"model": "smooth3", "q": 1009, "A": 24, "S": 1000, "u": 0.238, "se": 0.01347, "mean_len": 5.286, "max_len": 11, "sec": 38.4}
+{"model": "smooth3", "q": 3001, "A": 24, "S": 300, "u": 0.29, "se": 0.0262, "mean_len": 5.648, "max_len": 11, "sec": 102.1}
+{"model": "smooth3", "q": 101, "A": 48, "S": 2000, "u": 0.0045, "se": 0.0015, "mean_len": 3.992, "max_len": 9, "sec": 4.3}
+{"model": "smooth3", "q": 307, "A": 48, "S": 2000, "u": 0.014, "se": 0.00263, "mean_len": 4.536, "max_len": 10, "sec": 37.8}
+{"model": "smooth3", "q": 1009, "A": 48, "S": 1000, "u": 0.056, "se": 0.00727, "mean_len": 5.231, "max_len": 11, "sec": 148.3}
+{"model": "smooth3", "q": 3001, "A": 48, "S": 300, "u": 0.08, "se": 0.01566, "mean_len": 5.656, "max_len": 10, "sec": 362.8}

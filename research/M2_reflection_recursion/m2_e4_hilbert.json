@@ -1,0 +1,170 @@
+[
+ {
+  "model": "plain",
+  "A": 6,
+  "q": 101,
+  "lam_full": 2.4348,
+  "lam_top": 1.4554
+ },
+ {
+  "model": "plain",
+  "A": 6,
+  "q": 1009,
+  "lam_full": 2.6067,
+  "lam_top": 1.4526
+ },
+ {
+  "model": "plain",
+  "A": 6,
+  "q": 3001,
+  "lam_full": 2.6673,
+  "lam_top": 1.4524
+ },
+ {
+  "model": "qa",
+  "A": 6,
+  "q": 101,
+  "lam_full": 2.367,
+  "lam_top": 1.2262
+ },
+ {
+  "model": "qa",
+  "A": 6,
+  "q": 1009,
+  "lam_full": 2.5621,
+  "lam_top": 1.2223
+ },
+ {
+  "model": "qa",
+  "A": 6,
+  "q": 3001,
+  "lam_full": 2.6301,
+  "lam_top": 1.222
+ },
+ {
+  "model": "smooth",
+  "A": 6,
+  "q": 101,
+  "lam_full": 1.8022,
+  "lam_top": 0.2356
+ },
+ {
+  "model": "smooth",
+  "A": 6,
+  "q": 1009,
+  "lam_full": 2.112,
+  "lam_top": 0.2666
+ },
+ {
+  "model": "smooth",
+  "A": 6,
+  "q": 3001,
+  "lam_full": 2.1981,
+  "lam_top": 0.2543
+ },
+ {
+  "model": "smooth",
+  "A": 24,
+  "q": 101,
+  "lam_full": 1.8024,
+  "lam_top": 0.2436
+ },
+ {
+  "model": "smooth",
+  "A": 24,
+  "q": 1009,
+  "lam_full": 2.1121,
+  "lam_top": 0.2843
+ },
+ {
+  "model": "smooth",
+  "A": 24,
+  "q": 3001,
+  "lam_full": 2.1982,
+  "lam_top": 0.2742
+ },
+ {
+  "model": "smooth",
+  "A": 48,
+  "q": 101,
+  "lam_full": 1.8024,
+  "lam_top": 0.2441
+ },
+ {
+  "model": "smooth",
+  "A": 48,
+  "q": 1009,
+  "lam_full": 2.1121,
+  "lam_top": 0.2861
+ },
+ {
+  "model": "smooth",
+  "A": 48,
+  "q": 3001,
+  "lam_full": 2.1982,
+  "lam_top": 0.2765
+ },
+ {
+  "model": "smooth3",
+  "A": 6,
+  "q": 101,
+  "lam_full": 1.8022,
+  "lam_top": 0.2356
+ },
+ {
+  "model": "smooth3",
+  "A": 6,
+  "q": 1009,
+  "lam_full": 1.9822,
+  "lam_top": 0.1451
+ },
+ {
+  "model": "smooth3",
+  "A": 6,
+  "q": 3001,
+  "lam_full": 2.0607,
+  "lam_top": 0.1228
+ },
+ {
+  "model": "smooth3",
+  "A": 24,
+  "q": 101,
+  "lam_full": 1.9374,
+  "lam_top": 0.413
+ },
+ {
+  "model": "smooth3",
+  "A": 24,
+  "q": 1009,
+  "lam_full": 2.0608,
+  "lam_top": 0.2213
+ },
+ {
+  "model": "smooth3",
+  "A": 24,
+  "q": 3001,
+  "lam_full": 2.1503,
+  "lam_top": 0.2144
+ },
+ {
+  "model": "smooth3",
+  "A": 48,
+  "q": 101,
+  "lam_full": 1.9374,
+  "lam_top": 0.4148
+ },
+ {
+  "model": "smooth3",
+  "A": 48,
+  "q": 1009,
+  "lam_full": 2.1121,
+  "lam_top": 0.2861
+ },
+ {
+  "model": "smooth3",
+  "A": 48,
+  "q": 3001,
+  "lam_full": 2.1842,
+  "lam_top": 0.2571
+ }
+]
