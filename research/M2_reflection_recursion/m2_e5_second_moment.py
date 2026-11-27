@@ -9,7 +9,7 @@ import sys, json, math, random, time
 from collections import defaultdict
 from m2_e4_random_model import bits_needed
 
-def sample_counts(rng, q, A, B, Lmax, V0):
+def sample_counts(rng, q, A, B, Lmax, V0, cap=None):
     Z = 2 * A * q
     y = rng.getrandbits(B)
     adj = defaultdict(list)          # v -> [(w, d)]
@@ -28,6 +28,9 @@ def sample_counts(rng, q, A, B, Lmax, V0):
         for (v, din), c in cur.items():
             for (w, d) in adj[v]:
                 if d != din:
+                    # cap：路径中间（T 之外）的顶点度数不得超过 cap（M2-E6）
+                    if cap is not None and not (-V0 <= w < V0) and len(adj[w]) > cap:
+                        continue
                     nxt[(w, d)] += c
         cur = nxt
         x0 = sum(c for (v, _), c in cur.items() if v in (0, -1))
@@ -35,18 +38,18 @@ def sample_counts(rng, q, A, B, Lmax, V0):
         outT0.append(x0); outTV.append(xV)
     return outT0, outTV
 
-def run(q, A, S, seed, Lmax=8, V0=8):
+def run(q, A, S, seed, Lmax=8, V0=8, cap=None):
     rng = random.Random(seed); B = bits_needed(2 * A * q, q)
     s1 = {k: [0.0] * Lmax for k in ("T0", "TV")}; s2 = {k: [0.0] * Lmax for k in ("T0", "TV")}
     pos = {k: [0] * Lmax for k in ("T0", "TV")}; n = 0; t0 = time.time()
     for _ in range(S):
-        r = sample_counts(rng, q, A, B, Lmax, V0)
+        r = sample_counts(rng, q, A, B, Lmax, V0, cap)
         if r is None: continue
         n += 1
         for k, xs in zip(("T0", "TV"), r):
             for i, x in enumerate(xs):
                 s1[k][i] += x; s2[k][i] += x * x; pos[k][i] += (x > 0)
-    res = dict(q=q, A=A, S=n, sec=round(time.time() - t0, 1))
+    res = dict(q=q, A=A, S=n, cap=cap, sec=round(time.time() - t0, 1))
     for k in ("T0", "TV"):
         res[k] = [dict(L=i + 1, EX=round(s1[k][i] / n, 3),
                        ratio=round((s1[k][i] / n) ** 2 / (s2[k][i] / n), 4) if s2[k][i] else 0.0,
@@ -55,4 +58,5 @@ def run(q, A, S, seed, Lmax=8, V0=8):
 
 if __name__ == "__main__":
     q, A, S, seed = map(int, sys.argv[1:5])
-    print(json.dumps(run(q, A, S, seed)), flush=True)
+    cap = int(sys.argv[5]) if len(sys.argv) > 5 else None
+    print(json.dumps(run(q, A, S, seed, cap=cap)), flush=True)
