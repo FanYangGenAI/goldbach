@@ -1,0 +1,2 @@
+{"q": 1009, "eta": 0.25, "W": 5687, "nP": 13, "n": 150, "lemmaB_match": "1950/1950", "P_untouched_obs": 0.0933, "P_untouched_pred": 0.1058, "Lambda_median": 13.0, "sec": 4.8}
+{"q": 3001, "eta": 0.25, "W": 22212, "nP": 22, "n": 40, "lemmaB_match": "880/880", "P_untouched_obs": 0.025, "P_untouched_pred": 0.0447, "Lambda_median": 22.0, "sec": 10.0}
