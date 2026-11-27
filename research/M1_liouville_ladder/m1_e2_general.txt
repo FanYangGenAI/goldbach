@@ -1,0 +1,10 @@
+{"N": 2006, "factors": [2, 17, 59], "dim": 13, "restricted_dim": 1, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 4022, "factors": [2, 2011], "dim": 14, "restricted_dim": 1, "char_span_dim": 3, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 8018, "factors": [2, 19, 211], "dim": 26, "restricted_dim": 1, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 6010, "factors": [2, 5, 601], "dim": 36, "restricted_dim": 1, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 9998, "factors": [2, 4999], "dim": 38, "restricted_dim": 1, "char_span_dim": 3, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 12000, "factors": [2, 3, 5], "dim": 98, "restricted_dim": 2, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 16384, "factors": [2], "dim": 52, "restricted_dim": 2, "char_span_dim": 2, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 30030, "factors": [2, 3, 5, 7, 11, 13], "dim": 277, "restricted_dim": 1, "char_span_dim": 7, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 20002, "factors": [2, 73, 137], "dim": 61, "restricted_dim": 1, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
+{"N": 40004, "factors": [2, 73, 137], "dim": 89, "restricted_dim": 2, "char_span_dim": 4, "restricted_subset_of_char_span": true, "lambda_pattern_in_restricted": false}
