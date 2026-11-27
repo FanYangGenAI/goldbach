@@ -1,0 +1,6 @@
+1009 13 26 n checked: 1008 mismatches: 0
+1009 23 46 n checked: 1008 mismatches: 0
+1009 41 82 n checked: 1008 mismatches: 0
+2003 23 69 n checked: 2002 mismatches: 0
+2003 41 123 n checked: 2002 mismatches: 0
+TOTAL n checked 7028 mismatches 0
