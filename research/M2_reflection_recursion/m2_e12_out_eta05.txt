@@ -1,0 +1,3 @@
+{"q": 101, "eta": 0.5, "Z": 1015, "S": 300, "frac_one_big": 1.0, "frac_giant_has0": 1.0, "second_median": 5, "second_max": 12, "giant_frac_of_nonisolated": 0.8871, "sec": 0.3}
+{"q": 307, "eta": 0.5, "Z": 5379, "S": 200, "frac_one_big": 1.0, "frac_giant_has0": 1.0, "second_median": 7, "second_max": 23, "giant_frac_of_nonisolated": 0.8865, "sec": 2.7}
+{"q": 1009, "eta": 0.5, "Z": 32051, "S": 60, "frac_one_big": 1.0, "frac_giant_has0": 1.0, "second_median": 10, "second_max": 16, "giant_frac_of_nonisolated": 0.8873, "sec": 21.4}
