@@ -1,0 +1,1 @@
+{"q": 307, "eta": 0.25, "Z": 1285, "M": 18420, "classes": 40, "R": 60, "mean_allfail_obs": 0.185, "mean_allfail_indep_pred": 0.0117, "sec": 2.5}
