@@ -1,0 +1,2 @@
+{"q": 101, "A": 1, "Z": 1015, "S": 3000, "u": 0.001, "se_u": 0.0006, "no_escape": 0.0, "se_ne": 0.0, "comp_median": 11, "comp_max": 16, "frac_small_comp": 1.0, "sec": 3.7, "eta": 0.5}
+{"q": 307, "A": 1, "Z": 5379, "S": 2000, "u": 0.0, "se_u": 0.0, "no_escape": 0.0, "se_ne": 0.0, "comp_median": 0, "comp_max": 0, "frac_small_comp": 0.0, "sec": 46.3, "eta": 0.5}
