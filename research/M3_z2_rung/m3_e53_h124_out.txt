@@ -1,0 +1,21 @@
+{
+ "H1": {
+  "strings_x_j": 426592,
+  "viol_mod": 0,
+  "viol_independence": 0
+ },
+ "H2": {
+  "sequences_j": 154,
+  "checks": 329552,
+  "viol": 0
+ },
+ "H4": {
+  "checks": 4860,
+  "viol": 0,
+  "viol_omega": 0,
+  "normalized_mean": 0.1598,
+  "normalized_q90": 0.4641,
+  "normalized_max": 2.8179,
+  "note": "normalized = (E_{a_j}[#hard q | X(X+1)]) * sqrt(a_{j+1})/(ell+1)"
+ }
+}
