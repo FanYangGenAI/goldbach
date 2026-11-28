@@ -1,0 +1,7 @@
+# Exact local marginal obstruction
+
+2026-11-27. Hub summary blob eccb086cf87fcd2d707e7b4af4a0c67dc2fb21d2 read. Prior round: centered residual convolution need not cancel.
+
+Proposition (proved): for any even W >= 2, on Z/(2W), let b(n)=1 if gcd(n,W)=1 and 0 otherwise. Let f(n)=2b(n) for representatives 0<=n<W and zero otherwise. Every residue class modulo W has identical total f and b mass, hence so does every class modulo any divisor of W. Yet (f*f)(0)=0 while (b*b)(0)=2 phi(W)>0, with unnormalized cyclic convolution. Indeed any supported n lies strictly between 0 and W, and its negative modulo 2W lies strictly between W and 2W. For the ordinary integer convolution on [0,2W), the same zero holds at N=2W. This is a bounded nonnegative countermodel to inference from exact local marginals alone, not a counterexample involving primes. Choosing W divisible by all moduli up to Q covers every such modulus. The construction does not match short-interval distribution or Fourier uniformity, so it does not rule out arguments using those additional inputs.
+
+Reference checked: Green–Tao, Linear equations in primes, official abstract https://annals.math.princeton.edu/2010/171-3/p08 explicitly excludes binary cases. Full text not audited this round. Next: seek countermodels with simultaneous short interval and local marginal control, or prove a useful sufficient bound on centered convolution with genuinely binary input. No Goldbach proof.
