@@ -1,0 +1,3 @@
+{"q": 3, "parts": 23, "sigma2_continuum": 12.8889, "m2_mult_N65521": 12.8889, "m2_mult_N262139": 12.8889}
+{"q": 5, "parts": 143, "sigma2_continuum": 43.5556, "m2_mult_N65521": 43.5553, "m2_mult_N262139": 43.5559}
+{"q": 7, "parts": 564, "sigma2_continuum": 85.4995, "m2_mult_N65521": 85.4987, "m2_mult_N262139": 85.5024}
