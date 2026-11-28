@@ -1,0 +1,6 @@
+{"N": 211, "q": 3, "K": 4, "certs": 2377, "square_fail": 0, "e12_set_diff": 8, "uncovered": 0, "t_float": 3.0985, "t_exact": 3.0984697206827208, "t_exact_frac": "631527/203819", "n_used": 140}
+{"N": 211, "q": 7, "K": 4, "certs": 3916, "square_fail": 0, "e12_set_diff": 22, "uncovered": 0, "t_float": 6.8, "t_exact": 6.800001, "t_exact_frac": "6800001/1000000", "n_used": 180}
+{"N": 211, "q": 13, "K": 4, "certs": 3908, "square_fail": 0, "e12_set_diff": 11, "uncovered": 0, "t_float": 12.875, "t_exact": 12.875001, "t_exact_frac": "12875001/1000000", "n_used": 194}
+{"N": 401, "q": 3, "K": 4, "certs": 4329, "square_fail": 0, "e12_set_diff": 17, "uncovered": 0, "t_float": 3.157, "t_exact": 3.156982, "t_exact_frac": "1578491/500000", "n_used": 267}
+{"N": 401, "q": 7, "K": 4, "certs": 6491, "square_fail": 0, "e12_set_diff": 15, "uncovered": 0, "t_float": 6.6222, "t_exact": 6.622223, "t_exact_frac": "6622223/1000000", "n_used": 343}
+{"N": 401, "q": 13, "K": 4, "certs": 6871, "square_fail": 0, "e12_set_diff": 15, "uncovered": 4, "t_float": 13.3333, "t_exact": 13.333335, "t_exact_frac": "2666667/200000", "n_used": 366}

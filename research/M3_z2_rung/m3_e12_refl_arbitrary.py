@@ -29,7 +29,7 @@ def run(N, q, K, cap=200, dmax=None):
                 j = t // N
                 for d in divisors(t):
                     if d <= j or (dmax and d > dmax): continue
-                    S2 = S ^ {pr(t // d), pr(t)}
+                    S2 = S ^ {pr(t // d)} ^ {pr(t)}  # 更正（E14）：原为 S ^ {a, b}，a = b 时少抵消一次
                     t2 = d * N - t
                     if t2 < N:
                         found.add(S2)
