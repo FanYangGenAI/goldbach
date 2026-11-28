@@ -1,0 +1,4 @@
+{"N": 1009, "q": 31, "rho_flip_q": 30.516, "localsearch_from_flip_q_max": 33.571, "q_plus_5": 36, "sec": 1.5}
+{"N": 1009, "q": 67, "rho_flip_q": 65.2, "localsearch_from_flip_q_max": 69.714, "q_plus_5": 72, "sec": 1.5}
+{"N": 4093, "q": 31, "rho_flip_q": 29.969, "localsearch_from_flip_q_max": 31.344, "q_plus_5": 36, "sec": 6.4}
+{"N": 4093, "q": 67, "rho_flip_q": 65.082, "localsearch_from_flip_q_max": 72.0, "q_plus_5": 72, "sec": 6.3}
