@@ -1,0 +1,4 @@
+{"N": 65521, "q": 61, "max_anc": 52, "max_anc_over_q": 0.85, "rowload_max": 418, "ratio": 6.85}
+{"N": 65521, "q": 127, "max_anc": 151, "max_anc_over_q": 1.19, "rowload_max": 990, "ratio": 7.8}
+{"N": 262139, "q": 31, "max_anc": 29, "max_anc_over_q": 0.94, "rowload_max": 198, "ratio": 6.39}
+{"N": 262139, "q": 61, "max_anc": 58, "max_anc_over_q": 0.95, "rowload_max": 474, "ratio": 7.77}
