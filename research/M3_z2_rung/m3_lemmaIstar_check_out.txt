@@ -1,0 +1,1 @@
+{"coprime_cases": 82, "coprime_not_exact": 0, "noncoprime_cases": 103, "noncoprime_ratio_min": 0.406, "noncoprime_ratio_max": 2.25, "noncoprime_exact_fraction": 0.621}
