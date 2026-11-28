@@ -1,0 +1,5 @@
+{"N": 4096, "q": 31, "fibre": "odd", "n_targets": 2048, "coverage": 0.9697, "random16_ratio": 0.756, "worst_single": 18, "sec": 1.4}
+{"N": 4096, "q": 67, "fibre": "odd", "n_targets": 2048, "coverage": 0.9688, "random16_ratio": 0.994, "worst_single": 16, "sec": 1.5}
+{"N": 4093, "q": 3, "fibre": "full", "n_targets": 4092, "coverage": 1.0, "random16_ratio": 0.3, "worst_single": 2, "sec": 4.2}
+{"N": 4093, "q": 31, "fibre": "full", "n_targets": 4092, "coverage": 1.0, "random16_ratio": 0.225, "worst_single": 2, "sec": 4.9}
+{"N": 4093, "q": 67, "fibre": "full", "n_targets": 4092, "coverage": 1.0, "random16_ratio": 0.312, "worst_single": 2, "sec": 5.8}
