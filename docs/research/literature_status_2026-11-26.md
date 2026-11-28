@@ -31,3 +31,19 @@
 ## 4. 本轮新开的线
 
 `gb/M1-liouville-ladder`：把 Shusterman 问题（条件性已证）与哥德巴赫用一个参数 z 连起来的"粗糙阶梯" G(z)，G(N^{1/3}) 正是哥德巴赫。
+
+## 更新（2026-11-27 22:25）：Corrádi–Kátai / Shusterman 方向的两篇新文献
+
+- **Meng（eScholarship，2026-09-24）**，"Decompositions of every integer N ≥ 11"，https://escholarship.org/content/qt7945n3rh/qt7945n3rh.pdf
+  - 定理 A **无条件**成立：对一切 N ∉ {2, 3, 4, 5, 6, 9, 10} 和任一符号对 (s, t)，存在 a + b = N 使 λ(a) = s、λ(b) = t。
+  - 文中说这是 Mangerel 定理 1.3（需要 GRH 和非光滑条件）的"无条件定性加强"。
+  - 推论：N ≥ 11 时 |L_λ(N)| < N − 1，证明中还得到 ≤ N − 5。
+  - 它**不给**表示个数的下界，所以不对应 Mangerel 的命题 1.4。
+  - 因此第 21 行"Shusterman 问题：GRH（Mangerel）"已经过时，应改为"无条件（Meng 2026）"。
+- **Krishnamoorthy（arXiv:2608.13266，2026-08-13）**，"On a conjecture of Corrádi and Kátai"，无条件。
+  - 对任意 δ > 0，满足 |G₂(N)| > δN 的 N ≤ X 至多有 ≪_{A,δ} X/log^A X 个，故 lim inf |G₂(N)|/N = 0。
+  - 完整的 o(N) 猜想（对一切 N）仍未解决。
+- **对 M3 的影响**：
+  - M3 的目标是：在 GRH 下，对一切素数 N 证明 |L_λ(N)| ≤ N − cN/((log N)²(log log N)^{2+ε})。
+  - 它对应的比较对象是 Mangerel 命题 1.4（GRH）：|L_λ(N)| ≤ N − N·e^{−C(log log N)⁶}。这一点已用 arXiv HTML 版核对。
+  - 上面两篇新文献都不覆盖这个"对一切 N 的定量节省"，所以 M3 的目标仍然是新的（若能完成）。但它的意义是对已有定理的定量改进，**不是**通向哥德巴赫的关键步骤。
