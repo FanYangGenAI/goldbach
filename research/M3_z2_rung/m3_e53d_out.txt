@@ -1,0 +1,1 @@
+{"cases_q_k": 2054, "skipped_q_divides_next": 0, "checks": 4808128, "viol": 0}
