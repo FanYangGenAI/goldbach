@@ -16,26 +16,27 @@ def refl_cov(N, q, n, Z):
     rx, ry = find(-1), find(0)
     if rx != ry: par[rx] = ry
     return find(j0) == find(0)
-k, q = int(sys.argv[1]), int(sys.argv[2])
-N, primes, rows, targets = setup(k, q)
-R = [r for _, r in rows]
-half = defaultdict(list)
-for s in range(0, 4):
-    for comb in itertools.combinations(range(len(R)), s):
-        x = 0
-        for i in comb: x ^= R[i]
-        if x not in half: half[x] = comb
-sizes = Counter(); examples = []
-for n, v in targets:
-    if refl_cov(N, q, n, 6 * q): continue
-    best = None
-    for x, comb in half.items():
-        y = v ^ x
-        if y in half:
-            s = len(comb) + len(half[y])
-            if best is None or s < best[0]: best = (s, comb, half[y])
-    if best is None: sizes[">6"] += 1
-    else:
-        sizes[best[0]] += 1
-        if len(examples) < 4: examples.append(dict(n=n, size=best[0], rows=[rows[i][0] for i in set(best[1]) ^ set(best[2])]))
-print(json.dumps(dict(k=k, q=q, N=N, not_reflection_covered=sum(sizes.values()), cert_size_dist={str(a): b for a, b in sorted(sizes.items(), key=lambda x: str(x[0]))}, examples=examples)))
+if __name__ == "__main__":
+    k, q = int(sys.argv[1]), int(sys.argv[2])
+    N, primes, rows, targets = setup(k, q)
+    R = [r for _, r in rows]
+    half = defaultdict(list)
+    for s in range(0, 4):
+        for comb in itertools.combinations(range(len(R)), s):
+            x = 0
+            for i in comb: x ^= R[i]
+            if x not in half: half[x] = comb
+    sizes = Counter(); examples = []
+    for n, v in targets:
+        if refl_cov(N, q, n, 6 * q): continue
+        best = None
+        for x, comb in half.items():
+            y = v ^ x
+            if y in half:
+                s = len(comb) + len(half[y])
+                if best is None or s < best[0]: best = (s, comb, half[y])
+        if best is None: sizes[">6"] += 1
+        else:
+            sizes[best[0]] += 1
+            if len(examples) < 4: examples.append(dict(n=n, size=best[0], rows=[rows[i][0] for i in set(best[1]) ^ set(best[2])]))
+    print(json.dumps(dict(k=k, q=q, N=N, not_reflection_covered=sum(sizes.values()), cert_size_dist={str(a): b for a, b in sorted(sizes.items(), key=lambda x: str(x[0]))}, examples=examples)))

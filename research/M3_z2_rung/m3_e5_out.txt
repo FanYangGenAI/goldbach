@@ -1,0 +1,4 @@
+{"k": 9, "N": 512, "s": 3, "derivable_nonreflection": 70, "frac_short": 0.9857, "size_dist": {"2": 6, "4": 47, "6": 16, "long": 1}, "row_use_max": 30, "row_use_mean_over_used": 3.524, "sec": 4.0}
+{"k": 10, "N": 1024, "s": 3, "derivable_nonreflection": 146, "frac_short": 0.9932, "size_dist": {"2": 15, "4": 106, "6": 24, "long": 1}, "row_use_max": 59, "row_use_mean_over_used": 3.497, "sec": 95.7}
+{"k": 11, "N": 2048, "s": 2, "derivable_nonreflection": 306, "frac_short": 0.768, "size_dist": {"2": 19, "4": 216, "long": 71}, "row_use_max": 63, "row_use_mean_over_used": 3.483, "sec": 4.8}
+{"k": 12, "N": 4096, "s": 2, "derivable_nonreflection": 622, "frac_short": 0.8039, "size_dist": {"2": 49, "4": 451, "long": 122}, "row_use_max": 241, "row_use_mean_over_used": 3.623, "sec": 60.5}
