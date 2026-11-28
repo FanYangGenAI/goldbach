@@ -1,0 +1,1 @@
+{"k": 8, "q": 3, "N": 256, "not_reflection_covered": 42, "cert_size_dist": {"2": 8, "4": 23, "6": 3, ">6": 8}, "examples": [{"n": 87, "size": 2, "rows": [87, 121]}, {"n": 91, "size": 2, "rows": [35, 121]}, {"n": 93, "size": 2, "rows": [49, 31]}, {"n": 95, "size": 4, "rows": [1, 85, 87, 121]}]}
