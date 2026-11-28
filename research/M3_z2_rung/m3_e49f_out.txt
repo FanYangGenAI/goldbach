@@ -1,0 +1,2 @@
+{"p": 1021, "triples": 8492, "max_bin_over_mean": 1.218, "min_bin_over_mean": 0.749, "frac_A_pm1": 0.0989, "uniform_units_expectation": 0.1004, "bins": [321, 377, 477, 416, 502, 458, 379, 435, 517, 405, 383, 423, 499, 367, 423, 391, 500, 465, 436, 318]}
+{"p": 4093, "triples": 10705, "max_bin_over_mean": 1.229, "min_bin_over_mean": 0.788, "frac_A_pm1": 0.0807, "uniform_units_expectation": 0.076, "bins": [422, 531, 587, 523, 583, 534, 460, 463, 619, 545, 509, 531, 612, 464, 558, 512, 658, 561, 579, 454]}
