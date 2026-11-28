@@ -1,0 +1,6 @@
+{"N": 211, "q": 3, "K": 4, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 2.604, "q_plus_5": 8, "sec": 7.4}
+{"N": 211, "q": 7, "K": 4, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 6.267, "q_plus_5": 12, "sec": 10.3}
+{"N": 211, "q": 13, "K": 4, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 12.0, "q_plus_5": 18, "sec": 12.3}
+{"N": 401, "q": 3, "K": 4, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 2.797, "q_plus_5": 8, "sec": 18.9}
+{"N": 401, "q": 7, "K": 4, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 6.206, "q_plus_5": 12, "sec": 26.6}
+{"N": 401, "q": 13, "K": 4, "dmax": null, "uncovered": 4, "frac_uncovered": 0.01, "t_star_refl": 12.677, "q_plus_5": 18, "sec": 29.5}

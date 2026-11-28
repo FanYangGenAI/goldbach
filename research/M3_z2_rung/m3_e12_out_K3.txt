@@ -1,0 +1,9 @@
+{"N": 211, "q": 3, "K": 3, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 4.0, "q_plus_5": 8, "sec": 0.3}
+{"N": 211, "q": 7, "K": 3, "dmax": null, "uncovered": 3, "frac_uncovered": 0.0143, "t_star_refl": 7.656, "q_plus_5": 12, "sec": 0.4}
+{"N": 211, "q": 13, "K": 3, "dmax": null, "uncovered": 11, "frac_uncovered": 0.0524, "t_star_refl": 14.429, "q_plus_5": 18, "sec": 0.5}
+{"N": 401, "q": 3, "K": 3, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 4.0, "q_plus_5": 8, "sec": 0.9}
+{"N": 401, "q": 7, "K": 3, "dmax": null, "uncovered": 13, "frac_uncovered": 0.0325, "t_star_refl": 7.354, "q_plus_5": 12, "sec": 1.3}
+{"N": 401, "q": 13, "K": 3, "dmax": null, "uncovered": 39, "frac_uncovered": 0.0975, "t_star_refl": 14.667, "q_plus_5": 18, "sec": 1.5}
+{"N": 809, "q": 3, "K": 3, "dmax": null, "uncovered": 0, "frac_uncovered": 0.0, "t_star_refl": 4.0, "q_plus_5": 8, "sec": 2.4}
+{"N": 809, "q": 7, "K": 3, "dmax": null, "uncovered": 23, "frac_uncovered": 0.0285, "t_star_refl": 7.682, "q_plus_5": 12, "sec": 3.7}
+{"N": 809, "q": 13, "K": 3, "dmax": null, "uncovered": 74, "frac_uncovered": 0.0916, "t_star_refl": 13.5, "q_plus_5": 18, "sec": 4.2}
