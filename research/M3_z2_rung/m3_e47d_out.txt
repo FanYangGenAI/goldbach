@@ -1,3 +1,4 @@
 {"p": 61, "S": 1000, "mean_terminal_anc": 2.762, "median": 2, "q90": 6, "q99": 11, "max": 19, "mean_over_lnp": 0.672, "log_mean_over_log_p": 0.247}
 {"p": 251, "S": 1000, "mean_terminal_anc": 4.496, "median": 3, "q90": 10, "q99": 19, "max": 50, "mean_over_lnp": 0.814, "log_mean_over_log_p": 0.272}
 {"p": 1021, "S": 600, "mean_terminal_anc": 5.983, "median": 4, "q90": 13, "q99": 30, "max": 50, "mean_over_lnp": 0.864, "log_mean_over_log_p": 0.258}
+{"p": 4093, "S": 300, "mean_terminal_anc": 7.613, "median": 4, "q90": 16, "q99": 56, "max": 113, "mean_over_lnp": 0.915, "log_mean_over_log_p": 0.244}
