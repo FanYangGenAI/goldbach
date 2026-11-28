@@ -64,9 +64,15 @@ def run(N, q, K):
             assert square_ok(N, q, n, S)
             for xr in S: load[xr] += f / tot
     t_exact = max(load.values())
+    if DUMP:
+        cert = dict(N=N, q=q, certs={str(n): [[sorted(S), (f / sum(g for _, g in lst)).numerator, (f / sum(g for _, g in lst)).denominator] for S, f in lst] for n, lst in W.items()})
+        json.dump(cert, open(f"certs/cert_N{N}_q{q}.json", "w"))
     return dict(N=N, q=q, K=K, certs=len(cols), square_fail=bad, e12_set_diff=diff, uncovered=uncovered,
                 t_float=round(res.fun, 4), t_exact=float(t_exact), t_exact_frac=str(t_exact.limit_denominator(10 ** 6)), n_used=len(W))
+DUMP = False
 if __name__ == "__main__":
+    import os
+    if "--dump" in sys.argv: DUMP = True; sys.argv.remove("--dump"); os.makedirs("certs", exist_ok=True)
     K = int(sys.argv[2]) if len(sys.argv) > 2 else 4
     for spec in sys.argv[1].split(";"):
         N, q = map(int, spec.split(","))
