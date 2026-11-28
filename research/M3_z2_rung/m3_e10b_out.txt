@@ -1,0 +1,2 @@
+{"N": 211, "q": 3, "rows": 105, "targets": 210, "no_short_cert": 0, "frac_no_short": 0.0, "lp_status": 0, "t_star": 6.739, "q_plus_5": 8, "cap": 300, "per": 20, "sec": 1.5}
+{"N": 401, "q": 3, "rows": 200, "targets": 400, "no_short_cert": 0, "frac_no_short": 0.0, "lp_status": 0, "t_star": 9.893, "q_plus_5": 8, "cap": 300, "per": 20, "sec": 3.6}
