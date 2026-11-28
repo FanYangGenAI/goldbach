@@ -1,0 +1,2 @@
+{"k": 11, "N": 2048, "top_rows": [1, 25, 23, 475, 189, 11, 243, 7], "m5_killed": 0, "m5_ratio": 0.0, "m20_killed": 0, "m20_ratio": 0.0, "m50_killed": 6, "m50_ratio": 0.12, "sec": 5.1}
+{"k": 12, "N": 4096, "top_rows": [1, 375, 961, 125, 169, 1573, 847, 15], "m5_killed": 0, "m5_ratio": 0.0, "m20_killed": 0, "m20_ratio": 0.0, "m50_killed": 0, "m50_ratio": 0.0, "sec": 61.9}
