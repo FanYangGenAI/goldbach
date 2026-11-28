@@ -1,0 +1,4 @@
+{"N": 16381, "q": 13, "M": 8, "square_fail": 0, "avg_load_max": 214.25, "avg_load_mean": 17.36, "argmax": [[781, 214.25], [1, 201.25], [469, 164.88]], "lp_t_star": 36.0, "cand_mean": 6.42}
+{"N": 16381, "q": 31, "M": 8, "square_fail": 0, "avg_load_max": 574.75, "avg_load_mean": 24.5, "argmax": [[757, 574.75], [13, 564.5], [1501, 424.62]], "lp_t_star": 58.0, "cand_mean": 7.14}
+{"N": 65521, "q": 13, "M": 8, "square_fail": 0, "avg_load_max": 317.5, "avg_load_mean": 17.44, "argmax": [[1, 317.5], [2185, 253.12], [3745, 228.0]]}
+{"N": 65521, "q": 31, "M": 8, "square_fail": 0, "avg_load_max": 815.88, "avg_load_mean": 24.56, "argmax": [[3025, 815.88], [421, 760.25], [49, 649.25]]}
