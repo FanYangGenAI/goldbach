@@ -1,0 +1,2 @@
+{"q": 11, "parts": 4828, "sigma2_continuum": 190.7731}
+{"q": 13, "parts": 12506, "sigma2_continuum": 248.8886}
