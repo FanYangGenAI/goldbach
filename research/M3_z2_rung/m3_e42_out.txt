@@ -1,0 +1,4 @@
+{"N": 65521, "q": 31, "median": 3, "max": 26, "exp_slope": -0.3024, "exp_resid": 0.1351, "pow_slope": -3.244, "pow_resid": 0.5012, "npts": 23}
+{"N": 65521, "q": 61, "median": 3, "max": 52, "exp_slope": -0.1373, "exp_resid": 0.219, "pow_slope": -2.576, "pow_resid": 0.6204, "npts": 49}
+{"N": 262139, "q": 31, "median": 3, "max": 29, "exp_slope": -0.3202, "exp_resid": 0.2615, "pow_slope": -3.495, "pow_resid": 0.8189, "npts": 24}
+{"N": 262139, "q": 61, "median": 3, "max": 58, "exp_slope": -0.15, "exp_resid": 0.3595, "pow_slope": -2.881, "pow_resid": 1.1104, "npts": 52}
