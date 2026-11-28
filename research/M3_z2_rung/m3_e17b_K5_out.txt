@@ -1,0 +1,1 @@
+{"N": 401, "q": 3, "K": 5, "certs": 6690, "square_fail": 0, "e12_set_diff": 25, "uncovered": 0, "t_float": 3.1557, "t_exact": 3.1557052546027453, "t_exact_frac": "2671112/846439", "n_used": 267}
