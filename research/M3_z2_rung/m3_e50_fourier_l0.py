@@ -7,7 +7,7 @@ def fourier(q, at, K=200000):
     s = 2 / q
     for k in range(1, K + 1):
         x = 2 * math.pi * at * k / q
-        s += 2 * (q * math.sin(x) / x) * (math.sin(2 * math.pi * k / q) / (math.pi * k))
+        s += 2 * (math.sin(x) / x) * (math.sin(2 * math.pi * k / q) / (math.pi * k))
     return s
 rng = random.Random(31); rows = []; maxerr = 0
 for it in range(200):
