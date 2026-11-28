@@ -1,0 +1,7 @@
+{"families": 31, "H1_bound_viol": 0, "real_exceeds_lattice_count": 0, "checks": 129536, "H2_max": 0.0846, "H2_holds": true, "H3_max_frac_short": 0.216, "H3_holds": true}
+{"prefix": [397, 394], "a3": 393, "a1": 100, "at": 99, "q": 197, "n": 77, "mean_excess": 0.00458, "H2_stat": 0.0412, "frac_short": 0.013}
+{"prefix": [151, 149], "a3": 63, "a1": 35, "at": 17, "q": 149, "n": 13, "mean_excess": -0.00445, "H2_stat": -0.0109, "frac_short": 0.0}
+{"prefix": [541, 529], "a3": 254, "a1": 22, "at": 17, "q": 23, "n": 99, "mean_excess": 0.00395, "H2_stat": 0.0118, "frac_short": 0.101}
+{"prefix": [173, 172], "a3": 49, "a1": 12, "at": 7, "q": 43, "n": 10, "mean_excess": 0.01349, "H2_stat": 0.0212, "frac_short": 0.1}
+{"prefix": [547, 545], "a3": 197, "a1": 52, "at": 21, "q": 109, "n": 65, "mean_excess": 0.0023, "H2_stat": 0.0059, "frac_short": 0.015}
+{"prefix": [557, 553], "a3": 277, "a1": 38, "at": 11, "q": 7, "n": 97, "mean_excess": -0.0002, "H2_stat": -0.0003, "frac_short": 0.216}
