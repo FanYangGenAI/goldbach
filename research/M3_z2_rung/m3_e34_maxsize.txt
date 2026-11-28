@@ -1,0 +1,8 @@
+65521 13 max multiplicity tree size 24 at (53528, 7)
+65521 31 max multiplicity tree size 36 at (33912, 11)
+65521 61 max multiplicity tree size 40 at (47768, 10)
+65521 127 max multiplicity tree size 54 at (51847, 14)
+262139 13 max multiplicity tree size 24 at (214157, 7)
+262139 31 max multiplicity tree size 34 at (207938, 10)
+262139 61 max multiplicity tree size 46 at (187871, 10)
+262139 127 max multiplicity tree size 54 at (95518, 10)
