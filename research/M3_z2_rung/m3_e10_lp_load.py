@@ -5,7 +5,7 @@ import numpy as np
 from scipy.optimize import linprog
 from scipy.sparse import lil_matrix
 from m3_e8_ratio import primes_upto
-def run(N, q, cap=30):
+def run(N, q, cap=30, per=3):
     P = [p for p in primes_upto(N) if p != N]; idx = {p: i for i, p in enumerate(P)}; E = len(P)
     L = q * N + 1; spf = list(range(L + 1))
     for i in range(2, int(L ** .5) + 1):
@@ -32,8 +32,8 @@ def run(N, q, cap=30):
             for x, lst in pair.items():
                 y = v ^ x
                 if y in pair:
-                    for a in lst[:3]:
-                        for b in pair[y][:3]:
+                    for a in lst[:per]:
+                        for b in pair[y][:per]:
                             S = frozenset(a) ^ frozenset(b)
                             if len(S) in (2, 4): cs.add(S)
                     if len(cs) >= cap: break
@@ -53,7 +53,9 @@ def run(N, q, cap=30):
     return dict(N=N, q=q, rows=len(R), targets=N - 1, no_short_cert=unc, frac_no_short=round(unc / (N - 1), 4),
                 lp_status=res.status, t_star=round(res.fun, 3) if res.status == 0 else None, q_plus_5=q + 5)
 if __name__ == "__main__":
+    cap = int(sys.argv[2]) if len(sys.argv) > 2 else 30; per = int(sys.argv[3]) if len(sys.argv) > 3 else 3
+    qs = [int(x) for x in sys.argv[4].split(",")] if len(sys.argv) > 4 else [3, 7, 13]
     for N in [int(x) for x in sys.argv[1].split(",")]:
-        for q in (3, 7, 13):
+        for q in qs:
             if q >= N: continue
-            t0 = time.time(); r = run(N, q); r["sec"] = round(time.time() - t0, 1); print(json.dumps(r), flush=True)
+            t0 = time.time(); r = run(N, q, cap, per); r.update(cap=cap, per=per); r["sec"] = round(time.time() - t0, 1); print(json.dumps(r), flush=True)
