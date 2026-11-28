@@ -1,0 +1,1 @@
+{"cases_q_k": 300, "checks": 962560, "viol_reduction": 0, "viol_cond_equiv": 0}
