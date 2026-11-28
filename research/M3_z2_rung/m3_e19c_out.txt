@@ -1,0 +1,6 @@
+{"N": 16381, "q": 13, "square_fail": 0, "cert_mean": 5.04, "cert_max": 14, "load_max": 48, "load_mean": 9.3, "argmax": [[456, 48], [805, 48], [781, 46]]}
+{"N": 16381, "q": 31, "square_fail": 0, "cert_mean": 7.23, "cert_max": 22, "load_max": 134, "load_mean": 13.99, "argmax": [[261, 134], [1036, 128], [385, 122]]}
+{"N": 65521, "q": 13, "square_fail": 0, "cert_mean": 5.04, "cert_max": 16, "load_max": 62, "load_mean": 9.3, "argmax": [[456, 62], [3745, 54], [820, 52]]}
+{"N": 65521, "q": 31, "square_fail": 0, "cert_mean": 7.25, "cert_max": 26, "load_max": 164, "load_mean": 14.03, "argmax": [[3025, 164], [4761, 136], [1537, 124]]}
+{"N": 262139, "q": 13, "square_fail": 0, "cert_mean": 5.04, "cert_max": 16, "load_max": 68, "load_mean": 9.3, "argmax": [[24440, 68], [8424, 66], [2880, 60]]}
+{"N": 262139, "q": 31, "square_fail": 0, "cert_mean": 7.25, "cert_max": 24, "load_max": 198, "load_mean": 14.03, "argmax": [[12155, 198], [6699, 146], [11039, 144]]}
