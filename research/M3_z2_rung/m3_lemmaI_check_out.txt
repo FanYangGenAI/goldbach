@@ -1,0 +1,1 @@
+{"pairs_tested": 400, "pairs_not_exact": 0, "max_ratio_triple_to_product": 3.75}
