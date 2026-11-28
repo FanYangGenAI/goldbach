@@ -1,0 +1,9 @@
+{"N": 16381, "q": 13, "instances_over_N": 4.011, "A1_over_N": 6.108, "A2_over_N": 12.477, "A3_over_N": 36.52, "max_anc": 10}
+{"N": 16381, "q": 31, "instances_over_N": 5.57, "A1_over_N": 10.265, "A2_over_N": 35.972, "A3_over_N": 281.207, "max_anc": 25}
+{"N": 16381, "q": 61, "instances_over_N": 6.714, "A1_over_N": 14.225, "A2_over_N": 84.129, "A3_over_N": 1553.113, "max_anc": 50}
+{"N": 65521, "q": 13, "instances_over_N": 4.01, "A1_over_N": 6.11, "A2_over_N": 12.47, "A3_over_N": 36.384, "max_anc": 10}
+{"N": 65521, "q": 31, "instances_over_N": 5.572, "A1_over_N": 10.306, "A2_over_N": 36.416, "A3_over_N": 285.861, "max_anc": 26}
+{"N": 65521, "q": 61, "instances_over_N": 6.726, "A1_over_N": 14.304, "A2_over_N": 84.947, "A3_over_N": 1573.257, "max_anc": 52}
+{"N": 262139, "q": 13, "instances_over_N": 4.01, "A1_over_N": 6.11, "A2_over_N": 12.471, "A3_over_N": 36.385, "max_anc": 11}
+{"N": 262139, "q": 31, "instances_over_N": 5.569, "A1_over_N": 10.302, "A2_over_N": 36.373, "A3_over_N": 285.185, "max_anc": 29}
+{"N": 262139, "q": 61, "instances_over_N": 6.714, "A1_over_N": 14.283, "A2_over_N": 84.864, "A3_over_N": 1571.29, "max_anc": 58}
