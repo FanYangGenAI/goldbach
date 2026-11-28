@@ -1566,7 +1566,7 @@ N 为 1024 位素数，每个 p 抽 1000 个 n。对每个脊柱节点的每个�
 - E[Ω(a₁)] ≤ 2 log log p + O(1)；
 - E[Ω(a₂)] ≤ 4 log log p + O(1)。
 
-**引理 S**：对 t ∈ {1, 2}，E[log indeg*(σ_t)] ≤ log(5 + 4 ln p) + log 2·E[Ω(a₁) + Ω(a₂)] = O(log log p)。
+**引理 S**：对 t ∈ {1, 2}，E[log indeg*(σ_t)] ≤ log(6 + 4 ln p) + log 2·E[Ω(a₁) + Ω(a₂)] = O(log log p)。（05:55 自查后修正常数：由 log(1 + 2(1 + ln p)·τ(g)) ≤ log(3 + 2 ln p) + log τ(g) 与 τ(g) ≤ 2τ(a₁)τ(a₂) 得到；谱系父节点本身也是候选，所以 indeg* ≤ d_p(w) + d_p(N − w)。）
 
 证明：
 - indeg*(σ_t) ≤ 1 + d_p(w_t) + d_p(N − w_t)。
