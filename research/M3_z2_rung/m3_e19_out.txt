@@ -1,0 +1,15 @@
+{"N": 1009, "q": 3, "square_fail": 0, "cert_mean": 2.5, "cert_max": 4, "load_max": 6, "load_mean": 3.33, "argmax": [[333, 6], [327, 6], [321, 6]]}
+{"N": 1009, "q": 5, "square_fail": 0, "cert_mean": 3.25, "cert_max": 6, "load_max": 14, "load_mean": 5.2, "argmax": [[165, 14], [145, 14], [105, 14]]}
+{"N": 1009, "q": 7, "square_fail": 0, "cert_mean": 3.81, "cert_max": 8, "load_max": 22, "load_mean": 6.54, "argmax": [[49, 22], [85, 20], [129, 20]]}
+{"N": 1009, "q": 13, "square_fail": 0, "cert_mean": 5.02, "cert_max": 12, "load_max": 44, "load_mean": 9.28, "argmax": [[99, 44], [64, 40], [385, 38]]}
+{"N": 1009, "q": 31, "square_fail": 0, "cert_mean": 7.2, "cert_max": 18, "load_max": 94, "load_mean": 13.95, "argmax": [[79, 94], [64, 80], [17, 80]]}
+{"N": 4093, "q": 3, "square_fail": 0, "cert_mean": 2.5, "cert_max": 4, "load_max": 6, "load_mean": 3.33, "argmax": [[1359, 6], [1353, 6], [1347, 6]]}
+{"N": 4093, "q": 5, "square_fail": 0, "cert_mean": 3.25, "cert_max": 6, "load_max": 14, "load_mean": 5.2, "argmax": [[805, 14], [765, 14], [745, 14]]}
+{"N": 4093, "q": 7, "square_fail": 0, "cert_mean": 3.82, "cert_max": 8, "load_max": 22, "load_mean": 6.54, "argmax": [[553, 22], [385, 22], [133, 22]]}
+{"N": 4093, "q": 13, "square_fail": 0, "cert_mean": 5.04, "cert_max": 14, "load_max": 42, "load_mean": 9.3, "argmax": [[205, 42], [133, 42], [648, 40]]}
+{"N": 4093, "q": 31, "square_fail": 0, "cert_mean": 7.19, "cert_max": 22, "load_max": 122, "load_mean": 13.92, "argmax": [[187, 122], [63, 120], [1, 94]]}
+{"N": 16381, "q": 3, "square_fail": 0, "cert_mean": 2.5, "cert_max": 4, "load_max": 6, "load_mean": 3.33, "argmax": [[5457, 6], [5451, 6], [5445, 6]]}
+{"N": 16381, "q": 5, "square_fail": 0, "cert_mean": 3.25, "cert_max": 6, "load_max": 14, "load_mean": 5.2, "argmax": [[3265, 14], [3225, 14], [3205, 14]]}
+{"N": 16381, "q": 7, "square_fail": 0, "cert_mean": 3.82, "cert_max": 8, "load_max": 22, "load_mean": 6.54, "argmax": [[2065, 22], [1981, 22], [1645, 22]]}
+{"N": 16381, "q": 13, "square_fail": 0, "cert_mean": 5.04, "cert_max": 14, "load_max": 48, "load_mean": 9.3, "argmax": [[456, 48], [805, 48], [781, 46]]}
+{"N": 16381, "q": 31, "square_fail": 0, "cert_mean": 7.23, "cert_max": 22, "load_max": 134, "load_mean": 13.99, "argmax": [[261, 134], [1036, 128], [385, 122]]}
