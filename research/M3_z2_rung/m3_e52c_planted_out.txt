@@ -1,0 +1,2 @@
+{"planted_inner_l4": {"seq": [397, 394, 393, "b", 251, 199, 100, 99], "q": 197, "n": 93, "mean_abs": 0.0012, "mean_excess_x_at": -0.065, "max_abs": 0.005, "inv_at": 0.0101}}
+{"original_l2_family": {"seq": [397, 394, 393, "b", 100, 99], "q": 197, "n": 77, "mean_abs": 0.0097, "mean_excess_x_at": 0.453, "max_abs": 0.49, "inv_at": 0.0101}}
